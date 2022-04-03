@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "1020440603577",
+    "project_id": "specialite-199f0",
+    "storage_bucket": "specialite-199f0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1020440603577:android:8206869090122c6562e468",
+        "android_client_info": {
+          "package_name": "com.example.specialite_foodapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1020440603577-cv2u6gfgc56dqpbs0hughplp88l58ias.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.specialite_foodapp",
+            "certificate_hash": "6dc6f6839e15bf93584f2af278cc7186acdea37e"
+          }
+        },
+        {
+          "client_id": "1020440603577-i3812qhuj2iksr7i1hbt15bh2l5so30j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.specialite_foodapp",
+            "certificate_hash": "78dafd69adb6967a71d3d3518576eb6e3789cc36"
+          }
+        },
+        {
+          "client_id": "1020440603577-o6jafb8pg96do7siv47q3m22mo8m0d10.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcF-2rCOcxvmkr-K88jj6OuhQ5fM9GnFI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1020440603577-o6jafb8pg96do7siv47q3m22mo8m0d10.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1020440603577-c7vtuu2dr2umln2d7cckdefkgg01o4p7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.specialiteFoodapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
