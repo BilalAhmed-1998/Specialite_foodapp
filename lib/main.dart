@@ -17,8 +17,10 @@ import 'package:specialite_foodapp/screens/loginScreen.dart';
 import 'package:specialite_foodapp/screens/signUpScreen.dart';
 import 'package:specialite_foodapp/screens/splashScreen.dart';
 import 'package:specialite_foodapp/screens/homeScreen.dart';
+import 'package:specialite_foodapp/screens/streamTest.dart';
 import 'package:specialite_foodapp/services/authService.dart';
 import 'package:specialite_foodapp/services/locationService.dart';
+import 'package:specialite_foodapp/services/notificationService.dart';
 import 'package:specialite_foodapp/services/wrapper.dart';
 import 'package:geocoding/geocoding.dart';
 import 'classes/allClasses.dart';
@@ -31,10 +33,11 @@ Future<void> backgroundHandler(RemoteMessage message) async {
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  notificationService.useNotificationService();
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);
 
-  runApp(MyApp(
-  ));
+  runApp(MyApp());
+
 }
 
 class MyApp extends StatelessWidget {
@@ -61,7 +64,6 @@ class MyApp extends StatelessWidget {
           routes: routes,
           debugShowCheckedModeBanner: false,
           home: splashScreen(1,Wrapper.routeName),
-        //  home: checkoutScreen2(),
          ),
       ),
     );

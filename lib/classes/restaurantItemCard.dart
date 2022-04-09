@@ -37,7 +37,7 @@ class restaurantItemCard extends StatelessWidget {
           Container(
             width: 100.w,
             height: 76.h,
-            child: Image.asset(this.restaurantItem.image,
+            child: Image.network(this.restaurantItem.image,
             fit: BoxFit.fill,),
 
           ),

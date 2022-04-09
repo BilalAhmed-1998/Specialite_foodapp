@@ -1,7 +1,9 @@
 
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
 class AppUser{
 
@@ -23,11 +25,12 @@ class Restaurant{
   bool open;
   bool dineIn;
   int seatsLeft;
-  //String geoPoints;
+  GeoPoint geoPoints;
+  String state;
   List<RestaurantItem> restaurantItems;
 
 
-  Restaurant({this.totalRating,this.restaurantItems,this.description,this.uid,this.images,this.title,this.rating,this.favt,this.address,this.dineIn,this.open,this.seatsLeft});
+  Restaurant({this.state,this.geoPoints,this.totalRating,this.restaurantItems,this.description,this.uid,this.images,this.title,this.rating,this.favt,this.address,this.dineIn,this.open,this.seatsLeft});
 
 }
 
@@ -36,9 +39,9 @@ class RestaurantItem{
   dynamic image;
   String itemTitle;
   String description;
-  int sale;
+  dynamic sale;
   int lengthTimeCost;
-  Map<String,int> timeCost;
+  Map<String,dynamic> timeCost;
 
   RestaurantItem({this.description,this.image,this.itemTitle,this.lengthTimeCost,this.sale,this.timeCost});
 

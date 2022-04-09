@@ -3,9 +3,11 @@ import 'package:flutter_credit_card/credit_card_brand.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:specialite_foodapp/dummyData.dart';
 import 'package:specialite_foodapp/services/paymentService.dart';
 import 'package:specialite_foodapp/screens/homeScreen.dart';
 
+import 'loadingScreen.dart';
 
 class checkout_addNewCard extends StatefulWidget {
   static const routeName = '/checkout_addNewCard';
@@ -26,6 +28,70 @@ class _checkout_addNewCard extends State<checkout_addNewCard> {
   OutlineInputBorder border;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool check = false;
+
+  showAlertDialog(BuildContext context, CardDetails _card) {
+    // set up the button
+    Widget okButton = TextButton(
+      child: Text("Continue"),
+      onPressed: () async {
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) {
+              return loadingScreen();
+            });
+        dynamic response = await StripeService.payWithNewCard(
+            amount: (widget.amount.round()).toString(),
+            currency: 'JPY',
+            card: _card
+        );
+
+        //print(response.message);
+        if (response.success){
+          bool exist=await dbMain.checkCardExist(_card.number);
+          if(exist){
+            print("card already in user collection.");
+          }else{
+            print("saving card");
+            dbMain.addCard(_card.number, _card.expirationMonth.toString(), _card.expirationYear.toString());
+          }
+
+        }
+        if(response.success){
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('transaction successful'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
+        Navigator.popUntil(context, (route) => false);
+        Navigator.pushNamed(context, homeScreen.routeName);
+      },
+    );
+    Widget cancelButton = TextButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Payment confirmation"),
+      content: Text("pay ${widget.amount.round()} securely. "),
+      actions: [
+        cancelButton,
+        okButton,
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
 
   @override
   void initState() {
@@ -75,10 +141,8 @@ class _checkout_addNewCard extends State<checkout_addNewCard> {
                 fontSize: 18.sp,
                 fontFamily: 'Poppins',
                 fontWeight: FontWeight.w500,
-
               ),
             ),
-
           ],
         ),
       ),
@@ -120,7 +184,6 @@ class _checkout_addNewCard extends State<checkout_addNewCard> {
                     children: <Widget>[
                       CreditCardForm(
                         formKey: formKey,
-
                         obscureCvv: true,
                         obscureNumber: false,
                         cardNumber: cardNumber,
@@ -154,7 +217,6 @@ class _checkout_addNewCard extends State<checkout_addNewCard> {
                           hintText: 'MM/YY',
                         ),
                         cvvCodeDecoration: InputDecoration(
-
                           hintStyle: const TextStyle(color: Colors.black),
                           labelStyle: const TextStyle(color: Colors.black),
                           focusedBorder: const OutlineInputBorder(
@@ -176,25 +238,22 @@ class _checkout_addNewCard extends State<checkout_addNewCard> {
                         onCreditCardModelChange: onCreditCardModelChange,
                       ),
                       CheckboxListTile(
-                        title: Text('By saving your card you grant us your consent to store your payment method for future orders.',
-                            style:TextStyle(
-                              fontWeight: FontWeight.normal,
-                              fontSize: 12.sp,
-                              color: Color(0xff555555),
-                              fontFamily: 'poppins'
-                            )),
+                          title: Text(
+                              'By saving your card you grant us your consent to store your payment method for future orders.',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 12.sp,
+                                  color: Color(0xff555555),
+                                  fontFamily: 'poppins')),
                           activeColor: Color(0xfffdb601),
                           checkColor: Colors.black,
                           controlAffinity: ListTileControlAffinity.leading,
-
                           value: check,
                           onChanged: (bool value) {
                             setState(() {
                               check = value;
                             });
-                          }
-
-                          ),
+                          }),
                     ],
                   ),
                 ),
@@ -227,30 +286,16 @@ class _checkout_addNewCard extends State<checkout_addNewCard> {
                         if (formKey.currentState.validate()) {
                           print('valid!');
 
-                          final date=expiryDate.split('/');
-                          CardDetails _card=CardDetails(
+                          final date = expiryDate.split('/');
+                          CardDetails _card = CardDetails(
                             number: cardNumber,
                             expirationMonth: int.parse(date[0]),
-                              expirationYear: int.parse(date[1]),
-                              cvc: cvvCode,
-
+                            expirationYear: int.parse(date[1]),
+                            cvc: cvvCode,
                           );
-                          // _card.copyWith(number: cardNumber);
-                          // _card.copyWith(expirationMonth: int.parse(date[0]));
-                          // _card.copyWith(expirationYear: int.parse(date[1]));
-                          // _card.copyWith(cvc: cvvCode);
+
                           print(_card);
-                         dynamic response= await StripeService.payWithNewCard(
-                             amount: (widget.amount.round()).toString(),
-                             currency: 'JPY',
-                             card: _card
-                         );
-                         print(response.message);
-
-
-                          Navigator.pop(context);
-                          Navigator.popUntil(context, (route) => false);
-                          Navigator.pushNamed(context, homeScreen.routeName);
+                          showAlertDialog(context, _card);
                         } else {
                           print('invalid!');
                         }

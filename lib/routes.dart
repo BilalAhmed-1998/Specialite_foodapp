@@ -16,6 +16,7 @@ import 'package:specialite_foodapp/screens/orderScreen.dart';
 import 'package:specialite_foodapp/screens/profile_copied.dart';
 import 'package:specialite_foodapp/screens/profile_dialogue.dart';
 import 'package:specialite_foodapp/screens/profile_edit.dart';
+import 'package:specialite_foodapp/screens/profile_enterReferral.dart';
 import 'package:specialite_foodapp/screens/profile_homepage.dart';
 import 'package:specialite_foodapp/screens/profile_order.dart';
 import 'package:specialite_foodapp/screens/profile_phone.dart';
@@ -24,6 +25,7 @@ import 'package:specialite_foodapp/screens/profile_refer.dart';
 import 'package:specialite_foodapp/screens/profile_verify.dart';
 import 'package:specialite_foodapp/screens/restaurant_search.dart';
 import 'package:specialite_foodapp/screens/signUpScreen.dart';
+import 'package:specialite_foodapp/screens/streamTest.dart';
 import 'package:specialite_foodapp/services/wrapper.dart';
 
 
@@ -32,6 +34,7 @@ import 'package:specialite_foodapp/services/wrapper.dart';
 final Map <String,WidgetBuilder> routes =  {
 
   Wrapper.routeName: (context) => Wrapper(),
+  UserInformation.routeName: (context) => UserInformation(),
   loginScreen.routeName: (context) => loginScreen(),
   signUpScreen.routeName:(context) => signUpScreen(),
   homeScreen.routeName:(context) => homeScreen(),
@@ -56,6 +59,7 @@ final Map <String,WidgetBuilder> routes =  {
   profile_phone.routeName:(context) => profile_phone(),
   profile_verify.routeName:(context) => profile_verify(),
   profile_order.routeName:(context) => profile_order(),
+  profile_enterReferral.routeName:(context) => profile_enterReferral(),
 
 
 };

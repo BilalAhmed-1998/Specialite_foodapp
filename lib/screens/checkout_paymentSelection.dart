@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:specialite_foodapp/dummyData.dart';
 import 'package:specialite_foodapp/screens/checkout_addNewCard.dart';
 import 'package:specialite_foodapp/screens/checkout_chooseExisting.dart';
 
 import '../services/paymentService.dart';
+import 'loadingScreen.dart';
 
 class checkout_paymentSelection extends StatefulWidget {
   static const routeName = '/checkout_paymentSelection';
@@ -61,6 +63,7 @@ class _checkout_paymentSelectionState extends State<checkout_paymentSelection> {
   }
   @override
   Widget build(BuildContext context) {
+    List cardList=[];
     return Scaffold(
       backgroundColor: const Color(0xffF0F3FD),
       appBar: AppBar(
@@ -106,27 +109,26 @@ class _checkout_paymentSelectionState extends State<checkout_paymentSelection> {
           InkWell(
               onTap: ()async{
                 //pay with existing
-
+                showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (context) {
+                      return loadingScreen();
+                    });
+                if(cardList.isEmpty){
+                  cardList=await dbMain.getCards();
+                }
+                Navigator.pop(context);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => checkout_chooseExisting(
                       amount: widget.amount,
+                      cards: cardList,
                     ),
                   ),
                 );
-                // CardDetails _card=CardDetails(
-                //   number: '4242424242424242',
-                //     expirationMonth: 12,
-                //     expirationYear: 23,
-                //     cvc: '123'
-                // );
-                // print(_card.expirationMonth);
-                // var reponse= await StripeService.payWithNewCard(
-                //     amount: '200',
-                //     currency: 'usd',
-                //     card: _card
-                // );
+
 
               },
               child: payment_cards(Icons.credit_card_outlined, "Pay with Existing Card",20.h)

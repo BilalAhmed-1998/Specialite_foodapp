@@ -18,6 +18,10 @@ class restaurantCard extends StatelessWidget {
       child:
       Stack(
         children: [
+          Positioned.fill(
+            child: Image.network(this.restaurant.images[0],
+            fit: BoxFit.fill,),
+          ),
           // Positioned.fill(
           //   child: ClipRRect(
           //     borderRadius: BorderRadius.circular(8.0),
@@ -46,11 +50,11 @@ class restaurantCard extends StatelessWidget {
           //     ),
           //   ),
           // ),
-          Positioned.fill(
-            child: Image(image: AssetImage(this.restaurant.images[0],),
-              fit: BoxFit.cover,
-            ),
-          ),
+          // Positioned.fill(
+          //   child: Image(image: AssetImage(this.restaurant.images[0],),
+          //     fit: BoxFit.cover,
+          //   ),
+          // ),
           Container(
             width: 342.w,
             height: 222.h,

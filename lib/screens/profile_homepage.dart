@@ -13,7 +13,7 @@ import 'package:specialite_foodapp/screens/loginScreen.dart';
 import 'package:specialite_foodapp/screens/profile_edit.dart';
 import 'package:specialite_foodapp/screens/profile_refer.dart';
 import 'package:specialite_foodapp/screens/profile_order.dart';
-
+import 'package:specialite_foodapp/screens/profile_enterReferral.dart';
 import '../services/authService.dart';
 import '../services/wrapper.dart';
 import 'loadingScreen.dart';
@@ -159,7 +159,7 @@ class _profile_homepageState extends State<profile_homepage> {
               height: 24.h,
             ),
             Container(
-              height: 305.h,
+
               width: 342.w,
               decoration: BoxDecoration(
                 boxShadow: [
@@ -195,6 +195,21 @@ class _profile_homepageState extends State<profile_homepage> {
                       },
                       child: profileCard(
                           "assets/images/pro4.png", "Refer a friend")),
+                  Divider(
+                    height: 1.h,
+                    color: const Color(0xffDFDFDF),
+                    thickness: 2,
+                  ),
+                  InkWell(
+                      enableFeedback: true,
+                      onTap: () {
+                        if(FirebaseAuth.instance.currentUser!=null)
+                          refCode=FirebaseAuth.instance.currentUser.uid;
+                        Navigator.pushNamed(context, profile_enterReferral.routeName);
+                      },
+                      child: profileCard(
+                          "assets/images/pro4.png", "Enter Referral Code")
+                  ),
                   Divider(
                     height: 1.h,
                     color: const Color(0xffDFDFDF),

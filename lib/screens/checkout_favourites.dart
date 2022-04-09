@@ -85,7 +85,7 @@ class _checkout_favouritesState extends State<checkout_favourites> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => nearby(
-                          favList: nearbyList,
+                          favList: allRestaurants,
                         )
                       ),
                     );

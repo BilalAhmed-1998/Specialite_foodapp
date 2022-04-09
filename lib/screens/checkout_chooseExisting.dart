@@ -3,43 +3,95 @@ import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/credit_card_brand.dart';
 import 'package:flutter_credit_card/credit_card_widget.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:specialite_foodapp/screens/homeScreen.dart';
+
+import '../dummyData.dart';
+import '../services/paymentService.dart';
+import 'loadingScreen.dart';
 
 class checkout_chooseExisting extends StatefulWidget {
   static const routeName = '/checkout_chooseExisting';
   double amount;
-  checkout_chooseExisting({this.amount});
+  List cards;
+  checkout_chooseExisting({this.amount, this.cards});
   @override
   _checkout_chooseExisting createState() => _checkout_chooseExisting();
 }
 
 class _checkout_chooseExisting extends State<checkout_chooseExisting> {
-  List cards = [
-    // {
-    //   'cardNumber': '4242424242424242',
-    //   'expiryDate': '04/24',
-    //   'cardHolderName': 'Shaheer Ali',
-    //   'cvvCode': '123',
-    //   'showBackView': false,
-    //   'selected':true
-    // },
-    // {
-    //   'cardNumber': '3566002020360505',
-    //   'expiryDate': '04/24',
-    //   'cardHolderName': 'Ghufran Ahmad',
-    //   'cvvCode': '123',
-    //   'showBackView': false,
-    //   'selected':false,
-    // },
-    // {
-    //   'cardNumber': '4242424242424242',
-    //   'expiryDate': '04/24',
-    //   'cardHolderName': 'Ghufran Ahmad',
-    //   'cvvCode': '123',
-    //   'showBackView': false,
-    //   'selected':false,
-    // }
-  ];
+  TextEditingController cvvController=TextEditingController();
+  showAlertDialog(BuildContext context, CardDetails _card) {
+    // set up the button
+    Widget okButton = TextButton(
+      child: Text("Continue"),
+      onPressed: () async {
+        CardDetails current=CardDetails(
+          cvc: cvvController.text,
+          expirationMonth: _card.expirationMonth,
+          expirationYear: _card.expirationYear,
+          number: _card.number,
+        );
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) {
+              return loadingScreen();
+            });
+        dynamic response = await StripeService.payWithNewCard(
+            amount: (widget.amount.round()).toString(),
+            currency: 'JPY',
+            card: current);
+
+        if(response.success){
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('transaction successful'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
+
+        Navigator.popUntil(context, (route) => false);
+        Navigator.pushNamed(context, homeScreen.routeName);
+      },
+    );
+    Widget cancelButton = TextButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Payment confirmation"),
+      content: Container(
+        child: TextField(
+          controller: cvvController,
+          obscureText: true,
+          maxLength: 4,
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+            hintText: 'CVV',
+          ),
+
+        ),
+      ),
+
+      actions: [
+        cancelButton,
+        okButton,
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   payViaExistingCard(BuildContext context, card){
 
   }
@@ -93,24 +145,25 @@ class _checkout_chooseExisting extends State<checkout_chooseExisting> {
               height:height-190.h,
               padding: EdgeInsets.only(left:10.sp,right: 10.sp,top: 10.sp),
               child: ListView.builder(
-                itemCount: cards.length,
+                itemCount: widget.cards.length,
                 itemBuilder: (context, index) {
                   return InkWell(
 
                     onTap: (){
                       setState(() {
-                        for (int i =0 ; i<cards.length; i++){
+                        for (int i =0 ; i<widget.cards.length; i++){
                           if(i!=index) {
-                            cards[i]["selected"] = false;
+                            widget.cards[i]["selected"] = false;
                           }
                         }
-                        cards[index]['selected']=true;
+
+                        widget.cards[index]['selected']=true;
                       });
                     },
                     child: Container(
                       decoration: BoxDecoration(
                         border: Border.all(
-                          color: cards[index]['selected']==true?Colors.blue :Colors.transparent
+                          color: widget.cards[index]['selected']==true?Colors.blue :Colors.transparent
                         ),
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -118,13 +171,11 @@ class _checkout_chooseExisting extends State<checkout_chooseExisting> {
 
 
                         onCreditCardWidgetChange: (CreditCardBrand creditCardBrand) {},
-                        cardNumber: cards[index]['cardNumber'],
-                        expiryDate: cards[index]['expiryDate'],
-                        cardHolderName: cards[index]['cardHolderName'],
-                        //labelCardHolder: cards[index]['cardHolderName'],
-                        cvvCode: cards[index]['cvvCode'],
-                        showBackView: cards[index][
-                        'showBackView'], //true when you want to show cvv(back) view
+                        cardNumber: widget.cards[index]['number'],
+                        expiryDate: widget.cards[index]['expirationMonth']+'/'+ widget.cards[index]['expirationYear'],
+                        cardHolderName: 'NIL',//widget.cards[index]['cardHolderName'],
+                        cvvCode: '123',
+                        showBackView: false, //true when you want to show cvv(back) view
                         obscureCardNumber: true,
                         obscureCardCvv: true,
                         isHolderNameVisible: true,
@@ -138,7 +189,7 @@ class _checkout_chooseExisting extends State<checkout_chooseExisting> {
               child: Container(
                 //width:width,
                 height: 56.h,
-                margin: EdgeInsets.only(left:22.sp,right:22.sp,bottom: 25.h),
+                margin: EdgeInsets.only(left:22.sp,right:22.sp,bottom: 25.h,top: 5.h),
                 child: Center(
                   child: Text(
                     'Done',
@@ -161,8 +212,22 @@ class _checkout_chooseExisting extends State<checkout_chooseExisting> {
                   : () {
                 if (true) {
                   print('valid!');
-                  Navigator.popUntil(context, (route) => false);
-                  Navigator.pushNamed(context, homeScreen.routeName);
+                  for(int i = 0 ; i< widget.cards.length; i++){
+                    try{
+                      if(widget.cards[i]["selected"]){
+                        CardDetails _card = CardDetails(
+                          number: widget.cards[i]['number'],
+                          expirationMonth: int.parse(widget.cards[i]['expirationMonth']),
+                          expirationYear: int.parse(widget.cards[i]['expirationYear']),
+                          cvc: '',
+                        );
+                        print(_card);
+                        showAlertDialog(context, _card);
+                      }
+                    }catch(e){
+                      print("choose a card");
+                    }
+                  }
                 } else {
                   print('invalid!');
                 }

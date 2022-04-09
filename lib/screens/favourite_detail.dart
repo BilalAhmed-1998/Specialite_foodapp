@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,16 +21,6 @@ class favourite_detail extends StatefulWidget {
 
 class _favourite_detailState extends State<favourite_detail> {
   GoogleMapController myMapController;
-  Marker pickUpLocMarker = Marker(
-    icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-    position: LatLng(currentCoordinates.latitude,currentCoordinates.longitude),
-    markerId: MarkerId("MyLocation"),
-  );
-
-
-  CameraPosition campos = CameraPosition(
-      target: LatLng(currentCoordinates.latitude, currentCoordinates.longitude),
-      zoom: 14.0);
 
   double calculateDistance(lat1, lon1, lat2, lon2){
     var p = 0.017453292519943295;
@@ -88,7 +79,7 @@ class _favourite_detailState extends State<favourite_detail> {
                               child: Stack(children: [
                                 Positioned.fill(
                                   child: Image(
-                                    image: AssetImage(
+                                    image: NetworkImage(
                                       widget.restaurant.images[index],
                                     ),
                                     fit: BoxFit.fill,
@@ -198,11 +189,14 @@ class _favourite_detailState extends State<favourite_detail> {
                               SizedBox(
                                 width: 8.w,
                               ),
-                              Text(
-                                this.widget.restaurant.address,
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.normal,
+                              Flexible(
+                                flex: 1,
+                                child: Text(
+                                  this.widget.restaurant.address,
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.normal,
+                                  ),
                                 ),
                               ),
                             ],
@@ -262,7 +256,7 @@ class _favourite_detailState extends State<favourite_detail> {
                           ),
                           child: Center(
                             child: Text(
-                              '${calculateDistance(currentCoordinates.latitude, currentCoordinates.longitude, currentCoordinates.latitude, currentCoordinates.longitude)} km',
+                              '${calculateDistance(currentCoordinates.latitude, currentCoordinates.longitude, widget.restaurant.geoPoints.latitude, widget.restaurant.geoPoints.longitude).toStringAsFixed(1)}  km',
                               style: TextStyle(
                                 fontSize: 8.sp,
                                 color: Color(0xffFF5252),
@@ -279,7 +273,9 @@ class _favourite_detailState extends State<favourite_detail> {
                   height: 250.h,
                   child: GoogleMap(
                     mapType: MapType.normal,
-                    initialCameraPosition: campos,
+                    initialCameraPosition: CameraPosition(
+                        target: LatLng(widget.restaurant.geoPoints.latitude, widget.restaurant.geoPoints.longitude),
+                        zoom: 14.0),
                     myLocationEnabled: false,
                     zoomControlsEnabled: false,
                     zoomGesturesEnabled: false,
@@ -287,7 +283,11 @@ class _favourite_detailState extends State<favourite_detail> {
                     scrollGesturesEnabled: false,
                     tiltGesturesEnabled: false,
 
-                    markers: {pickUpLocMarker,},
+                    markers: {Marker(
+                  icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+                  position: LatLng(widget.restaurant.geoPoints.latitude,widget.restaurant.geoPoints.longitude),
+                  markerId: MarkerId("Restaurant's location"),
+                  ),},
                     onMapCreated: (controller) async{
                       // myMapController.animateCamera(CameraUpdate.newCameraPosition(campos));
                     },

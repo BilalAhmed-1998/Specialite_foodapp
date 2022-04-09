@@ -57,14 +57,6 @@ class StripeService {
       );
 
       print(paymentMethod["id"]);
-
-      // var paymentMethod = await Stripe.instance.createPaymentMethod(
-      //   PaymentMethodParams.card(
-      //     billingDetails: billingDetails,
-      //
-      //   ),
-      // );
-
       print('hello');
 
       var response = await Stripe.instance.confirmPayment(

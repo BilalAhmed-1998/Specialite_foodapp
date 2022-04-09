@@ -70,44 +70,10 @@ class _restaurantDetailScreenState extends State<restaurantDetailScreen> {
                           width: width,
                           child: Stack(children: [
                             Positioned.fill(
-                              child: Image(
-                                image: AssetImage(
-                                  this.widget.restaurant.images[index],
-                                ),
-                                fit: BoxFit.fill,
-                              ),
+                              child: Image.network(this.widget.restaurant.images[index],
+                                fit: BoxFit.fill,),
                             ),
 
-                            // Positioned.fill(
-                            //   child: ClipRRect(
-                            //     borderRadius: BorderRadius.circular(8.0),
-                            //     child: this.widget.restaurant.images[index].runtimeType != String
-                            //         ? FutureBuilder(
-                            //         future: this.widget.restaurant.images[index],
-                            //         builder: (context, snapshot) {
-                            //           if (snapshot.connectionState == ConnectionState.done) {
-                            //             return Image.network(
-                            //               snapshot.data,
-                            //               fit: BoxFit.cover,
-                            //             );
-                            //           }
-                            //
-                            //           if (snapshot.connectionState ==
-                            //               ConnectionState.waiting) {
-                            //             return SizedBox(
-                            //               height: 400,
-                            //               child:
-                            //               CircularProgressIndicator
-                            //                   .adaptive(),
-                            //             );
-                            //           }
-                            //         })
-                            //         : Image.network(
-                            //       this.widget.restaurant.images[index],
-                            //       fit: BoxFit.cover,
-                            //     ),
-                            //   ),
-                            // ),
                           ]),
                         );
                       }),
@@ -212,11 +178,15 @@ class _restaurantDetailScreenState extends State<restaurantDetailScreen> {
                           SizedBox(
                             width: 8.w,
                           ),
-                          Text(
-                            this.widget.restaurant.address,
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.normal,
+                          Flexible(
+                            flex: 1,
+                            child: Text(
+                              this.widget.restaurant.address,
+                              overflow: TextOverflow.fade,
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.normal,
+                              ),
                             ),
                           ),
                         ],
@@ -324,7 +294,9 @@ class _restaurantDetailScreenState extends State<restaurantDetailScreen> {
                 mainCheckout.dineIn = widget.restaurant.dineIn;
                 mainCheckout.seatsLeft = 1;
                 mainCheckout.totalSeats = widget.restaurant.seatsLeft;
+
                // mainCheckout.dateTime = DateTime.now();
+
                 for(var i=0;i<widget.restaurant.restaurantItems.length;i++) {
                   if (widget.isSelectedItems[i] == true) {
 
@@ -333,14 +305,15 @@ class _restaurantDetailScreenState extends State<restaurantDetailScreen> {
                     mainCheckout.orderSummary.add(CheckoutItems(
                         image: widget.restaurant.restaurantItems[i].image,
                         title:  widget.restaurant.restaurantItems[i].itemTitle,
-                        price:  widget.restaurant.restaurantItems[i].timeCost.values.elementAt(
-                            widget.restaurant.restaurantItems[i].lengthTimeCost - 1),
-                        time:  widget.restaurant.restaurantItems[i].timeCost.keys.elementAt(
-                            widget.restaurant.restaurantItems[i].lengthTimeCost - 1),
+                        price: widget.restaurant.restaurantItems[i].timeCost.values.elementAt(0),
+                        time:  widget.restaurant.restaurantItems[i].timeCost.keys.elementAt(0),
                         quantity: 1
                     ));
                   }
                 }
+
+
+
                 mainCheckout.calculateSubTotal();
 
                 Navigator.push(context,

@@ -119,7 +119,7 @@ class _checkoutScreenState extends State<checkoutScreen> {
                                     ),
                                     width: 24.w,
                                     height: 24.w,
-                                    child: Image.asset(
+                                    child: Image.network(
                                       mainCheckout.orderSummary[selectedItemNo].image,
                                       fit: BoxFit.fill,
                                     ),

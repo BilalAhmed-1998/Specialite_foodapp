@@ -32,7 +32,7 @@ class orderScreen extends StatefulWidget {
 
     for(var i =0;i<row;i++) {
       ///by default last radio button is selected///
-      radiobools[i][selectedItems[i].lengthTimeCost-1] = true;
+      radiobools[i][0] = true;
 
 
     }
@@ -262,13 +262,19 @@ class _orderScreenState extends State<orderScreen> {
                   ),
 
                   calendarStyle: CalendarStyle(
+                    selectedTextStyle: TextStyle(
+                      color: Colors.black
+                    ),
                     todayDecoration: BoxDecoration(
                       color:  Colors.black.withOpacity(0.5),
                       shape: BoxShape.circle,
+
                     ),
                     selectedDecoration: BoxDecoration(
+
                       color: Color(0xfffdb601),
                       shape: BoxShape.circle,
+
                       //borderRadius: BorderRadius.circular(8),
                     ),
                   ),
@@ -350,7 +356,7 @@ class _orderScreenState extends State<orderScreen> {
                           ),
                           width: 34.w,
                           height: 34.w,
-                          child: Image.asset(this.widget.selectedItems[selectedItemNo].image,
+                          child: Image.network(this.widget.selectedItems[selectedItemNo].image,
                           fit: BoxFit.fill,),
 
                         ),
@@ -412,7 +418,7 @@ class _orderScreenState extends State<orderScreen> {
                                     }
                                 ),
                                   Text(
-                                          widget.selectedItems[selectedItemNo].timeCost.keys.elementAt(radioNo),
+                                          widget.selectedItems[selectedItemNo].timeCost.keys.elementAt(radioNo)+":00",
                                           style: TextStyle(
                                             fontSize: 14.sp,
                                             color:Colors.grey.shade700,

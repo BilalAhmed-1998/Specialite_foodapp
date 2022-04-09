@@ -28,7 +28,7 @@ class _favourites_cardState extends State<favourites_card> {
                   borderRadius: BorderRadius.circular(8.0),
                   child: Container(
                     width:width,
-                    child: Image.asset(
+                    child: Image.network(
                       widget.fav.images[0],
                       fit: BoxFit.fill,
                     ),

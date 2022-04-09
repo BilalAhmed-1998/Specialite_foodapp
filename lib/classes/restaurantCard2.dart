@@ -34,41 +34,9 @@ class _restaurantCard2State extends State<restaurantCard2> {
               height: 152.h,
               child: Stack(
               children: [
-                // Positioned.fill(
-                //   child: ClipRRect(
-                //     borderRadius: BorderRadius.circular(8.0),
-                //     child: this.restaurant.images[0].runtimeType!=String?FutureBuilder(
-                //         future: this.restaurant.images[0],
-                //         builder: (context, snapshot) {
-                //           if (snapshot.connectionState == ConnectionState.done) {
-                //             if(snapshot.hasError)
-                //               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(snapshot.error.toString())));
-                //             else {
-                //               return Image.network(
-                //                 snapshot.data,
-                //                 fit: BoxFit.cover,
-                //               );
-                //             }
-                //           }
-                //           if (snapshot.connectionState == ConnectionState.waiting) {
-                //             return SizedBox(
-                //               height: 400,
-                //               child: CircularProgressIndicator.adaptive(),
-                //             );
-                //           }
-                //         }):Image.network(
-                //       this.restaurant.images[0],
-                //       fit: BoxFit.cover,
-                //     ),
-                //   ),
-                // ),
                 Positioned.fill(
-                  child: Image(image: AssetImage(this.widget.restaurant.images[0],
-                  ),
-                    // height: this.widget.height,
-                    // width: this.widget.width,
-                    fit: BoxFit.fill,
-                  ),
+                  child: Image.network(this.widget.restaurant.images[0],
+                    fit: BoxFit.fill,),
                 ),
                 Positioned(
                   left: 12.w,
