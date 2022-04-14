@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
-import 'package:specialite_foodapp/screens/checkout_paymentSelection.dart';
+import 'package:qr_flutter/qr_flutter.dart';
+
 
 import '../classes/allClasses.dart';
 import '../dummyData.dart';
@@ -10,9 +10,11 @@ import '../dummyData.dart';
 
 
 class checkoutScreen2 extends StatefulWidget {
-  //const checkoutScreen2({Key? key}) : super(key: key);
   static const routeName = '/checkoutScreen2';
 
+  Order order;
+  
+  checkoutScreen2({this.order});
 
   @override
   _checkoutScreen2State createState() => _checkoutScreen2State();
@@ -22,8 +24,6 @@ class _checkoutScreen2State extends State<checkoutScreen2> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
-    mainCheckout = Provider.of<Checkout>(context, listen: false);
     return Scaffold(
       backgroundColor: Color(0xffF0F3FD),
       appBar: AppBar(
@@ -52,7 +52,7 @@ class _checkoutScreen2State extends State<checkoutScreen2> {
       body: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.max,
-mainAxisAlignment:MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment:MainAxisAlignment.spaceEvenly,
           children: [
             Container(
               margin: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
@@ -93,7 +93,7 @@ mainAxisAlignment:MainAxisAlignment.spaceEvenly,
                           ],
                         ),
                         Text(
-                          mainCheckout.dateTime,
+                          widget.order.dateTime,
                           style: TextStyle(
                             fontSize: 14.sp,
                             color: Colors.grey.shade800,
@@ -103,35 +103,23 @@ mainAxisAlignment:MainAxisAlignment.spaceEvenly,
                           height: 20.h,
                         ),
                         for (var selectedItemNo = 0;
-                        selectedItemNo < mainCheckout.orderSummary.length;
+                        selectedItemNo < widget.order.orderSummary.length;
                         selectedItemNo++)
                           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                             Container(
-                              // color: Colors.amber,
+                              margin: EdgeInsets.only(bottom: 10.h),
                               width: 140.w,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Container(
-                                    margin: EdgeInsets.only(bottom: 8.h),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(2),
-                                    ),
-                                    width: 24.w,
-                                    height: 24.w,
-                                    child: Image.asset(
-                                      mainCheckout.orderSummary[selectedItemNo].image,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
                                   SizedBox(
                                     width: 8.w,
                                   ),
                                   Text(
-                                    mainCheckout.orderSummary[selectedItemNo].title
+                                   widget.order.orderSummary[selectedItemNo].quantity.toString()+' x '+ widget.order.orderSummary[selectedItemNo].title
                                         .split(' ')
-                                        .first,
+                                        .last,
                                     style: TextStyle(
                                       fontSize: 14.sp,
                                       color: Colors.grey.shade700,
@@ -146,11 +134,10 @@ mainAxisAlignment:MainAxisAlignment.spaceEvenly,
                               alignment: Alignment.centerRight,
                               width: 70,
                               child:
-                              Consumer<Checkout>(
-                                builder: (context, orderSummary, child) => Text(
+                               Text(
                                   "¥ " +
-                                      (mainCheckout.orderSummary[selectedItemNo].price *
-                                          orderSummary
+                                      (widget.order.orderSummary[selectedItemNo].price *
+                                          widget.order
                                               .orderSummary[selectedItemNo].quantity)
                                           .toString(),
                                   style: TextStyle(
@@ -160,7 +147,6 @@ mainAxisAlignment:MainAxisAlignment.spaceEvenly,
                                   textAlign: TextAlign.center,
                                 ),
                               ),
-                            )
                           ]),
                         Divider(
                           height: 30.h,
@@ -177,16 +163,14 @@ mainAxisAlignment:MainAxisAlignment.spaceEvenly,
                                 color: Colors.grey.shade700,
                               ),
                             ),
-                            Consumer<Checkout>(
-                              builder: (context, orderSummary, child) => Text(
-                                "¥ " + orderSummary.subtotal.toString(),
+                            Text(
+                                "¥ " + widget.order.subtotal.toString(),
                                 style: TextStyle(
                                   fontSize: 14.sp,
                                   color: Color(0xff555555),
                                 ),
                                 textAlign: TextAlign.center,
                               ),
-                            ),
 
                           ],
                         ),
@@ -206,7 +190,7 @@ mainAxisAlignment:MainAxisAlignment.spaceEvenly,
                               ),
                             ),
                             Text(
-                              "¥ 20.0",
+                              "% $serviceFee",
                               style: TextStyle(
                                 fontSize: 14.sp,
                                 color: Color(0xff555555),
@@ -229,7 +213,7 @@ mainAxisAlignment:MainAxisAlignment.spaceEvenly,
                               ),
                             ),
                             Text(
-                              "¥ 20.0",
+                              "% $tax",
                               style: TextStyle(
                                 fontSize: 14.sp,
                                 color: Color(0xff555555),
@@ -268,9 +252,8 @@ mainAxisAlignment:MainAxisAlignment.spaceEvenly,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Consumer<Checkout>(
-                          builder: (context, orderSummary, child) => Text(
-                            "¥ " + orderSummary.subtotal.toString(),
+                        Text(
+                            "¥ " + widget.order.subtotal.toString(),
                             style: TextStyle(
                               fontSize: 14.sp,
                               color: Colors.black,
@@ -278,7 +261,7 @@ mainAxisAlignment:MainAxisAlignment.spaceEvenly,
                             ),
                             textAlign: TextAlign.center,
                           ),
-                        ),
+
 
                       ],
                     ),
@@ -289,10 +272,12 @@ mainAxisAlignment:MainAxisAlignment.spaceEvenly,
             ),
             SizedBox(height: 120.h,),
             Container(
-              child: Image.asset("assets/images/pro15.png",
-              height: 234.h,
-              width: 234.w,
-              fit: BoxFit.fill,),
+              child: QrImage(
+                data: widget.order.orderId,
+                version: QrVersions.auto,
+                size: 200,
+                gapless: false,
+              )
             ),
 
           ],

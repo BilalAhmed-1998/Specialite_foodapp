@@ -24,6 +24,8 @@ import 'package:specialite_foodapp/services/notificationService.dart';
 import 'package:specialite_foodapp/services/wrapper.dart';
 import 'package:geocoding/geocoding.dart';
 import 'classes/allClasses.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Future<void> backgroundHandler(RemoteMessage message) async {
   print('message from background');
@@ -44,6 +46,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return ScreenUtilInit(
       designSize:  Size(390, 844),
       builder: () =>MultiProvider(
@@ -57,6 +60,18 @@ class MyApp extends StatelessWidget {
               initialData: null),
         ],
         child: MaterialApp(
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+            //for languages with right to left directions
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('ja'),
+            Locale('en'),
+          ],
+
           theme: ThemeData(
 
             fontFamily: "regular"

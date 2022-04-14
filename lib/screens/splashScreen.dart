@@ -25,7 +25,7 @@ class splashScreen extends StatelessWidget {
       if(cities.contains(placeMarks[0].administrativeArea)){
         homeMainCity = placeMarks[0].administrativeArea;
       }
-
+      // print(placeMarks[1]);
       Navigator.pushNamed(context, goTopage);
     });
 
@@ -62,7 +62,7 @@ class splashScreen extends StatelessWidget {
                   Image.asset("assets/images/splashlogo.png"),
                   SizedBox(height: 15.h,),
                   CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation((Colors.black)),
+                    valueColor: AlwaysStoppedAnimation((Colors.black12)),
                   ),
 
 

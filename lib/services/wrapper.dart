@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:specialite_foodapp/dummyData.dart';
 import 'package:specialite_foodapp/screens/checkout_paymentSelection.dart';
+import 'package:specialite_foodapp/screens/emailVerificationScreen.dart';
 import 'package:specialite_foodapp/screens/homeScreen.dart';
 import 'package:specialite_foodapp/screens/loadingScreen.dart';
 import 'package:specialite_foodapp/screens/loginScreen.dart';
@@ -22,7 +23,7 @@ class Wrapper extends StatelessWidget {
     final firebaseUser =   Provider.of<AppUser>(context);
 
     if(firebaseUser!=null) {
-      return homeScreen();
+    return homeScreen();
     }
     else {
       return loginScreen();

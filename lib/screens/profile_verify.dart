@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:specialite_foodapp/dummyData.dart';
 import 'package:specialite_foodapp/screens/profile_phone.dart';
 import 'package:specialite_foodapp/screens/profile_refer.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 import '../classes/OtpInput.dart';
 
@@ -54,7 +56,7 @@ class _profile_verifyState extends State<profile_verify> {
               width: 12.w,
             ),
             Text(
-              'Number Verify',
+              AppLocalizations.of(context).numberVerify,
               style: TextStyle(
                 color: const Color(0xff121212),
                 fontSize: 18.sp,
@@ -76,7 +78,7 @@ class _profile_verifyState extends State<profile_verify> {
               child: Column(
                 children: [
                   Text(
-                    'Verification',
+                    AppLocalizations.of(context).verification,
                     style: TextStyle(
                       color: Color(0xff121212),
                       fontSize: 20.sp,
@@ -88,7 +90,7 @@ class _profile_verifyState extends State<profile_verify> {
                     height: 4.h,
                   ),
                   Text(
-                    'Code is sent to '+phoneNo.toString(),
+                    AppLocalizations.of(context).codeIsSend,
                     style: TextStyle(
                       color: Color(0xff555555),
                       fontSize: 14.sp,
@@ -116,28 +118,14 @@ class _profile_verifyState extends State<profile_verify> {
                   SizedBox(
                     height: 32.h,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Didn't receive code? ",
-                        style: TextStyle(
-                          color: Color(0xff555555),
-                          fontSize: 14.sp,
-                          fontFamily: 'regular',
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      Text(
-                        'Request again',
-                        style: TextStyle(
-                          color: Color(0xff121212),
-                          fontSize: 14.sp,
-                          fontFamily: 'regular',
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ],
+                  Text(
+                    AppLocalizations.of(context).didNotReceive,
+                    style: TextStyle(
+                      color: Color(0xff555555),
+                      fontSize: 14.sp,
+                      fontFamily: 'regular',
+                      fontWeight: FontWeight.w400,
+                    ),
                   )
                 ],
               ),
@@ -164,7 +152,7 @@ class _profile_verifyState extends State<profile_verify> {
                 ),
                 child: Center(
                   child: Text(
-                    'Verify number',
+                    AppLocalizations.of(context).verifyNumber,
                     style: TextStyle(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w500,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:specialite_foodapp/classes/favourites_card.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../classes/allClasses.dart';
 import '../dummyData.dart';
@@ -63,7 +64,7 @@ class _restaurant_searchState extends State<restaurant_search> {
             ),
             backgroundColor: const Color(0xffF0F3FD),
             borderRadius: BorderRadius.circular(8),
-            placeholder: "Search for shop & restaurants",
+            placeholder: AppLocalizations.of(context).searchForShopRestaurants,
           )),
       body: Container(
         margin: EdgeInsets.only(left: 20.w, right: 20.w, top: 20.h),
@@ -72,7 +73,7 @@ class _restaurant_searchState extends State<restaurant_search> {
             Container(
               alignment: Alignment.centerLeft,
               child: Text(
-                mainShowList.length!=0?'${mainShowList.length} restaurants found':"Popular searches",
+                mainShowList.length!=0?'${mainShowList.length} restaurants found':AppLocalizations.of(context).popSearch,
 
                 style: TextStyle(
                   color: Colors.black,

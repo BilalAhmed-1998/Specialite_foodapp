@@ -9,6 +9,7 @@ import 'package:specialite_foodapp/classes/allClasses.dart';
 import 'package:specialite_foodapp/dummyData.dart';
 import 'package:specialite_foodapp/screens/checkoutScreen.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 class orderScreen extends StatefulWidget {
@@ -122,7 +123,7 @@ class _orderScreenState extends State<orderScreen> {
                         width: 171.w,
                         height: 40.h,
                         child: Center(
-                          child: Text("Dine In",
+                          child: Text(AppLocalizations.of(context).dine,
                           style: TextStyle(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w600,
@@ -135,7 +136,7 @@ class _orderScreenState extends State<orderScreen> {
                       width: 171.w,
                       height: 40.h,
                       child: Center(
-                        child: Text("Take Away",
+                        child: Text(AppLocalizations.of(context).take,
                           style: TextStyle(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w600,
@@ -176,7 +177,7 @@ class _orderScreenState extends State<orderScreen> {
                         ),
                         SizedBox(width: 10.w,),
                         Center(
-                          child: Text("Seats",
+                          child: Text(AppLocalizations.of(context).seats,
                           textAlign: TextAlign.start,
                           style: TextStyle(
                             fontSize: 18.sp,
@@ -216,6 +217,7 @@ class _orderScreenState extends State<orderScreen> {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: TableCalendar(
+                  locale: 'ja',
                   focusedDay:_focusedDay,
                   firstDay: DateTime.now(),
                   lastDay: DateTime.utc(2025, 1, 1),
@@ -242,7 +244,7 @@ class _orderScreenState extends State<orderScreen> {
                               color: Color(0xfffdb601),
                             ),
                             SizedBox(width: 12.w,),
-                            Text("Calendar",
+                            Text(AppLocalizations.of(context).calendar,
                               style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 18.sp,
@@ -251,7 +253,7 @@ class _orderScreenState extends State<orderScreen> {
                           ],
                         ),
                           SizedBox(height: 3.h,),
-                          Text(DateFormat('dd MMMM').format(_selectedDay),
+                          Text(DateFormat('dd MMMM','ja').format(_selectedDay),
                           style: TextStyle(
                             fontSize: 14.sp,
                             color: Color(0xff555555),
@@ -319,7 +321,7 @@ class _orderScreenState extends State<orderScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Select Time",
+                        Text(AppLocalizations.of(context).selectTime,
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 18.sp,
@@ -547,7 +549,7 @@ class _orderScreenState extends State<orderScreen> {
                   mainCheckout.dineIn = false;
                 }
 
-                mainCheckout.dateTime = "  "+DateFormat('dd MMMM').format(_selectedDay)+ " at "+DateFormat('hh:mm a').format(DateTime.now());
+                mainCheckout.dateTime = "  "+DateFormat('dd MMMM','ja').format(_selectedDay)+ "（木）"+DateFormat('hh:mm a').format(DateTime.now());
 
                 Navigator.pushNamed(context, checkoutScreen.routeName);
 
@@ -560,7 +562,7 @@ class _orderScreenState extends State<orderScreen> {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Center(
-                  child: Text("Cart",
+                  child: Text(AppLocalizations.of(context).cart,
                    style: TextStyle(
                      color: Colors.black,
                      fontSize: 16.sp,

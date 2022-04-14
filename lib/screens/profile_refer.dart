@@ -9,6 +9,7 @@ import 'package:specialite_foodapp/screens/profile_homepage.dart';
 import 'package:specialite_foodapp/screens/profile_copied.dart';
 import 'package:flutter/services.dart';
 import 'package:specialite_foodapp/screens/profile_phone.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 class profile_refer extends StatefulWidget {
@@ -49,7 +50,7 @@ class _profile_referState extends State<profile_refer> {
               width: 12.w,
             ),
             Text(
-              'Refer a friend',
+              AppLocalizations.of(context).referAFriend,
               style: TextStyle(
                 color: const Color(0xff121212),
                 fontSize: 18.sp,
@@ -66,6 +67,7 @@ class _profile_referState extends State<profile_refer> {
 
         child: Column(
           children: [
+            SizedBox(height: 20.h,),
             Container(
               height: 200.h,
               width: 319.w,
@@ -76,7 +78,7 @@ class _profile_referState extends State<profile_refer> {
             ),
             Center(
               child: Text(
-                'Refer a friend',
+                AppLocalizations.of(context).referAFriend,
                 style: TextStyle(
                   fontSize: 20.sp,
                   fontFamily: 'regular',
@@ -87,7 +89,7 @@ class _profile_referState extends State<profile_refer> {
             ),
             Center(
               child: Text(
-                'And you can both earn a reward',
+                  AppLocalizations.of(context).andYouCanBothEarnReward,
                 style: TextStyle(
                   fontSize: 14.sp,
                   fontFamily: 'regular',
@@ -101,7 +103,7 @@ class _profile_referState extends State<profile_refer> {
             ),
             Container(
               width: 342.w,
-              height: 208.h,
+              // height: 208.h,
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
@@ -126,15 +128,15 @@ class _profile_referState extends State<profile_refer> {
                   ),
                   Column(
                     children: [
-                      referralCard("assets/images/pro10.png", 'Invite your friends', 'Just share your link',1),
+                      referralCard("assets/images/pro10.png",  AppLocalizations.of(context).inviteYourFriends,  AppLocalizations.of(context).shareLink,1),
                       SizedBox(
                         height: 28.h,
                       ),
-                      referralCard("assets/images/pro10.png", 'They hit the restaurant', 'with reward',2),
+                      referralCard("assets/images/pro10.png",  AppLocalizations.of(context).hitRestaurant,  AppLocalizations.of(context).withReward,2),
                       SizedBox(
                         height: 28.h,
                       ),
-                      referralCard("assets/images/pro10.png", 'You will be rewarded', 'you will get a reward',3),
+                      referralCard("assets/images/pro10.png",  AppLocalizations.of(context).willGetReward, '次回割引をご利用いただけます',3),
                     ],
                   ),
 
@@ -184,7 +186,7 @@ class _profile_referState extends State<profile_refer> {
                       ),
 
                       Text(
-                        'Share this code with your Friends',
+                        AppLocalizations.of(context).shareCode,
                         style: TextStyle(
                           fontSize: 12.sp,
                           fontFamily: 'regular',
@@ -211,7 +213,7 @@ class _profile_referState extends State<profile_refer> {
                         // dispose the timer in case something else has triggered the dismiss.
                         timer?.cancel();
                         timer = null;
-                      });;
+                      });
                     },
                     child: Container(
                       height: 32.h,
@@ -252,7 +254,7 @@ class _profile_referState extends State<profile_refer> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      'Refer friends now',
+                      AppLocalizations.of(context).referFriendsNow,
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontFamily: 'regular',

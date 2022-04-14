@@ -51,8 +51,8 @@ class restaurantItemCard extends StatelessWidget {
                 color: Colors.black,
                 fontWeight: FontWeight.w600,
               ),),
-              Container(
-                width: 170.w,
+              Flexible(
+                flex: 1,
                 child: Text(this.restaurantItem.description,
                   style: TextStyle(
                     fontSize: 14.sp,

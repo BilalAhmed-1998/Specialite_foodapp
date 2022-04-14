@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:specialite_foodapp/classes/allClasses.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:specialite_foodapp/dummyData.dart';
 import 'package:specialite_foodapp/screens/homeScreen.dart';
 
 class AuthService {
@@ -36,6 +37,7 @@ class AuthService {
     try {
       dynamic result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
+
       return _userFromFirebase(result.user);
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context)
@@ -87,15 +89,12 @@ class AuthService {
                 idToken: googleAuth.idToken,
                 accessToken: googleAuth.accessToken),
           );
-
           return _userFromFirebase(result.user);
         }
       }
-
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.message)));
-      print(e.message);
     }
   }
 

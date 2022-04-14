@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:specialite_foodapp/dummyData.dart';
@@ -6,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 import 'package:specialite_foodapp/screens/profile_picture.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 
@@ -20,10 +22,12 @@ class _profile_editState extends State<profile_edit> {
 
   TextEditingController controller1;
   TextEditingController controller2;
-  String proName;
-  String proEmail;
+  String proName = (FirebaseAuth.instance.currentUser.displayName!=null)?FirebaseAuth.instance.currentUser.displayName:"";
+  String proEmail = (FirebaseAuth.instance.currentUser.email!=null)?FirebaseAuth.instance.currentUser.email:"";
   String proPassword;
   final ImagePicker _picker = ImagePicker();
+
+
 
   _imageCamera() async {
     final XFile photo = await _picker.pickImage(source: ImageSource.camera);
@@ -196,7 +200,7 @@ class _profile_editState extends State<profile_edit> {
                             width: 32.w,
                           ),
                           Text(
-                            'Edit Pofile',
+                            AppLocalizations.of(context).editProfile,
                             style: TextStyle(
                               fontSize: 20.sp,
                               fontFamily: 'regular',
@@ -254,7 +258,7 @@ class _profile_editState extends State<profile_edit> {
                         //contentPadding: EdgeInsets.symmetric(vertical: 10),
                           fillColor: Colors.white,
                           filled: true,
-                          hintText: 'Name',
+                          hintText: AppLocalizations.of(context).name,
                           hintStyle: TextStyle(
                             color: const Color(0xff121212),
                             fontSize: 16.sp,
@@ -296,7 +300,7 @@ class _profile_editState extends State<profile_edit> {
                         //contentPadding: EdgeInsets.symmetric(vertical: 10),
                           fillColor: Colors.white,
                           filled: true,
-                          hintText: 'Email ID',
+                          hintText: AppLocalizations.of(context).email,
                           hintStyle: TextStyle(
                               fontSize: 16.sp,
                               color: const Color(0xff121212),
@@ -341,7 +345,7 @@ class _profile_editState extends State<profile_edit> {
                         //contentPadding: EdgeInsets.symmetric(vertical: 10),
                         fillColor: Colors.white,
                         filled: true,
-                        hintText: 'Password',
+                        hintText: AppLocalizations.of(context).password,
                         hintStyle: TextStyle(
                             fontSize: 16.sp,
                             color: const Color(0xff121212),
@@ -366,6 +370,12 @@ class _profile_editState extends State<profile_edit> {
                 name=proName;
                 emailId=proEmail;
                 password=proPassword;
+
+                FirebaseAuth.instance.currentUser.updateDisplayName(name);
+                FirebaseAuth.instance.currentUser.updatePassword(password);
+                FirebaseAuth.instance.currentUser.updateEmail(emailId);
+
+                Navigator.popAndPushNamed(context, profile_homepage.routeName);
               },
               child: Container(
                 height: 56.h,
@@ -384,7 +394,7 @@ class _profile_editState extends State<profile_edit> {
                 ),
                 child: Center(
                   child: Text(
-                    'Done',
+                    AppLocalizations.of(context).done,
                     style: TextStyle(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w500,

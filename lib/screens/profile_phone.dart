@@ -10,6 +10,8 @@ import 'package:specialite_foodapp/screens/profile_copied.dart';
 import 'package:specialite_foodapp/screens/profile_dialogue.dart';
 import 'package:specialite_foodapp/screens/profile_refer.dart';
 import 'package:specialite_foodapp/screens/profile_verify.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class profile_phone extends StatefulWidget {
   static const routeName = '/profile_phone';
@@ -49,7 +51,7 @@ class _profile_phoneState extends State<profile_phone> {
               width: 12.w,
             ),
             Text(
-              'Continue with phone',
+             AppLocalizations.of(context).continueWithPhone,
               style: TextStyle(
                 color: const Color(0xff121212),
                 fontSize: 18.sp,
@@ -83,7 +85,7 @@ class _profile_phoneState extends State<profile_phone> {
                   height: 25.h,
                 ),
                 Text(
-                  'Phone Number',
+                  AppLocalizations.of(context).phoneNumber,
                   style: TextStyle(
                     color: Color(0xff121212),
                     fontSize: 20.sp,
@@ -120,7 +122,7 @@ class _profile_phoneState extends State<profile_phone> {
                         //contentPadding: EdgeInsets.symmetric(vertical: 10),
                         fillColor: Colors.white,
                         filled: true,
-                        hintText: 'Enter mobile number',
+                        hintText: AppLocalizations.of(context).enterMobileNumber,
                         hintStyle: TextStyle(
                             color: const Color(0xff121212),
                             fontSize: 16.sp,
@@ -136,7 +138,7 @@ class _profile_phoneState extends State<profile_phone> {
                   height: 12.h,
                 ),
                 Text(
-                  'You’ll receive a 6 digit code to verify next',
+                  AppLocalizations.of(context).receiveDigitCode,
                   style: TextStyle(
                     color: Color(0xff555555),
                     fontSize: 14.sp,
@@ -222,7 +224,7 @@ class _profile_phoneState extends State<profile_phone> {
                 ),
                 child: Center(
                   child: Text(
-                    'Continue',
+                    AppLocalizations.of(context).cont,
                     style: TextStyle(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w500,

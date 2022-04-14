@@ -5,16 +5,19 @@ import 'package:flutter_credit_card/credit_card_widget.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:specialite_foodapp/screens/homeScreen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../classes/allClasses.dart';
 import '../dummyData.dart';
 import '../services/paymentService.dart';
 import 'loadingScreen.dart';
 
 class checkout_chooseExisting extends StatefulWidget {
   static const routeName = '/checkout_chooseExisting';
-  double amount;
+  int amount;
+  Order order;
   List cards;
-  checkout_chooseExisting({this.amount, this.cards});
+  checkout_chooseExisting({this.amount, this.cards,this.order});
   @override
   _checkout_chooseExisting createState() => _checkout_chooseExisting();
 }
@@ -42,7 +45,7 @@ class _checkout_chooseExisting extends State<checkout_chooseExisting> {
             amount: (widget.amount.round()).toString(),
             currency: 'JPY',
             card: current);
-
+        print(response.success);
         if(response.success){
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -50,10 +53,22 @@ class _checkout_chooseExisting extends State<checkout_chooseExisting> {
               duration: Duration(seconds: 2),
             ),
           );
+
+          await dbMain.updateOrders(widget.order);
+          Navigator.popUntil(context, (route) => false);
+          Navigator.pushNamed(context, homeScreen.routeName);
+        }else{
+          Navigator.pop(context);
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('transaction failed'),
+              duration: Duration(seconds: 2),
+            ),
+          );
         }
 
-        Navigator.popUntil(context, (route) => false);
-        Navigator.pushNamed(context, homeScreen.routeName);
+
       },
     );
     Widget cancelButton = TextButton(
@@ -126,7 +141,7 @@ class _checkout_chooseExisting extends State<checkout_chooseExisting> {
               width: 12.w,
             ),
             Text(
-              'Choose Existing Card',
+              AppLocalizations.of(context).chooseExisting,
               style: TextStyle(
                 color: const Color(0xff121212),
                 fontSize: 18.sp,
@@ -192,7 +207,7 @@ class _checkout_chooseExisting extends State<checkout_chooseExisting> {
                 margin: EdgeInsets.only(left:22.sp,right:22.sp,bottom: 25.h,top: 5.h),
                 child: Center(
                   child: Text(
-                    'Done',
+                    AppLocalizations.of(context).done,
                     style: TextStyle(
                       color: Colors.black,
                       fontFamily: 'poppins',

@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 
+import '../dummyData.dart';
 import 'allClasses.dart';
 
 class favourites_card extends StatefulWidget {
@@ -66,11 +68,28 @@ class _favourites_cardState extends State<favourites_card> {
                   ),
                 ),
                 InkWell(
-                    onTap: () {
-                      setState(() {
-                        widget.fav.favt =
-                        !widget.fav.favt;
-                      });
+                    onTap: () async{
+
+                      if(FirebaseAuth.instance.currentUser!=null){
+
+                        setState(() {
+                          widget.fav.favt =
+                          !widget.fav.favt;
+                        });
+
+                        if(widget.fav.favt){
+                          await dbMain.updateFavtList(widget.fav.uid);
+                        }
+                        else{
+                          await dbMain.deleteFavtList(widget.fav.uid);
+                        }
+
+                      }
+                      else{
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(SnackBar(content: Text("You need to sign in first.")));
+                      }
+
                     },
                     child: (!widget.fav.favt)
                         ? Icon(

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,8 +9,10 @@ import 'package:specialite_foodapp/dummyData.dart';
 import 'package:specialite_foodapp/screens/checkout_favourites.dart';
 import 'package:specialite_foodapp/screens/homeScreen.dart';
 import 'package:specialite_foodapp/screens/profile_homepage.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../classes/allClasses.dart';
+import '../services/wrapper.dart';
 import 'favourite_detail.dart';
 
 class nearby extends StatefulWidget {
@@ -49,7 +52,7 @@ class _nearbyState extends State<nearby> {
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
         title: Text(
-          'Nearby',
+          AppLocalizations.of(context).nearby,
           style: TextStyle(
             color: const Color(0xff121212),
             fontSize: 18.sp,
@@ -180,7 +183,15 @@ class _nearbyState extends State<nearby> {
                 ),
                 InkWell(
                   onTap: () {
-                    Navigator.pushNamed(context, profile_homepage.routeName);
+                    if(FirebaseAuth.instance.currentUser!=null){
+                      Navigator.pushNamed(context, profile_homepage.routeName);
+                    }else{
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text("を利用するためには、ログインが必要です。")));
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, Wrapper.routeName, (route) => false);
+                    }
+
                   },
                   child: Icon(
                     CupertinoIcons.person,

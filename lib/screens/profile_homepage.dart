@@ -17,6 +17,7 @@ import 'package:specialite_foodapp/screens/profile_enterReferral.dart';
 import '../services/authService.dart';
 import '../services/wrapper.dart';
 import 'loadingScreen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class profile_homepage extends StatefulWidget {
   static const routeName = '/profile_homepage';
@@ -32,7 +33,7 @@ class _profile_homepageState extends State<profile_homepage> {
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
         title: Text(
-          'Profile',
+          AppLocalizations.of(context).profile,
           style: TextStyle(
             color: const Color(0xff121212),
             fontSize: 18.sp,
@@ -84,7 +85,7 @@ class _profile_homepageState extends State<profile_homepage> {
                               color: Color(0xffFDB601), shape: BoxShape.circle),
                           height: 60.h,
                           width: 60.w,
-                          child: const ImageIcon(
+                          child: ImageIcon(
                             AssetImage("assets/images/pro1.png"),
                             color: Color(0xFF262626),
                           )),
@@ -96,49 +97,32 @@ class _profile_homepageState extends State<profile_homepage> {
                       Container(
                           padding: EdgeInsets.only(top: 8.h),
                           width: 214.w,
-                          child: name != null
-                              ? Text(
-                                  name,
-                                  style: TextStyle(
-                                    fontSize: 20.sp,
-                                    fontFamily: 'regular',
-                                    fontWeight: FontWeight.w600,
-                                    color: const Color(0xff121212),
-                                  ),
-                                )
-                              : Text(
-                                  "David John",
-                                  style: TextStyle(
-                                    fontSize: 20.sp,
-                                    fontFamily: 'regular',
-                                    fontWeight: FontWeight.w600,
-                                    color: const Color(0xff121212),
-                                  ),
-                                )),
+                          child: Text(
+                            (FirebaseAuth.instance.currentUser.displayName !=
+                                    null)
+                                ? FirebaseAuth.instance.currentUser.displayName
+                                : 'User',
+                            style: TextStyle(
+                              fontSize: 20.sp,
+                              fontFamily: 'regular',
+                              fontWeight: FontWeight.w600,
+                              color: const Color(0xff121212),
+                            ),
+                          )),
                       SizedBox(
                         height: 5.h,
                       ),
                       SizedBox(
                           width: 214.w,
-                          child: emailId != null
-                              ? Text(
-                                  emailId,
-                                  style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontFamily: 'regular',
-                                    fontWeight: FontWeight.w400,
-                                    color: const Color(0xff121212),
-                                  ),
-                                )
-                              : Text(
-                                  "David@gmail.com",
-                                  style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontFamily: 'regular',
-                                    fontWeight: FontWeight.w400,
-                                    color: const Color(0xff121212),
-                                  ),
-                                )),
+                          child: Text(
+                            FirebaseAuth.instance.currentUser.email,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontFamily: 'regular',
+                              fontWeight: FontWeight.w400,
+                              color: const Color(0xff121212),
+                            ),
+                          )),
                     ],
                   ),
                   InkWell(
@@ -159,7 +143,6 @@ class _profile_homepageState extends State<profile_homepage> {
               height: 24.h,
             ),
             Container(
-
               width: 342.w,
               decoration: BoxDecoration(
                 boxShadow: [
@@ -177,68 +160,6 @@ class _profile_homepageState extends State<profile_homepage> {
                 children: [
                   InkWell(
                       enableFeedback: true,
-                      onTap: () {
-                        Navigator.pushNamed(context, profile_order.routeName);
-                      },
-                      child: profileCard("assets/images/pro3.png", "Orders")),
-                  Divider(
-                    height: 1.h,
-                    color: const Color(0xffDFDFDF),
-                    thickness: 2,
-                  ),
-                  InkWell(
-                      enableFeedback: true,
-                      onTap: () {
-                        if(FirebaseAuth.instance.currentUser!=null)
-                          refCode=FirebaseAuth.instance.currentUser.uid;
-                        Navigator.pushNamed(context, profile_refer.routeName);
-                      },
-                      child: profileCard(
-                          "assets/images/pro4.png", "Refer a friend")),
-                  Divider(
-                    height: 1.h,
-                    color: const Color(0xffDFDFDF),
-                    thickness: 2,
-                  ),
-                  InkWell(
-                      enableFeedback: true,
-                      onTap: () {
-                        if(FirebaseAuth.instance.currentUser!=null)
-                          refCode=FirebaseAuth.instance.currentUser.uid;
-                        Navigator.pushNamed(context, profile_enterReferral.routeName);
-                      },
-                      child: profileCard(
-                          "assets/images/pro4.png", "Enter Referral Code")
-                  ),
-                  Divider(
-                    height: 1.h,
-                    color: const Color(0xffDFDFDF),
-                    thickness: 2,
-                  ),
-                  InkWell(
-                      enableFeedback: true,
-                      onTap: () {
-                        Navigator.pushNamed(
-                            context, checkout_paymentSelection.routeName);
-                      },
-                      child: profileCard(
-                          "assets/images/pro5.png", "Payment method")),
-                  Divider(
-                    height: 1.h,
-                    color: const Color(0xffDFDFDF),
-                    thickness: 2,
-                  ),
-                  InkWell(
-                      enableFeedback: true,
-                      onTap: () {},
-                      child: profileCard("assets/images/pro6.png", "Setting")),
-                  Divider(
-                    height: 1.h,
-                    color: const Color(0xffDFDFDF),
-                    thickness: 2,
-                  ),
-                  InkWell(
-                      enableFeedback: true,
                       onTap: () async {
                         showDialog(
                             context: context,
@@ -247,12 +168,78 @@ class _profile_homepageState extends State<profile_homepage> {
                               return loadingScreen();
                             });
 
-                        await AuthService().signOut(context);
+                        await dbMain.getOngoingOrders();
+
+                        Navigator.pop(context);
+                        Navigator.pushNamed(context, profile_order.routeName);
+                      },
+                      child: profileCard("assets/images/pro3.png", AppLocalizations.of(context).orders)),
+                  Divider(
+                    height: 1.h,
+                    color: const Color(0xffDFDFDF),
+                    thickness: 2,
+                  ),
+                  InkWell(
+                      enableFeedback: true,
+                      onTap: () {
+                        if (FirebaseAuth.instance.currentUser != null)
+                          refCode = FirebaseAuth.instance.currentUser.uid;
+                        Navigator.pushNamed(context, profile_refer.routeName);
+                      },
+                      child: profileCard(
+                          "assets/images/pro4.png", AppLocalizations.of(context).referFriend)),
+                  Divider(
+                    height: 1.h,
+                    color: const Color(0xffDFDFDF),
+                    thickness: 2,
+                  ),
+                  InkWell(
+                      enableFeedback: true,
+                      onTap: () {
+                        if (FirebaseAuth.instance.currentUser != null)
+                          refCode = FirebaseAuth.instance.currentUser.uid;
+                        Navigator.pushNamed(
+                            context, profile_enterReferral.routeName);
+                      },
+                      child: profileCard(
+                          "assets/images/pro4.png", "Enter Referral Code")),
+                  Divider(
+                    height: 1.h,
+                    color: const Color(0xffDFDFDF),
+                    thickness: 2,
+                  ),
+
+                  InkWell(
+                      enableFeedback: true,
+                      onTap: () {},
+                      child: profileCard("assets/images/pro6.png", AppLocalizations.of(context).setting)),
+                  Divider(
+                    height: 1.h,
+                    color: const Color(0xffDFDFDF),
+                    thickness: 2,
+                  ),
+                  InkWell(
+                      enableFeedback: true,
+                      onTap: () async {
+                        if (FirebaseAuth.instance.currentUser != null) {
+                          showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (context) {
+                                return loadingScreen();
+                              });
+
+                          await AuthService().signOut(context);
+                        }
 
                         Navigator.pushNamedAndRemoveUntil(
                             context, Wrapper.routeName, (route) => false);
                       },
-                      child: profileCard("assets/images/pro7.png", "Log out")),
+                      child: profileCard(
+                          "assets/images/pro7.png",
+                          (FirebaseAuth.instance.currentUser != null)
+                              ? AppLocalizations.of(context).logout
+                              : AppLocalizations.of(context).login)),
                 ],
               ),
             ),

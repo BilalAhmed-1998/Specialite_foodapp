@@ -7,12 +7,15 @@ import 'package:specialite_foodapp/dummyData.dart';
 import 'package:specialite_foodapp/services/paymentService.dart';
 import 'package:specialite_foodapp/screens/homeScreen.dart';
 
+import '../classes/allClasses.dart';
 import 'loadingScreen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class checkout_addNewCard extends StatefulWidget {
   static const routeName = '/checkout_addNewCard';
-  double amount;
-  checkout_addNewCard({this.amount});
+  Order order;
+  int amount;
+  checkout_addNewCard({this.amount,this.order});
   @override
   State<StatefulWidget> createState() {
     return _checkout_addNewCard();
@@ -57,6 +60,7 @@ class _checkout_addNewCard extends State<checkout_addNewCard> {
           }
 
         }
+        print(response.success);
         if(response.success){
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -64,9 +68,19 @@ class _checkout_addNewCard extends State<checkout_addNewCard> {
               duration: Duration(seconds: 2),
             ),
           );
+
+          await dbMain.updateOrders(widget.order);
+          Navigator.popUntil(context, (route) => false);
+          Navigator.pushNamed(context, homeScreen.routeName);
+        }else{
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('transaction failed'),
+              duration: Duration(seconds: 2),
+            ),
+          );
         }
-        Navigator.popUntil(context, (route) => false);
-        Navigator.pushNamed(context, homeScreen.routeName);
       },
     );
     Widget cancelButton = TextButton(
@@ -135,7 +149,7 @@ class _checkout_addNewCard extends State<checkout_addNewCard> {
               width: 12.w,
             ),
             Text(
-              'Add New Card',
+              AppLocalizations.of(context).addNew,
               style: TextStyle(
                 color: const Color(0xff121212),
                 fontSize: 18.sp,
@@ -196,7 +210,7 @@ class _checkout_addNewCard extends State<checkout_addNewCard> {
                         themeColor: Colors.blue,
                         textColor: Colors.black,
                         cardNumberDecoration: InputDecoration(
-                          labelText: 'Card Number',
+                          labelText: AppLocalizations.of(context).cardNo,
                           hintText: 'XXXX XXXX XXXX XXXX',
                           hintStyle: const TextStyle(color: Colors.black),
                           labelStyle: const TextStyle(color: Colors.black),
@@ -213,7 +227,7 @@ class _checkout_addNewCard extends State<checkout_addNewCard> {
                             borderSide: BorderSide(color: Color(0xfffdb601)),
                           ),
                           enabledBorder: border,
-                          labelText: 'Expiry Date',
+                          labelText: 'MM/YY',
                           hintText: 'MM/YY',
                         ),
                         cvvCodeDecoration: InputDecoration(
@@ -223,7 +237,7 @@ class _checkout_addNewCard extends State<checkout_addNewCard> {
                             borderSide: BorderSide(color: Color(0xfffdb601)),
                           ),
                           enabledBorder: border,
-                          labelText: 'CVV',
+                          labelText: AppLocalizations.of(context).cvc,
                           hintText: 'XXX',
                         ),
                         cardHolderDecoration: InputDecoration(
@@ -233,13 +247,13 @@ class _checkout_addNewCard extends State<checkout_addNewCard> {
                             borderSide: BorderSide(color: Color(0xfffdb601)),
                           ),
                           enabledBorder: border,
-                          labelText: 'Name of Card Holder',
+                          labelText: AppLocalizations.of(context).cardHolder,
                         ),
                         onCreditCardModelChange: onCreditCardModelChange,
                       ),
                       CheckboxListTile(
                           title: Text(
-                              'By saving your card you grant us your consent to store your payment method for future orders.',
+                              AppLocalizations.of(context).bySaving,
                               style: TextStyle(
                                   fontWeight: FontWeight.normal,
                                   fontSize: 12.sp,
@@ -265,7 +279,7 @@ class _checkout_addNewCard extends State<checkout_addNewCard> {
                   margin: EdgeInsets.all(12.w),
                   child: Center(
                     child: Text(
-                      'Done',
+                      AppLocalizations.of(context).done,
                       style: TextStyle(
                         color: Colors.black,
                         fontFamily: 'poppins',

@@ -1,0 +1,7 @@
+#where we put our source translation files
+arb-dir: lib/l10n
+#which translation file will be our template file (default locale)
+#required for localization to work
+template-arb-file: app_ja.arb
+#what to call auto-generated dart files
+output-localization-file: app_localizations.dart

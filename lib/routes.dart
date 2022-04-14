@@ -6,6 +6,7 @@ import 'package:specialite_foodapp/screens/checkout_addNewCard.dart';
 import 'package:specialite_foodapp/screens/checkout_chooseExisting.dart';
 import 'package:specialite_foodapp/screens/checkout_favourites.dart';
 import 'package:specialite_foodapp/screens/checkout_paymentSelection.dart';
+import 'package:specialite_foodapp/screens/emailVerificationScreen.dart';
 import 'package:specialite_foodapp/screens/favourite_detail.dart';
 import 'package:specialite_foodapp/screens/checkout_nearby.dart';
 import 'package:specialite_foodapp/screens/orderScreen.dart';
@@ -37,6 +38,7 @@ final Map <String,WidgetBuilder> routes =  {
   UserInformation.routeName: (context) => UserInformation(),
   loginScreen.routeName: (context) => loginScreen(),
   signUpScreen.routeName:(context) => signUpScreen(),
+  emailVerificationScreen.routeName:(context) => emailVerificationScreen(),
   homeScreen.routeName:(context) => homeScreen(),
   loadingScreen.routeName:(context) => loadingScreen(),
   orderScreen.routeName:(context) => orderScreen(),

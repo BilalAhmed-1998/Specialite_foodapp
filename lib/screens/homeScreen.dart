@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,7 +13,9 @@ import 'package:specialite_foodapp/screens/loadingScreen.dart';
 import 'package:specialite_foodapp/screens/profile_homepage.dart';
 import 'package:specialite_foodapp/screens/restaurantDetailScreen.dart';
 import 'package:specialite_foodapp/screens/restaurant_search.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../services/wrapper.dart';
 import 'checkout_nearby.dart';
 
 class homeScreen extends StatefulWidget {
@@ -64,7 +67,7 @@ class _homeScreenState extends State<homeScreen> {
                   ),
                   SizedBox(width: 12.w),
                   Text(
-                    "Search for shop & restaurants",
+                    AppLocalizations.of(context).searchForShopRestaurants,
                     style: TextStyle(
                       fontSize: 14.sp,
                       color: Colors.grey.shade700,
@@ -220,7 +223,7 @@ class _homeScreenState extends State<homeScreen> {
                           Padding(
                             padding: EdgeInsets.fromLTRB(24.w, 5.h, 0, 12.h),
                             child: Text(
-                              "Good Deals",
+                              AppLocalizations.of(context).goodDeals,
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 20.sp,
@@ -268,7 +271,7 @@ class _homeScreenState extends State<homeScreen> {
                           Padding(
                             padding: EdgeInsets.fromLTRB(24.w, 5.h, 0, 12.h),
                             child: Text(
-                              "New on Speciallite",
+                              AppLocalizations.of(context).newOnSpecialite,
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 20.sp,
@@ -315,7 +318,7 @@ class _homeScreenState extends State<homeScreen> {
                       ):
                       Padding(
                         padding: EdgeInsets.fromLTRB(12,20,12,0),
-                        child: Text("Unfortunately, no restaurant is found in this area! Kindly change the location.",
+                        child: Text("このエリアにはお店が登録されていません。他のエリアを選択し、もう一度検索をしてください。",
                         textAlign: TextAlign.center,
                           style: TextStyle(
                           color: Colors.grey,
@@ -470,7 +473,7 @@ class _homeScreenState extends State<homeScreen> {
                   Padding(
                     padding: EdgeInsets.fromLTRB(24.w, 5.h, 0, 12.h),
                     child: Text(
-                      "Good Deals",
+                      AppLocalizations.of(context).goodDeals,
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 20.sp,
@@ -518,7 +521,7 @@ class _homeScreenState extends State<homeScreen> {
                   Padding(
                     padding: EdgeInsets.fromLTRB(24.w, 5.h, 0, 12.h),
                     child: Text(
-                      "New on Speciallite",
+                      AppLocalizations.of(context).newOnSpecialite,
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 20.sp,
@@ -565,7 +568,7 @@ class _homeScreenState extends State<homeScreen> {
               ):
               Padding(
                 padding: EdgeInsets.fromLTRB(12,20,12,0),
-                child: Text("Unfortunately, no restaurant is found in this area! Kindly change the location.",
+                child: Text("このエリアにはお店が登録されていません。他のエリアを選択し、もう一度検索をしてください。",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.grey,
@@ -619,7 +622,15 @@ class _homeScreenState extends State<homeScreen> {
                 ),
                 InkWell(
                   onTap: () {
-                    Navigator.pushNamed(context, profile_homepage.routeName);
+                    if(FirebaseAuth.instance.currentUser!=null){
+                      Navigator.pushNamed(context, profile_homepage.routeName);
+
+                    }else{
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text("を利用するためには、ログインが必要です。")));
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, Wrapper.routeName, (route) => false);
+                    }
                   },
                   child: Icon(
                     CupertinoIcons.person,

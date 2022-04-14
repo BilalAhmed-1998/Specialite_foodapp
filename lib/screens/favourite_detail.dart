@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -119,11 +120,28 @@ class _favourite_detailState extends State<favourite_detail> {
                                   ),
                                 ),
                                 InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        this.widget.restaurant.favt =
-                                            !this.widget.restaurant.favt;
-                                      });
+                                    onTap: () async{
+
+                                      if(FirebaseAuth.instance.currentUser!=null){
+
+                                        setState(() {
+                                          widget.restaurant.favt =
+                                          !widget.restaurant.favt;
+                                        });
+
+                                        if(widget.restaurant.favt){
+                                          await dbMain.updateFavtList(widget.restaurant.uid);
+                                        }
+                                        else{
+                                          await dbMain.deleteFavtList(widget.restaurant.uid);
+                                        }
+
+                                      }
+                                      else{
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(content: Text("You need to sign in first.")));
+                                      }
+
                                     },
                                     child: (!widget.restaurant.favt)
                                         ? Icon(

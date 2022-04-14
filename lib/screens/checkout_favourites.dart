@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,8 +7,10 @@ import 'package:specialite_foodapp/screens/favourite_detail.dart';
 import 'package:specialite_foodapp/screens/homeScreen.dart';
 import 'package:specialite_foodapp/screens/checkout_nearby.dart';
 import 'package:specialite_foodapp/screens/profile_homepage.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../dummyData.dart';
+import '../services/wrapper.dart';
 
 class checkout_favourites extends StatefulWidget {
   static const routeName = '/checkout_favourites';
@@ -26,7 +29,7 @@ class _checkout_favouritesState extends State<checkout_favourites> {
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
         title: Text(
-          'Favourites',
+          AppLocalizations.of(context).favourites,
           style: TextStyle(
             color: const Color(0xff121212),
             fontSize: 18.sp,
@@ -34,26 +37,36 @@ class _checkout_favouritesState extends State<checkout_favourites> {
           ),
         ),
       ),
-      body: Container(
+      body:(FirebaseAuth.instance.currentUser!=null)?
+      Container(
         margin: EdgeInsets.only(left: 20.w, right: 20.w, top: 20.h),
         child: ListView.builder(
-            itemCount: favList.length,
+            itemCount: allRestaurants.length,
             itemBuilder: (context, index) {
-              if (favList[index].favt) {
+              if (allRestaurants[index].favt) {
                 return InkWell(
                   onTap: () {
                     Navigator.push(context,MaterialPageRoute(
-                      builder: (context) => favourite_detail(restaurant: favList[index]),
+                      builder: (context) => favourite_detail(restaurant: allRestaurants[index]),
                     ));
                   },
-                  child: favourites_card(fav: favList[index]),
+                  child: favourites_card(fav: allRestaurants[index]),
                 );
               } else {
                 return Container();
               }
             }),
+      ):
+      Padding(
+        padding: EdgeInsets.fromLTRB(15,40,15,0),
+        child: Text("お気に入りのお店を見るためには、ログインが必要です。",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 15,
+          ),),
       ),
-      bottomNavigationBar: Container(
+      bottomNavigationBar: Container (
           height: 79.h,
           color: Colors.white,
           child: Container(
@@ -65,7 +78,6 @@ class _checkout_favouritesState extends State<checkout_favourites> {
               children: [
                 InkWell(
                   onTap: (){
-
                     Navigator.pushNamed(context, homeScreen.routeName);
                   },
                   child: Icon(
@@ -99,8 +111,15 @@ class _checkout_favouritesState extends State<checkout_favourites> {
                 ),
                 InkWell(
                   onTap: (){
+                    if(FirebaseAuth.instance.currentUser!=null){
+                      Navigator.pushNamed(context, profile_homepage.routeName);
 
-                    Navigator.pushNamed(context, profile_homepage.routeName);
+                    }else{
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text("を利用するためには、ログインが必要です。")));
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, Wrapper.routeName, (route) => false);
+                    }
                   },
                   child: Icon(
                     CupertinoIcons.person,

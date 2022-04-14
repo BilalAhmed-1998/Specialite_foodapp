@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,11 +8,11 @@ import 'package:specialite_foodapp/screens/loginScreen.dart';
 import 'package:specialite_foodapp/services/authService.dart';
 
 import 'loadingScreen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class signUpScreen extends StatefulWidget {
   //const signUpScreen({Key? key}) : super(key: key);
   static const routeName = '/signUpScreen';
-
 
   @override
   _signUpScreenState createState() => _signUpScreenState();
@@ -32,7 +33,7 @@ class _signUpScreenState extends State<signUpScreen> {
           automaticallyImplyLeading: false,
           backgroundColor: Colors.white,
           centerTitle: true,
-          title: Text("Sign Up",
+          title: Text(AppLocalizations.of(context).signup,
             style: TextStyle(
                 fontFamily: 'regular',
                 fontWeight: FontWeight.w500,
@@ -70,7 +71,7 @@ class _signUpScreenState extends State<signUpScreen> {
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.grey.shade300, width: 1.5),
                         ),
-                        hintText: 'Email Address',
+                        hintText: AppLocalizations.of(context).email,
                         hintStyle: TextStyle(
                           fontSize: 16.sp,
                           color: Color(0xff121212).withOpacity(0.7),
@@ -113,7 +114,7 @@ class _signUpScreenState extends State<signUpScreen> {
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.grey.shade300, width: 1.5),
                         ),
-                        hintText: 'Password',
+                        hintText: AppLocalizations.of(context).password,
                         hintStyle: TextStyle(
                           fontSize: 16.sp,
                           color: Color(0xff121212).withOpacity(0.7),
@@ -128,39 +129,60 @@ class _signUpScreenState extends State<signUpScreen> {
                   enableFeedback: true,
                   onTap: () async {
 
-                    ScaffoldMessenger.of(context)
-                        .showSnackBar(SnackBar(
-                        duration: Duration(seconds: 1),
-                        content: Row(
-                          children: [
-                            SizedBox(
-                              width: 20,
-                            ),
-                            CircularProgressIndicator
-                                .adaptive(
-                              backgroundColor:
-                              Color(0xfffdb601),
-                            ),
-                            SizedBox(
-                              width: 20,
-                            ),
-                            Text(
-                              "Signing Up...",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.bold,
+                    bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(emailController.text);
+                    bool passValid = RegExp("^.{8,}\$").hasMatch(passwordController.text);
+
+                    if(emailValid && passValid && FirebaseAuth.instance.currentUser!=null){
+
+
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(
+                          duration: Duration(seconds: 1),
+                          content: Row(
+                            children: [
+                              SizedBox(
+                                width: 20,
                               ),
-                            ),
-                          ],
-                        )));
+                              CircularProgressIndicator
+                                  .adaptive(
+                                backgroundColor:
+                                Color(0xfffdb601),
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Text(
+                                "Signing Up...",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          )));
 
-                    await AuthService().signUpWithEmailPassword(
-                        context,
-                        emailController.text,
-                        passwordController.text);
 
-                    Navigator.pop(context);
+                      await AuthService().signUpWithEmailPassword(
+                          context,
+                          emailController.text,
+                          passwordController.text);
+                      await FirebaseAuth.instance.currentUser.sendEmailVerification();
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text("メールに送信された確認リンク")));
+                      Navigator.pop(context);
+
+                    }
+                    else {
+                      (!emailValid)?
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text('無効なメール'),))
+                          :ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text('最小8桁のパスワードを入力してください'),));
+                    }
+
+
+
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -170,7 +192,7 @@ class _signUpScreenState extends State<signUpScreen> {
                     alignment: Alignment.center,
                     width: 342.w,
                     height: 56.h,
-                    child: Text("Sign up",
+                    child: Text(AppLocalizations.of(context).signup,
                       style: TextStyle(
                           fontSize: 16.sp,
                           color: Colors.black,
@@ -183,7 +205,7 @@ class _signUpScreenState extends State<signUpScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("Already have an account?",
+                      Text(AppLocalizations.of(context).alreadyAccount,
                         style: TextStyle(
                           fontSize: 16.sp,
                         ),),
@@ -191,7 +213,7 @@ class _signUpScreenState extends State<signUpScreen> {
                         onTap: (){
                           Navigator.pop(context);
                         },
-                        child: Text(" Log In",
+                        child: Text(AppLocalizations.of(context).login,
                           style: TextStyle(
                             fontSize: 16.sp,
                             color: Color(0xffFDB601),
@@ -213,8 +235,6 @@ class _signUpScreenState extends State<signUpScreen> {
                           fontWeight: FontWeight.bold,
                           fontSize: 18.sp,
                         ),),
-
-
                     ],
                   ),
 
@@ -225,17 +245,9 @@ class _signUpScreenState extends State<signUpScreen> {
                 InkWell(
                   onTap: ()async{
 
-                    // showDialog(
-                    //     context: context,
-                    //     barrierDismissible: false,
-                    //     builder: (context) {
-                    //       return loadingScreen();
-                    //     });
+
                     await AuthService().signInWithGoogle(context);
 
-                    // //one for loading ///
-                    // Navigator.pop(context);
-                     //one for signup screen //
                      Navigator.pop(context);
 
                   },
@@ -251,7 +263,7 @@ class _signUpScreenState extends State<signUpScreen> {
                       children: [
                         Image(image: AssetImage("assets/images/google.png")),
                         SizedBox(width: 54.w,),
-                        Text("Sign in with Google",
+                        Text(AppLocalizations.of(context).signGoogle,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 16.sp,
@@ -265,19 +277,14 @@ class _signUpScreenState extends State<signUpScreen> {
                   height: 45.h,
                 ),
                 InkWell(
-                  onTap: () async {
-                    showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (context) {
-                          return loadingScreen();
-                        });
-                    await AuthService().signInAnon(context);
+                  onTap: () {
 
-                    Navigator.pop(context);
+                    Navigator.pushNamed(context, homeScreen.routeName);
+
+
                   },
                   child: Text(
-                    "Continue as a Guest",
+                    AppLocalizations.of(context).continueGuest,
                     style: TextStyle(
                       fontSize: 16.sp,
                       decoration: TextDecoration.underline,

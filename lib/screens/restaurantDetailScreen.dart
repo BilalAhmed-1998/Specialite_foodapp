@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,6 +9,7 @@ import 'package:specialite_foodapp/classes/allClasses.dart';
 import 'package:specialite_foodapp/classes/restaurantItemCard.dart';
 import 'package:specialite_foodapp/dummyData.dart';
 import 'package:specialite_foodapp/screens/orderScreen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class restaurantDetailScreen extends StatefulWidget {
   //const restaurantDetailScreen({Key? key}) : super(key: key);
@@ -108,11 +110,30 @@ class _restaurantDetailScreenState extends State<restaurantDetailScreen> {
                               ),
                             ),
                             InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    this.widget.restaurant.favt =
-                                        !this.widget.restaurant.favt;
-                                  });
+                                onTap: () async{
+
+                                  if(FirebaseAuth.instance.currentUser!=null){
+
+                                    setState(() {
+                                      widget.restaurant.favt =
+                                      !widget.restaurant.favt;
+                                    });
+
+                                    if(widget.restaurant.favt){
+                                      await dbMain.updateFavtList(widget.restaurant.uid);
+                                    }
+                                    else{
+                                      await dbMain.deleteFavtList(widget.restaurant.uid);
+                                    }
+
+                                  }
+                                  else{
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(SnackBar(content: Text("を利用するためには、ログインが必要です。")));
+                                  }
+
+
+
                                 },
                                 child: (!widget.restaurant.favt)
                                     ? Icon(
@@ -219,7 +240,7 @@ class _restaurantDetailScreenState extends State<restaurantDetailScreen> {
                         height: 28.h,
                       ),
                       Text(
-                        "Popular Items",
+                        AppLocalizations.of(context).popularItems,
                         style: TextStyle(
                           fontSize: 20.sp,
                           color: Colors.black,
@@ -251,8 +272,7 @@ class _restaurantDetailScreenState extends State<restaurantDetailScreen> {
                               setState(() {
                                 widget.isSelectedItems[i] =
                                     !widget.isSelectedItems[i];
-                                if (this
-                                    .widget
+                                if (widget
                                     .isSelectedItems
                                     .contains(true)) {
                                   isDisabledButton = false;
@@ -287,13 +307,14 @@ class _restaurantDetailScreenState extends State<restaurantDetailScreen> {
                 onSurface: Color(0xffFdb601),
                 primary: Color(0xffFdb601),
               ),
-              onPressed: !isDisabledButton?(){
+              onPressed: (!isDisabledButton && widget.restaurant.open)?(){
 
                 List <RestaurantItem> tempList=[];
 
                 mainCheckout.dineIn = widget.restaurant.dineIn;
                 mainCheckout.seatsLeft = 1;
                 mainCheckout.totalSeats = widget.restaurant.seatsLeft;
+                mainCheckout.restUid = widget.restaurant.uid;
 
                // mainCheckout.dateTime = DateTime.now();
 
@@ -328,7 +349,7 @@ class _restaurantDetailScreenState extends State<restaurantDetailScreen> {
               }:null,
               child: Center(
                 child: Text(
-                  "Continue",
+                  AppLocalizations.of(context).cont,
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w600,

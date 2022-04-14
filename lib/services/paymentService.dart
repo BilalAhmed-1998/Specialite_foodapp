@@ -57,12 +57,13 @@ class StripeService {
       );
 
       print(paymentMethod["id"]);
-      print('hello');
+      print('processing payment...');
 
       var response = await Stripe.instance.confirmPayment(
           paymentIntent['client_secret'],
           PaymentMethodParams.cardFromMethodId(
-              paymentMethodId: paymentMethod["id"]));
+              paymentMethodId: paymentMethod["id"])
+      );
       print(response.status);
       print(response);
 

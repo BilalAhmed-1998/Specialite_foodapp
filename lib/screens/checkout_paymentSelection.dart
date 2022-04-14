@@ -1,16 +1,19 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:specialite_foodapp/dummyData.dart';
 import 'package:specialite_foodapp/screens/checkout_addNewCard.dart';
 import 'package:specialite_foodapp/screens/checkout_chooseExisting.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../classes/allClasses.dart';
 import '../services/paymentService.dart';
 import 'loadingScreen.dart';
 
 class checkout_paymentSelection extends StatefulWidget {
   static const routeName = '/checkout_paymentSelection';
-  double amount;
+  int amount;
   checkout_paymentSelection({this.amount});
 
   @override
@@ -90,7 +93,7 @@ class _checkout_paymentSelectionState extends State<checkout_paymentSelection> {
               width: 12.w,
             ),
             Text(
-              'Payment',
+              AppLocalizations.of(context).payment,
               style: TextStyle(
                 color: const Color(0xff121212),
                 fontSize: 18.sp,
@@ -119,19 +122,31 @@ class _checkout_paymentSelectionState extends State<checkout_paymentSelection> {
                   cardList=await dbMain.getCards();
                 }
                 Navigator.pop(context);
+                print(widget.amount);
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => checkout_chooseExisting(
                       amount: widget.amount,
                       cards: cardList,
+                      order: Order(
+                        orderId: DateTime.now().toString() + FirebaseAuth.instance.currentUser.uid,
+                        resturauntId: mainCheckout.restUid,
+                          customerId: FirebaseAuth.instance.currentUser.uid,
+                          dateTime: mainCheckout.dateTime,
+                          dineIn: mainCheckout.dineIn,
+                          subtotal: widget.amount,
+                          seats: mainCheckout.dineIn?mainCheckout.seatsLeft:0,
+                          status: 'onGoing',
+                          orderSummary: mainCheckout.orderSummary,
+
+                      ),
                     ),
                   ),
                 );
 
-
               },
-              child: payment_cards(Icons.credit_card_outlined, "Pay with Existing Card",20.h)
+              child: payment_cards(Icons.credit_card_outlined, AppLocalizations.of(context).payExistingCard,20.h)
           ),
           InkWell(
               onTap: (){
@@ -142,12 +157,23 @@ class _checkout_paymentSelectionState extends State<checkout_paymentSelection> {
                   MaterialPageRoute(
                     builder: (context) => checkout_addNewCard(
                       amount: widget.amount,
+                      order: Order(
+                        orderId: DateTime.now().toString() + FirebaseAuth.instance.currentUser.uid,
+                        resturauntId: mainCheckout.restUid,
+                        customerId: FirebaseAuth.instance.currentUser.uid,
+                        dateTime: mainCheckout.dateTime,
+                        dineIn: mainCheckout.dineIn,
+                        subtotal: mainCheckout.subtotal,
+                        seats: mainCheckout.seatsLeft,
+                        status: 'onGoing',
+                        orderSummary: mainCheckout.orderSummary,
+                      ),
                     ),
                   ),
                 );
                 //Navigator.pushNamed(context, checkout_addNewCard.routeName);
               },
-              child: payment_cards(Icons.add, "Pay with New Card",0)
+              child: payment_cards(Icons.add, AppLocalizations.of(context).payAddCard,0)
           ),
 
         ],

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:specialite_foodapp/screens/homeScreen.dart';
@@ -8,6 +9,7 @@ import 'package:specialite_foodapp/screens/signUpScreen.dart';
 
 import '../services/authService.dart';
 import 'loadingScreen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class loginScreen extends StatefulWidget {
   //const loginScreen({Key? key}) : super(key: key);
@@ -33,7 +35,8 @@ class _loginScreenState extends State<loginScreen> {
         backgroundColor: Colors.white,
         centerTitle: true,
         title: Text(
-          "Log In",
+          AppLocalizations.of(context).login,
+
           style: TextStyle(
               fontFamily: 'regular',
               fontWeight: FontWeight.w500,
@@ -70,7 +73,7 @@ class _loginScreenState extends State<loginScreen> {
                         borderSide:
                             BorderSide(color: Colors.grey.shade300, width: 1.5),
                       ),
-                      hintText: 'Email Address',
+                      hintText: AppLocalizations.of(context).email,
                       hintStyle: TextStyle(
                         fontSize: 16.sp,
                         color: Color(0xff121212).withOpacity(0.7),
@@ -115,7 +118,7 @@ class _loginScreenState extends State<loginScreen> {
                         borderSide:
                             BorderSide(color: Colors.grey.shade300, width: 1.5),
                       ),
-                      hintText: 'Password',
+                      hintText: AppLocalizations.of(context).password,
                       hintStyle: TextStyle(
                         fontSize: 16.sp,
                         color: Color(0xff121212).withOpacity(0.7),
@@ -158,7 +161,7 @@ class _loginScreenState extends State<loginScreen> {
                 child: Container(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "Forgot Password?",
+                    AppLocalizations.of(context).forgot,
                     style: TextStyle(
                       fontSize: 16.sp,
                       color: Colors.black,
@@ -208,7 +211,7 @@ class _loginScreenState extends State<loginScreen> {
                   width: 342.w,
                   height: 56.h,
                   child: Text(
-                    "Login",
+                    AppLocalizations.of(context).login,
                     style: TextStyle(
                         fontSize: 16.sp,
                         color: Colors.black,
@@ -224,7 +227,7 @@ class _loginScreenState extends State<loginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Don't have an account?",
+                      AppLocalizations.of(context).dontAccount,
                       style: TextStyle(
                         fontSize: 16.sp,
                       ),
@@ -234,7 +237,7 @@ class _loginScreenState extends State<loginScreen> {
                         Navigator.pushNamed(context, signUpScreen.routeName);
                       },
                       child: Text(
-                        " Sign up",
+                        AppLocalizations.of(context).signup+'へ',
                         style: TextStyle(
                           fontSize: 16.sp,
                           color: Color(0xffFDB601),
@@ -285,7 +288,7 @@ class _loginScreenState extends State<loginScreen> {
                     children: [
                       Image(image: AssetImage("assets/images/google.png")),
                       SizedBox(width: 54.w,),
-                      Text("Sign in with Google",
+                      Text(AppLocalizations.of(context).signGoogle,
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16.sp,
@@ -299,19 +302,21 @@ class _loginScreenState extends State<loginScreen> {
                 height: 45.h,
               ),
               InkWell(
-                onTap: () async {
-                  showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (context) {
-                        return loadingScreen();
-                      });
-                   await AuthService().signInAnon(context);
+                onTap: ()  {
 
-                  Navigator.pop(context);
+                  Navigator.pushNamed(context, homeScreen.routeName);
+                  // showDialog(
+                  //     context: context,
+                  //     barrierDismissible: false,
+                  //     builder: (context) {
+                  //       return loadingScreen();
+                  //     });
+                  //  await AuthService().signInAnon(context);
+                  //
+                  // Navigator.pop(context);
                 },
                 child: Text(
-                  "Continue as a Guest",
+                  AppLocalizations.of(context).continueGuest,
                   style: TextStyle(
                     fontSize: 16.sp,
                     decoration: TextDecoration.underline,

@@ -12,7 +12,7 @@ class referralCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 40.h,
+      // height: 40.h,
       width: 340.w,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,

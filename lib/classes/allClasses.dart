@@ -49,20 +49,24 @@ class RestaurantItem{
 
 
 
-
-
-
 class Order{
 
+
+  String orderId;
+  String resturauntId;
+  String customerId;
   String dateTime;
   bool dineIn;
   List<CheckoutItems> orderSummary;
   int subtotal;
   int seats;
+  String status;
 
-  Order({this.dateTime,this.dineIn,this.orderSummary,this.seats,this.subtotal});
+  Order({this.orderId,this.customerId,this.resturauntId,this.dateTime,this.dineIn,this.orderSummary,this.seats,this.subtotal,this.status});
 
-}
+
+  }
+
 
 
 
@@ -81,6 +85,7 @@ class CheckoutItems{
 }
 
 class Checkout extends ChangeNotifier{
+  String restUid;
   String dateTime;
   bool dineIn;
   List<CheckoutItems> orderSummary;
@@ -94,6 +99,8 @@ class Checkout extends ChangeNotifier{
     orderSummary = [];
     dateTime = "";
     seatsLeft=0;
+    totalSeats=0;
+    restUid="";
   }
 
   void calculateSubTotal(){
