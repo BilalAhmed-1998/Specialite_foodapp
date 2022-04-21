@@ -20,12 +20,17 @@ class splashScreen extends StatelessWidget {
 
     Future.delayed(Duration(microseconds: duration,), () async{
       currentCoordinates = await LocationService.determinePosition();
-      //currentCoordinates = Position(latitude: 35.694845729866785,longitude:139.70238006570884); //japan
-      List<Placemark> placeMarks = await placemarkFromCoordinates(currentCoordinates.latitude,currentCoordinates.longitude);
-      if(cities.contains(placeMarks[0].administrativeArea)){
-        homeMainCity = placeMarks[0].administrativeArea;
+      currentCoordinates = Position(latitude: 35.694845729866785,longitude:139.70238006570884); //japan
+      List<Placemark> placeMarks = await placemarkFromCoordinates(currentCoordinates.latitude,currentCoordinates.longitude,localeIdentifier: 'ja');
+      bool exist = false;
+
+      for (var item in cities) {
+        if(placeMarks[0].administrativeArea.contains(item) && placeMarks[0].locality.contains(item)){
+          exist = true;
+          homeMainCity = item;
+          break;
+        }
       }
-      // print(placeMarks[1]);
       Navigator.pushNamed(context, goTopage);
     });
 

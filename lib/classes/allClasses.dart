@@ -15,6 +15,7 @@ class AppUser{
 class Restaurant{
 
   String uid;
+  Timestamp joinDate;
   List<dynamic> images;
   String description;
   String title;
@@ -30,7 +31,19 @@ class Restaurant{
   List<RestaurantItem> restaurantItems;
 
 
-  Restaurant({this.state,this.geoPoints,this.totalRating,this.restaurantItems,this.description,this.uid,this.images,this.title,this.rating,this.favt,this.address,this.dineIn,this.open,this.seatsLeft});
+  Restaurant({this.state,this.joinDate,this.geoPoints,this.totalRating,this.restaurantItems,this.description,this.uid,this.images,this.title,this.rating,this.favt,this.address,this.dineIn,this.open,this.seatsLeft});
+
+  bool joinInMonth(){
+
+   if(DateTime.now().difference(joinDate.toDate()).inDays < 30){
+    return true;
+   }
+   else {
+     return false;
+   }
+
+
+  }
 
 }
 
@@ -55,7 +68,7 @@ class Order{
   String orderId;
   String resturauntId;
   String customerId;
-  String dateTime;
+  Timestamp dateTime;
   bool dineIn;
   List<CheckoutItems> orderSummary;
   int subtotal;
@@ -86,7 +99,7 @@ class CheckoutItems{
 
 class Checkout extends ChangeNotifier{
   String restUid;
-  String dateTime;
+  Timestamp dateTime;
   bool dineIn;
   List<CheckoutItems> orderSummary;
   int subtotal;
@@ -97,7 +110,7 @@ class Checkout extends ChangeNotifier{
     dineIn = false;
     subtotal = 0;
     orderSummary = [];
-    dateTime = "";
+    dateTime = Timestamp.now();
     seatsLeft=0;
     totalSeats=0;
     restUid="";

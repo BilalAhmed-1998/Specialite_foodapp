@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:specialite_foodapp/classes/allClasses.dart';
 
 
@@ -37,7 +38,7 @@ class orderHistoryCard extends StatelessWidget {
                     children:[
 
                       Text(
-                        order.dateTime,
+                        "  "+DateFormat('dd MMMM','ja').format(order.dateTime.toDate())+ "（木）"+DateFormat.Hm().format(order.dateTime.toDate()),
                         style: TextStyle(
                           fontSize: 14.sp,
                           color: Colors.grey.shade800,

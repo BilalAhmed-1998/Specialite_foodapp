@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:specialite_foodapp/classes/allClasses.dart';
 
@@ -28,7 +29,6 @@ class restaurantItemCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       width: 342.w,
-      height: 100.h,
 
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -42,25 +42,26 @@ class restaurantItemCard extends StatelessWidget {
 
           ),
           SizedBox(width: 16.w,),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(this.restaurantItem.itemTitle,
-              style: TextStyle(
-                fontSize: 18.sp,
-                color: Colors.black,
-                fontWeight: FontWeight.w600,
-              ),),
-              Flexible(
-                flex: 1,
-                child: Text(this.restaurantItem.description,
+          Expanded(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(restaurantItem.itemTitle,
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                ),),
+                Text(restaurantItem.description,
+                  overflow: TextOverflow.visible,
                   style: TextStyle(
                     fontSize: 14.sp,
                     color: Colors.black,
                     fontWeight: FontWeight.normal,
                   ),),
-              ),
-            ],
+              ],
+            ),
           ),
 
         ],

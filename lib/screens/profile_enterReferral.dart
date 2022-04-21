@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:specialite_foodapp/classes/referralCard.dart';
 import 'package:specialite_foodapp/dummyData.dart';
 import 'package:specialite_foodapp/screens/profile_copied.dart';
 import 'package:specialite_foodapp/screens/profile_dialogue.dart';
@@ -67,13 +68,23 @@ class _profile_enterReferralState extends State<profile_enterReferral> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
+            referralApplied?
+            Text(
+              'Referral Applied Successfully',
+              style: TextStyle(
+                color: Color(0xff121212),
+                fontSize: 20.sp,
+                fontFamily: 'regular',
+                fontWeight: FontWeight.w700,
+              ),
+            )
+            :Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
                   height: 25.h,
                 ),
-                Text(
+               Text(
                   'Enter referral code',
                   style: TextStyle(
                     color: Color(0xff121212),
@@ -103,7 +114,7 @@ class _profile_enterReferralState extends State<profile_enterReferral> {
                   ),
                   child: Center(
                     child: TextField(
-                      controller: controller3,
+
                       onChanged: (text){
                         code=text;
                       },
@@ -127,7 +138,7 @@ class _profile_enterReferralState extends State<profile_enterReferral> {
                   height: 12.h,
                 ),
                 Text(
-                  'You and your friend will be given a discount of 50¥. ' ,
+                  'You and your friend will be given a discount of 500¥. ' ,
                   style: TextStyle(
                     color: Color(0xff555555),
                     fontSize: 14.sp,
@@ -138,9 +149,18 @@ class _profile_enterReferralState extends State<profile_enterReferral> {
               ],
             ),
 
-            InkWell(
+            referralApplied ? Container() :InkWell(
               enableFeedback: true,
               onTap: () async {
+                bool check=false;
+                check = await dbMain.checkReferral(code, context);
+                print(check);
+                if (check){
+                  await dbMain.updateFriends(code);
+                  setState(() {
+                    referralApplied=true;
+                  });
+                }
               },
               child: Container(
                 height: 56.h,
@@ -170,7 +190,7 @@ class _profile_enterReferralState extends State<profile_enterReferral> {
                 ),
 
               ),
-            )
+            ),
           ],
         ),
       ),

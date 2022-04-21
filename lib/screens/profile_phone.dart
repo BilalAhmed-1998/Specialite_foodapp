@@ -156,7 +156,7 @@ class _profile_phoneState extends State<profile_phone> {
 
                 FirebaseAuth auth = FirebaseAuth.instance;
                 await auth.verifyPhoneNumber(
-                  phoneNumber: '+81'+phoneNo,
+                  phoneNumber: '+92'+phoneNo,
 
                   verificationFailed: (FirebaseAuthException e) {
                     if (e.code == 'invalid-phone-number') {
@@ -182,25 +182,33 @@ class _profile_phoneState extends State<profile_phone> {
                     await Navigator.pushNamed(context, profile_verify.routeName);
                     String smsCode = phoneCode;
 
+                    print("smsCode");
                     PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode);
-                    await auth.signInWithCredential(credential);
-                    isVerified=true;
-                    Clipboard.setData(ClipboardData(text: refCode));
-                    Timer timer = Timer(Duration(milliseconds: 2000), (){
-                      Navigator.of(context, rootNavigator: true).pop();
-                      Navigator.of(context, rootNavigator: true).pop();
-                    });
-                    showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (context)
-                        {
-                          return profile_dialogue(text: 'Phone Number Verified',);
-                        }).then((value){
-                      // dispose the timer in case something else has triggered the dismiss.
-                      timer?.cancel();
-                      timer = null;
-                    });;
+                    print(credential.smsCode);
+                    
+                    //await auth.signInWithCredential(credential);
+                    await FirebaseAuth.instance.currentUser.updatePhoneNumber(credential);
+
+                   if(FirebaseAuth.instance.currentUser.phoneNumber!=null){
+                     isVerified=true;
+                     Timer timer = Timer(Duration(milliseconds: 2000), (){
+                       Navigator.of(context, rootNavigator: true).pop();
+                       Navigator.of(context, rootNavigator: true).pop();
+                     });
+                     showDialog(
+                         context: context,
+                         barrierDismissible: false,
+                         builder: (context)
+                         {
+                           return profile_dialogue(text: 'Phone Number Verified',);
+                         }).then((value){
+                       // dispose the timer in case something else has triggered the dismiss.
+                       timer?.cancel();
+                       timer = null;
+                     });
+                    }
+
+
                   },
                   codeAutoRetrievalTimeout: (String verificationId) {},
                 );

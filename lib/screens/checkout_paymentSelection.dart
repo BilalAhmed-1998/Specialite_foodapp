@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -133,7 +134,7 @@ class _checkout_paymentSelectionState extends State<checkout_paymentSelection> {
                         orderId: DateTime.now().toString() + FirebaseAuth.instance.currentUser.uid,
                         resturauntId: mainCheckout.restUid,
                           customerId: FirebaseAuth.instance.currentUser.uid,
-                          dateTime: mainCheckout.dateTime,
+                          dateTime: Timestamp.now(),
                           dineIn: mainCheckout.dineIn,
                           subtotal: widget.amount,
                           seats: mainCheckout.dineIn?mainCheckout.seatsLeft:0,
@@ -161,7 +162,7 @@ class _checkout_paymentSelectionState extends State<checkout_paymentSelection> {
                         orderId: DateTime.now().toString() + FirebaseAuth.instance.currentUser.uid,
                         resturauntId: mainCheckout.restUid,
                         customerId: FirebaseAuth.instance.currentUser.uid,
-                        dateTime: mainCheckout.dateTime,
+                        dateTime: Timestamp.now(),
                         dineIn: mainCheckout.dineIn,
                         subtotal: mainCheckout.subtotal,
                         seats: mainCheckout.seatsLeft,

@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:specialite_foodapp/main.dart';
 import 'package:specialite_foodapp/screens/checkout_chooseExisting.dart';
@@ -14,6 +16,7 @@ import '../classes/allClasses.dart';
 import '../dummyData.dart';
 import '../services/wrapper.dart';
 import 'loadingScreen.dart';
+import 'package:specialite_foodapp/screens/homeScreen.dart';
 
 class checkoutScreen extends StatefulWidget {
   // const checkoutScreen({Key? key}) : super(key: key);
@@ -30,10 +33,7 @@ class _checkoutScreenState extends State<checkoutScreen> {
     Widget okButton = TextButton(
       child: Text("Continue"),
       onPressed: () async {
-        print(_discount);
         Navigator.pop(context);
-        Navigator.pop(context);
-
         if (((mainCheckout.subtotal +
                     (tax * mainCheckout.subtotal / 100) +
                     (serviceFee * mainCheckout.subtotal / 100)) -
@@ -51,6 +51,38 @@ class _checkoutScreenState extends State<checkoutScreen> {
               ),
             ),
           );
+        } else if (((mainCheckout.subtotal +
+                    (tax * mainCheckout.subtotal / 100) +
+                    (serviceFee * mainCheckout.subtotal / 100)) -
+                _discount) <=
+            0) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('order placed successfully'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+
+          await dbMain.updateOrders(
+            Order(
+              orderId: DateTime.now().toString() +
+                  FirebaseAuth.instance.currentUser.uid,
+              resturauntId: mainCheckout.restUid,
+              customerId: FirebaseAuth.instance.currentUser.uid,
+              dateTime: Timestamp.now(),
+              dineIn: mainCheckout.dineIn,
+              subtotal: 0,
+              seats: mainCheckout.dineIn ? mainCheckout.seatsLeft : 0,
+              status: 'onGoing',
+              orderSummary: mainCheckout.orderSummary,
+            ),
+          );
+          if (refCheckoutInfo[0]){
+            await dbMain.decrementBonus(refCheckoutInfo[1], context);
+          }
+
+          Navigator.popUntil(context, (route) => false);
+          Navigator.pushNamed(context, homeScreen.routeName);
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text("Minimium order amount is ¥ 50")));
@@ -61,14 +93,14 @@ class _checkoutScreenState extends State<checkoutScreen> {
       child: Text("Cancel"),
       onPressed: () {
         Navigator.of(context).pop();
-        Navigator.of(context).pop();
       },
     );
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("Promo"),
       content: Container(
-        child: Text(promoText),
+        child: Text(promoText +
+            '\nYou will be charged: ${((mainCheckout.subtotal + (tax * mainCheckout.subtotal / 100) + (serviceFee * mainCheckout.subtotal / 100)) - _discount).truncate()<=0? 0 : ((mainCheckout.subtotal + (tax * mainCheckout.subtotal / 100) + (serviceFee * mainCheckout.subtotal / 100)) - _discount).truncate()}'),
       ),
       actions: [
         cancelButton,
@@ -157,7 +189,12 @@ class _checkoutScreenState extends State<checkoutScreen> {
                           ],
                         ),
                         Text(
-                          mainCheckout.dateTime,
+                          "  " +
+                              DateFormat('dd MMMM', 'ja')
+                                  .format(mainCheckout.dateTime.toDate()) +
+                              "（木）" +
+                              DateFormat.Hm()
+                                  .format(mainCheckout.dateTime.toDate()),
                           style: TextStyle(
                             fontSize: 14.sp,
                             color: Colors.grey.shade800,
@@ -610,39 +647,29 @@ class _checkoutScreenState extends State<checkoutScreen> {
                       builder: (context) {
                         return loadingScreen();
                       });
+                  refCheckoutInfo = await dbMain.checkReferralBonus(context);
                   if (promoController.text.length > 1) {
                     dynamic promo =
                         await dbMain.checkPromo(promoController.text);
+                    Navigator.pop(context);
                     if (promo > 0) {
                       showAlertDialog(
-                          context, 'discount applied: $promo', promo);
+                          context,
+                          'discount applied${refCheckoutInfo[0] ? '(referral+promo)' : ''}: ${promo + (refCheckoutInfo[0] ? 500 : 0)}',
+                          promo + (refCheckoutInfo[0] ? 500 : 0));
                     } else if (promo == -1) {
-                      showAlertDialog(context, 'Promo Expired.', 0);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Promo Expired")));
                     } else if (promo == 0) {
-                      showAlertDialog(context, 'Invalid Promo code', 0);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("Invalid Promo code")));
                     }
                   } else {
-                    if (((mainCheckout.subtotal +
-                            (tax * mainCheckout.subtotal / 100) +
-                            (serviceFee * mainCheckout.subtotal / 100))) >
-                        50) {
-                      Navigator.pop(context);
-                      Navigator.push(
+                    Navigator.pop(context);
+                    showAlertDialog(
                         context,
-                        MaterialPageRoute(
-                          builder: (context) => checkout_paymentSelection(
-                            amount: (mainCheckout.subtotal +
-                                    (tax * mainCheckout.subtotal / 100) +
-                                    (serviceFee * mainCheckout.subtotal / 100))
-                                .truncate(),
-                          ),
-                        ),
-                      );
-                    } else {
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text("Minimium order amount is ¥ 50")));
-                    }
+                        refCheckoutInfo[0] ? 'referral discount: ¥500 ' : '',
+                        (refCheckoutInfo[0] ? 500 : 0));
                   }
                 }
 
@@ -656,8 +683,6 @@ class _checkoutScreenState extends State<checkoutScreen> {
                       .orderSummary
                       .clear();
                 }
-
-                //Navigator.pushNamed(context, checkout_paymentSelection.routeName);
               },
               child: Center(
                 child: Text(

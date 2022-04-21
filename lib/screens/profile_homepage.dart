@@ -161,16 +161,36 @@ class _profile_homepageState extends State<profile_homepage> {
                   InkWell(
                       enableFeedback: true,
                       onTap: () async {
-                        showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (context) {
-                              return loadingScreen();
-                            });
 
-                        await dbMain.getOngoingOrders();
 
-                        Navigator.pop(context);
+                        if(ongoingOrders.isEmpty){
+                          showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (context) {
+                                return loadingScreen();
+                              });
+
+                          await dbMain.getOngoingOrders();
+                          Navigator.pop(context);
+
+                        }
+
+                        if(orderHistory.isEmpty){
+                          showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (context) {
+                                return loadingScreen();
+                              });
+
+                          await dbMain.getCompletedOrders();
+                          Navigator.pop(context);
+
+                        }
+
+
+
                         Navigator.pushNamed(context, profile_order.routeName);
                       },
                       child: profileCard("assets/images/pro3.png", AppLocalizations.of(context).orders)),
@@ -182,8 +202,9 @@ class _profile_homepageState extends State<profile_homepage> {
                   InkWell(
                       enableFeedback: true,
                       onTap: () {
-                        if (FirebaseAuth.instance.currentUser != null)
-                          refCode = FirebaseAuth.instance.currentUser.uid;
+                        if (FirebaseAuth.instance.currentUser != null) {
+                          refCode = FirebaseAuth.instance.currentUser.phoneNumber!=null?FirebaseAuth.instance.currentUser.uid:'Please verify your phone number.';
+                        }
                         Navigator.pushNamed(context, profile_refer.routeName);
                       },
                       child: profileCard(
@@ -195,9 +216,14 @@ class _profile_homepageState extends State<profile_homepage> {
                   ),
                   InkWell(
                       enableFeedback: true,
-                      onTap: () {
+                      onTap: () async{
                         if (FirebaseAuth.instance.currentUser != null)
-                          refCode = FirebaseAuth.instance.currentUser.uid;
+                          {refCode = FirebaseAuth.instance.currentUser.uid;}
+                        dynamic temp = [false,""];
+                        temp = await dbMain.checkReferralBonus(context);
+                        if (temp[1]!=""){
+                          referralApplied=true;
+                        }
                         Navigator.pushNamed(
                             context, profile_enterReferral.routeName);
                       },

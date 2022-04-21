@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -237,10 +238,13 @@ class _profile_referState extends State<profile_refer> {
             ),
             InkWell(
               enableFeedback: true,
-              onTap: (){
-                isVerified==false?
-                Navigator.pushNamed(context, profile_phone.routeName):
-                    null;
+              onTap: FirebaseAuth.instance.currentUser.phoneNumber==null?(){
+                Navigator.pushNamed(context, profile_phone.routeName);
+
+              }:(){
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('phone number already verified.'))
+                );
               },
               child: Container(
                 height: 56.h,

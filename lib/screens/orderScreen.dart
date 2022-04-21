@@ -1,5 +1,6 @@
 
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -549,7 +550,7 @@ class _orderScreenState extends State<orderScreen> {
                   mainCheckout.dineIn = false;
                 }
 
-                mainCheckout.dateTime = "  "+DateFormat('dd MMMM','ja').format(_selectedDay)+ "（木）"+DateFormat('hh:mm a').format(DateTime.now());
+                mainCheckout.dateTime = Timestamp.now();
 
                 Navigator.pushNamed(context, checkoutScreen.routeName);
 

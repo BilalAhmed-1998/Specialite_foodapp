@@ -293,6 +293,7 @@ class _homeScreenState extends State<homeScreen> {
                               scrollDirection: Axis.horizontal,
                               itemCount: allRestaurants.length,
                               itemBuilder: (BuildContext context, int index) {
+                              if(allRestaurants[index].joinInMonth()){
                                 return InkWell(
                                   onTap: () {
                                     Navigator.push(
@@ -310,6 +311,7 @@ class _homeScreenState extends State<homeScreen> {
                                     restaurant: allRestaurants[index],
                                   ),
                                 );
+                              }
                               },
                             ),
                           ),
@@ -543,6 +545,7 @@ class _homeScreenState extends State<homeScreen> {
                       scrollDirection: Axis.horizontal,
                       itemCount: allRestaurants.length,
                       itemBuilder: (BuildContext context, int index) {
+                      if(allRestaurants[index].joinInMonth()){
                         return InkWell(
                           onTap: () {
                             Navigator.push(
@@ -560,6 +563,8 @@ class _homeScreenState extends State<homeScreen> {
                             restaurant: allRestaurants[index],
                           ),
                         );
+                      }
+
                       },
                     ),
                   ),

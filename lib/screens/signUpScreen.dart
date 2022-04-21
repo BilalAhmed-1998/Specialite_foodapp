@@ -132,7 +132,7 @@ class _signUpScreenState extends State<signUpScreen> {
                     bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(emailController.text);
                     bool passValid = RegExp("^.{8,}\$").hasMatch(passwordController.text);
 
-                    if(emailValid && passValid && FirebaseAuth.instance.currentUser!=null){
+                    if(emailValid && passValid && FirebaseAuth.instance.currentUser==null){
 
 
                       ScaffoldMessenger.of(context)
@@ -161,7 +161,6 @@ class _signUpScreenState extends State<signUpScreen> {
                               ),
                             ],
                           )));
-
 
                       await AuthService().signUpWithEmailPassword(
                           context,

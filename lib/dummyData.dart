@@ -16,10 +16,12 @@ dynamic name;
 dynamic emailId;
 dynamic password;
 String refCode="K9Q3291";
+dynamic refCheckoutInfo=[false,""];
 TextEditingController controller3;
 String phoneNo;
 String phoneCode = "";
 bool isVerified = false;
+bool referralApplied=false;
 ///All Lists////
 List<Order> ongoingOrders = [];
 List<Order> orderHistory = [];
@@ -30,8 +32,19 @@ List<Restaurant> allRestaurants = [];
 Checkout mainCheckout = Checkout();
 ///Home Page///
 Position currentCoordinates = Position();
-List<String> cities = ["Tokyo", "Islamabad", "Lahore", "Faislabad"];
+List<String> cities =
+[
+  "東京",
+  "横浜",
+  "名古屋",
+  "大阪",
+  "札幌",
+  "仙台",
+  "広島",
+  "福岡",
+  "那覇",
+];
 ///by default city is TOKYO///
-String homeMainCity = "Tokyo";
+String homeMainCity = "東京";
 double tax=7;
 double serviceFee=10;

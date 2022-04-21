@@ -55,6 +55,10 @@ class _checkout_chooseExisting extends State<checkout_chooseExisting> {
           );
 
           await dbMain.updateOrders(widget.order);
+          if (refCheckoutInfo[0]){
+            await dbMain.decrementBonus(refCheckoutInfo[1], context);
+
+          }
           Navigator.popUntil(context, (route) => false);
           Navigator.pushNamed(context, homeScreen.routeName);
         }else{

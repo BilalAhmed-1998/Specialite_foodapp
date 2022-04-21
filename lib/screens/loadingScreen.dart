@@ -23,7 +23,7 @@ class loadingScreen extends StatelessWidget {
             SizedBox(width: 6.w,),
             CircularProgressIndicator(valueColor: AlwaysStoppedAnimation((Colors.amber)),),
             SizedBox(width: 20.w,),
-            Text("Loading...",
+            Text("炉料...",
             style: TextStyle(
               fontSize: 18.sp,
               color: Colors.black,

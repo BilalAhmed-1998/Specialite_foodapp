@@ -70,7 +70,9 @@ class _checkout_addNewCard extends State<checkout_addNewCard> {
           );
 
           await dbMain.updateOrders(widget.order);
-          Navigator.popUntil(context, (route) => false);
+          if (refCheckoutInfo[0]){
+            await dbMain.decrementBonus(refCheckoutInfo[1], context);
+          }          Navigator.popUntil(context, (route) => false);
           Navigator.pushNamed(context, homeScreen.routeName);
         }else{
           Navigator.pop(context);

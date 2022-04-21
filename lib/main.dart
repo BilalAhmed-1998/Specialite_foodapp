@@ -38,6 +38,9 @@ void main() async{
   notificationService.useNotificationService();
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);
 
+
+  //print(FirebaseAuth.instance.currentUser.phoneNumber);
+
   runApp(MyApp());
 
 }
@@ -71,9 +74,7 @@ class MyApp extends StatelessWidget {
             Locale('ja'),
             Locale('en'),
           ],
-
           theme: ThemeData(
-
             fontFamily: "regular"
           ),
           routes: routes,

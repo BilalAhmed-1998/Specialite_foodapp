@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +15,91 @@ class DatabaseCollection {
       FirebaseFirestore.instance.collection('User');
   final CollectionReference orderCollection =
       FirebaseFirestore.instance.collection('orders');
+  
+  /// referral ///
+
+  Future<bool> checkReferral(String code, context) async {
+    bool exist;
+    try {
+      print('going into friends collection');
+      // check if the person referring(person A) is already in this user's friendlist ( A joined from this users code ).
+      await userCollection
+          .doc(FirebaseAuth.instance.currentUser.uid)
+          .collection('friends')
+          .doc(FirebaseAuth.instance.currentUser.uid)
+          .get()
+          .then((value) {
+        exist = value.exists;
+      });
+      if (!exist) {
+        await userCollection
+            .doc(code)
+            .collection('friends')
+            .doc(FirebaseAuth.instance.currentUser.uid)
+            .get()
+            .then((value) {
+          exist = value.exists;
+        });
+        return !exist;
+      }
+    } on Exception catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+      print('phone not verified.');
+      return false;
+    }
+  }
+
+  Future<bool> updateFriends(String code) async {
+    await userCollection
+        .doc(code)
+        .collection('friends')
+        .doc(FirebaseAuth.instance.currentUser.uid)
+        .set({}).then((value) => true);
+    await userCollection.doc(FirebaseAuth.instance.currentUser.uid).collection('referral')
+        .doc(FirebaseAuth.instance.currentUser.uid).set({
+      'referredFrom': code,
+      'referralBonus': 2,
+    });
+    await userCollection.doc(code).collection('referral')
+        .doc(code).set({
+      'referredFrom': "",
+      'referralBonus': 0,
+    });
+
+  }
+  
+  Future checkReferralBonus(context)async{
+    try {
+      var data = await userCollection.doc(FirebaseAuth.instance.currentUser.uid)
+          .collection('referral').doc(FirebaseAuth.instance.currentUser.uid)
+          .get();
+      if(data.exists) {
+        if (data['referralBonus'] > 0) {
+          return [true, data['referredFrom']];
+        }
+      }else{
+        return [false, ""];
+      }
+    }on Exception catch(e){
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+      print('referral issue.');
+      return [false, ""];
+    }
+  }
+
+  Future decrementBonus(String referredFrom, context)async{
+    await userCollection.doc(FirebaseAuth.instance.currentUser.uid).collection('referral').doc(FirebaseAuth.instance.currentUser.uid).update({
+      "referralBonus": FieldValue.increment(-1),
+    });
+    if (referredFrom !=""){
+      await userCollection.doc(referredFrom).collection('referral').doc(referredFrom).update({
+        "referralBonus": FieldValue.increment(1),
+      });
+    }
+  }
+  
 
   /// promo code ////
   Future<dynamic> checkPromo(String code) async {
@@ -94,6 +181,7 @@ class DatabaseCollection {
 
       allRestaurants.add(Restaurant(
         uid: value.docs[i].id,
+        joinDate: value.docs[i].get('joinedAt'),
         totalRating: value.docs[i].get('rating'),
         title: value.docs[i].get('name'),
         description: value.docs[i].get('tagline'),
@@ -151,7 +239,7 @@ class DatabaseCollection {
 
   Future<bool> updateFavtList(String uid) async {
     if (FirebaseAuth.instance.currentUser != null) {
-          await userCollection
+      await userCollection
           .doc(FirebaseAuth.instance.currentUser.uid)
           .collection('FavtList')
           .doc(uid)
@@ -175,11 +263,10 @@ class DatabaseCollection {
 
   /// //////-------------------------////////
 
-
   /// ---------Orders related Functions      ------------/////
 
   Future<bool> updateOrders(Order order) async {
-    orderCollection.doc(order.orderId).set({
+    await orderCollection.doc(order.orderId).set({
       'resturauntId': order.resturauntId,
       'customerId': order.customerId,
       'dineIn': order.dineIn,
@@ -197,6 +284,9 @@ class DatabaseCollection {
           },
       ]
     });
+
+    //just to fetch the fresh ongoing order list//
+    ongoingOrders.clear();
   }
 
   Future<bool> getOngoingOrders() async {
@@ -204,9 +294,40 @@ class DatabaseCollection {
         .where('customerId', isEqualTo: FirebaseAuth.instance.currentUser.uid)
         .get();
 
-    for(var i=0;i<orderDocs.size;i++) {
-      ongoingOrders.add(
-          Order(
+    for (var i = 0; i < orderDocs.size; i++) {
+      ongoingOrders.add(Order(
+          orderId: orderDocs.docs[i].id,
+          resturauntId: orderDocs.docs[i]['resturauntId'],
+          customerId: orderDocs.docs[i]['customerId'],
+          dateTime: orderDocs.docs[i]['timeOfOrder'],
+          dineIn: orderDocs.docs[i]['dineIn'],
+          subtotal: orderDocs.docs[i]['price'],
+          seats: orderDocs.docs[i]['seats'],
+          status: orderDocs.docs[i]['status'],
+          orderSummary: [
+            for (var j = 0; j < orderDocs.docs[i]['dishes'].length; j++)
+              CheckoutItems(
+                title: orderDocs.docs[i]['dishes'][j]['dishName'],
+                price: orderDocs.docs[i]['dishes'][j]['price'],
+                quantity: orderDocs.docs[i]['dishes'][j]['quantity'],
+                time: orderDocs.docs[i]['dishes'][j]['time'],
+              ),
+          ]));
+    }
+  }
+  
+  Future<bool> getCompletedOrders() async {
+
+    var orderDocs =
+    await FirebaseFirestore.instance.collection('User').doc(FirebaseAuth.instance.currentUser.uid)
+        .collection('completedOrders').get();
+
+
+    if(orderDocs.docs.isNotEmpty){
+
+
+      for (var i = 0; i < orderDocs.size; i++) {
+        orderHistory.add(Order(
             orderId: orderDocs.docs[i].id,
             resturauntId: orderDocs.docs[i]['resturauntId'],
             customerId: orderDocs.docs[i]['customerId'],
@@ -216,23 +337,22 @@ class DatabaseCollection {
             seats: orderDocs.docs[i]['seats'],
             status: orderDocs.docs[i]['status'],
             orderSummary: [
-              for(var j=0;j<orderDocs.docs[i]['dishes'].length;j++)
+              for (var j = 0; j < orderDocs.docs[i]['dishes'].length; j++)
                 CheckoutItems(
                   title: orderDocs.docs[i]['dishes'][j]['dishName'],
                   price: orderDocs.docs[i]['dishes'][j]['price'],
                   quantity: orderDocs.docs[i]['dishes'][j]['quantity'],
                   time: orderDocs.docs[i]['dishes'][j]['time'],
                 ),
-            ]
+            ]));
+      }
 
 
-          )
-      );
     }
 
+
+
+
+
   }
-
-
-
-
 }

@@ -133,7 +133,7 @@ class _profile_verifyState extends State<profile_verify> {
             InkWell(
               enableFeedback: true,
               onTap: (){
-                Navigator.pushNamed(context, profile_refer.routeName);
+                Navigator.pop(context);
               },
               child: Container(
                 height: 56.h,

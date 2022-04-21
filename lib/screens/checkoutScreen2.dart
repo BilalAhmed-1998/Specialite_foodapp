@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 
@@ -93,7 +94,7 @@ class _checkoutScreen2State extends State<checkoutScreen2> {
                           ],
                         ),
                         Text(
-                          widget.order.dateTime,
+                          "  "+DateFormat('dd MMMM','ja').format(widget.order.dateTime.toDate())+ "（木）"+DateFormat.Hm().format(widget.order.dateTime.toDate()),
                           style: TextStyle(
                             fontSize: 14.sp,
                             color: Colors.grey.shade800,
