@@ -30,7 +30,8 @@ class _checkoutScreenState extends State<checkoutScreen> {
   TextEditingController promoController = TextEditingController();
   showAlertDialog(BuildContext context, String promoText, dynamic _discount) {
     // set up the button
-    Widget okButton = TextButton(
+    Widget okButton =
+    TextButton(
       child: Text("Continue"),
       onPressed: () async {
         Navigator.pop(context);
@@ -190,7 +191,7 @@ class _checkoutScreenState extends State<checkoutScreen> {
                         ),
                         Text(
                           "  " +
-                              DateFormat('dd MMMM', 'ja')
+                              DateFormat('yyyy年 MMMM dEE', 'ja')
                                   .format(mainCheckout.dateTime.toDate()) +
                               "（木）" +
                               DateFormat.Hm()
@@ -384,7 +385,7 @@ class _checkoutScreenState extends State<checkoutScreen> {
                               ),
                             ),
                             Text(
-                              "$serviceFee %",
+                              "${serviceFee.toInt()} %",
                               style: TextStyle(
                                 fontSize: 14.sp,
                                 color: Color(0xff555555),
@@ -409,7 +410,7 @@ class _checkoutScreenState extends State<checkoutScreen> {
                               ),
                             ),
                             Text(
-                              "$tax %",
+                              "${tax.toInt()} %",
                               style: TextStyle(
                                 fontSize: 14.sp,
                                 color: Color(0xff555555),
@@ -686,7 +687,7 @@ class _checkoutScreenState extends State<checkoutScreen> {
               },
               child: Center(
                 child: Text(
-                  "Submit",
+                  AppLocalizations.of(context).submit,
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w600,

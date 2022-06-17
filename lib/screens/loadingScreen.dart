@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 class loadingScreen extends StatelessWidget {
@@ -23,7 +24,7 @@ class loadingScreen extends StatelessWidget {
             SizedBox(width: 6.w,),
             CircularProgressIndicator(valueColor: AlwaysStoppedAnimation((Colors.amber)),),
             SizedBox(width: 20.w,),
-            Text("炉料...",
+            Text("Loading...",
             style: TextStyle(
               fontSize: 18.sp,
               color: Colors.black,

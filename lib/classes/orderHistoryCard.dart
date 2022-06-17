@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:specialite_foodapp/classes/allClasses.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 class orderHistoryCard extends StatelessWidget {
@@ -38,7 +39,7 @@ class orderHistoryCard extends StatelessWidget {
                     children:[
 
                       Text(
-                        "  "+DateFormat('dd MMMM','ja').format(order.dateTime.toDate())+ "（木）"+DateFormat.Hm().format(order.dateTime.toDate()),
+                        "  "+DateFormat('yyyy年 MMMM dEE','ja').format(order.dateTime.toDate())+ "（木）"+DateFormat.Hm().format(order.dateTime.toDate()),
                         style: TextStyle(
                           fontSize: 14.sp,
                           color: Colors.grey.shade800,
@@ -88,7 +89,7 @@ class orderHistoryCard extends StatelessWidget {
                         Container(
                           margin: EdgeInsets.only(bottom: 10.h),
                           // color: Colors.amber,
-                          width: 140.w,
+                          //width: 140.w,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,6 +99,7 @@ class orderHistoryCard extends StatelessWidget {
                                 // order.orderSummary[selectedItemNo].quantity.toString()+'  '+
                                     order.orderSummary[selectedItemNo].title,
                                 style: TextStyle(
+                                  overflow: TextOverflow.clip,
                                   fontSize: 14.sp,
                                   color: Colors.grey.shade700,
                                   fontWeight: FontWeight.w500,
@@ -145,7 +147,7 @@ class orderHistoryCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Total",
+                  AppLocalizations.of(context).total,
                   style: TextStyle(
                     fontSize: 14.sp,
                     color: Colors.black,

@@ -49,6 +49,7 @@ class Restaurant{
 
 class RestaurantItem{
 
+  String dishId;
   dynamic image;
   String itemTitle;
   String description;
@@ -56,7 +57,7 @@ class RestaurantItem{
   int lengthTimeCost;
   Map<String,dynamic> timeCost;
 
-  RestaurantItem({this.description,this.image,this.itemTitle,this.lengthTimeCost,this.sale,this.timeCost});
+  RestaurantItem({this.dishId,this.description,this.image,this.itemTitle,this.lengthTimeCost,this.sale,this.timeCost});
 
 }
 
@@ -87,13 +88,14 @@ class Order{
 ///Change Notifier Class///
 class CheckoutItems{
   dynamic image;
+  String dishId;
   String title;
   int quantity;
   int price;
   //TimeOfDay timeOfDay;
   String time;
 
-  CheckoutItems({this.quantity,this.price,this.time,this.image,this.title});
+  CheckoutItems({this.dishId,this.quantity,this.price,this.time,this.image,this.title});
 
 }
 
@@ -160,6 +162,8 @@ class Checkout extends ChangeNotifier{
     notifyListeners();
     calculateSubTotal();
   }
+
+
 
 
 }

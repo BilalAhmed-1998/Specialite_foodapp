@@ -68,14 +68,14 @@ class _profile_homepageState extends State<profile_homepage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  myimage != null
+                  FirebaseAuth.instance.currentUser.photoURL != null
                       ? ClipRRect(
                           borderRadius: BorderRadius.circular(100),
                           child: SizedBox(
                             height: 60.h,
                             width: 60.w,
-                            child: Image.file(
-                              myimage,
+                            child: Image.network(
+                              FirebaseAuth.instance.currentUser.photoURL,
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -101,7 +101,7 @@ class _profile_homepageState extends State<profile_homepage> {
                             (FirebaseAuth.instance.currentUser.displayName !=
                                     null)
                                 ? FirebaseAuth.instance.currentUser.displayName
-                                : 'User',
+                                : AppLocalizations.of(context).user,
                             style: TextStyle(
                               fontSize: 20.sp,
                               fontFamily: 'regular',
@@ -203,7 +203,7 @@ class _profile_homepageState extends State<profile_homepage> {
                       enableFeedback: true,
                       onTap: () {
                         if (FirebaseAuth.instance.currentUser != null) {
-                          refCode = FirebaseAuth.instance.currentUser.phoneNumber!=null?FirebaseAuth.instance.currentUser.uid:'Please verify your phone number.';
+                          refCode = FirebaseAuth.instance.currentUser.phoneNumber!=null?FirebaseAuth.instance.currentUser.uid:AppLocalizations.of(context).pleaseVerifyPhone;
                         }
                         Navigator.pushNamed(context, profile_refer.routeName);
                       },
@@ -228,7 +228,7 @@ class _profile_homepageState extends State<profile_homepage> {
                             context, profile_enterReferral.routeName);
                       },
                       child: profileCard(
-                          "assets/images/pro4.png", "Enter Referral Code")),
+                          "assets/images/pro4.png", AppLocalizations.of(context).enterReferral)),
                   Divider(
                     height: 1.h,
                     color: const Color(0xffDFDFDF),
@@ -278,7 +278,7 @@ class _profile_homepageState extends State<profile_homepage> {
           child: Container(
             color: Colors.white,
             width: 312.w,
-            margin: EdgeInsets.only(bottom: 20.h, left: 39.w, right: 39.w),
+            margin: EdgeInsets.only(bottom: 20.h, left: 35.w, right: 35.w),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -286,20 +286,38 @@ class _profile_homepageState extends State<profile_homepage> {
                   onTap: () {
                     Navigator.pushNamed(context, homeScreen.routeName);
                   },
-                  child: Icon(
-                    Icons.dashboard_outlined,
-                    size: 22.sp,
-                    color: Color(0xff7E869E),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.dashboard_outlined,
+                      size: 22.sp,
+                      color: Color(0xff7E869E),
+                    ),
                   ),
                 ),
                 InkWell(
-                  onTap: () {
+                  onTap: () async{
+                    if (favList.isEmpty) {
+                      showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (context) {
+                            return loadingScreen();
+                          });
+
+                      await dbMain.getFavtList();
+
+                      Navigator.pop(context);
+                    }
                     Navigator.pushNamed(context, checkout_favourites.routeName);
                   },
-                  child: Icon(
-                    Icons.favorite_border_outlined,
-                    size: 22.sp,
-                    color: Color(0xff7E869E),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.favorite_border_outlined,
+                      size: 22.sp,
+                      color: Color(0xff7E869E),
+                    ),
                   ),
                 ),
                 InkWell(
@@ -312,16 +330,22 @@ class _profile_homepageState extends State<profile_homepage> {
                               )),
                     );
                   },
-                  child: Icon(
-                    CupertinoIcons.location,
-                    size: 22.sp,
-                    color: Color(0xff7E869E),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(
+                      CupertinoIcons.location,
+                      size: 22.sp,
+                      color: Color(0xff7E869E),
+                    ),
                   ),
                 ),
-                Icon(
-                  CupertinoIcons.person,
-                  size: 22.sp,
-                  color: Color(0xfffdb601),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(
+                    CupertinoIcons.person,
+                    size: 22.sp,
+                    color: Color(0xfffdb601),
+                  ),
                 ),
               ],
             ),

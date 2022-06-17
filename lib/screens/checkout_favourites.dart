@@ -41,16 +41,16 @@ class _checkout_favouritesState extends State<checkout_favourites> {
       Container(
         margin: EdgeInsets.only(left: 20.w, right: 20.w, top: 20.h),
         child: ListView.builder(
-            itemCount: allRestaurants.length,
+            itemCount: favList.length,
             itemBuilder: (context, index) {
-              if (allRestaurants[index].favt) {
+              if (favList[index].favt) {
                 return InkWell(
                   onTap: () {
                     Navigator.push(context,MaterialPageRoute(
-                      builder: (context) => favourite_detail(restaurant: allRestaurants[index]),
+                      builder: (context) => favourite_detail(restaurant: favList[index]),
                     ));
                   },
-                  child: favourites_card(fav: allRestaurants[index]),
+                  child: favourites_card(fav: favList[index]),
                 );
               } else {
                 return Container();
@@ -72,7 +72,7 @@ class _checkout_favouritesState extends State<checkout_favourites> {
           child: Container(
             color: Colors.white,
             width: 312.w,
-            margin: EdgeInsets.only(bottom: 20.h, left: 39.w, right: 39.w),
+            margin: EdgeInsets.only(bottom: 20.h, left: 35.w, right: 35.w),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -80,16 +80,22 @@ class _checkout_favouritesState extends State<checkout_favourites> {
                   onTap: (){
                     Navigator.pushNamed(context, homeScreen.routeName);
                   },
-                  child: Icon(
-                    Icons.dashboard_outlined,
-                    size: 22.sp,
-                    color: Color(0xff7E869E),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.dashboard_outlined,
+                      size: 22.sp,
+                      color: Color(0xff7E869E),
+                    ),
                   ),
                 ),
-                Icon(
-                  Icons.favorite_border_outlined,
-                  size: 22.sp,
-                  color: Color(0xfffdb601),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(
+                    Icons.favorite_border_outlined,
+                    size: 22.sp,
+                    color: Color(0xfffdb601),
+                  ),
                 ),
                 InkWell(
                   onTap: (){
@@ -103,10 +109,13 @@ class _checkout_favouritesState extends State<checkout_favourites> {
                     );
 
                   },
-                  child: Icon(
-                    CupertinoIcons.location,
-                    size: 22.sp,
-                    color: Color(0xff7E869E),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(
+                      CupertinoIcons.location,
+                      size: 22.sp,
+                      color: Color(0xff7E869E),
+                    ),
                   ),
                 ),
                 InkWell(
@@ -121,10 +130,13 @@ class _checkout_favouritesState extends State<checkout_favourites> {
                           context, Wrapper.routeName, (route) => false);
                     }
                   },
-                  child: Icon(
-                    CupertinoIcons.person,
-                    size: 22.sp,
-                    color: Color(0xff7E869E),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(
+                      CupertinoIcons.person,
+                      size: 22.sp,
+                      color: Color(0xff7E869E),
+                    ),
                   ),
                 ),
               ],

@@ -1,4 +1,6 @@
 
+import 'dart:collection';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -28,9 +30,9 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Future<void> backgroundHandler(RemoteMessage message) async {
-  print('message from background');
-  print(message.notification.title);
-  print(message.notification.body);
+  // print('message from background');
+  // print(message.notification.title);
+  // print(message.notification.body);
 }
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,8 +40,8 @@ void main() async{
   notificationService.useNotificationService();
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);
 
+  //await dbMain.getSpecificDatePrices('5','EBt8SlqqyCUDdgF7QRNd', '2022-05-14');
 
-  //print(FirebaseAuth.instance.currentUser.phoneNumber);
 
   runApp(MyApp());
 
@@ -72,7 +74,7 @@ class MyApp extends StatelessWidget {
           ],
           supportedLocales: const [
             Locale('ja'),
-            Locale('en'),
+           // Locale('en'),
           ],
           theme: ThemeData(
             fontFamily: "regular"

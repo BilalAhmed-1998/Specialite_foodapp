@@ -3,6 +3,7 @@ import 'package:flutter_credit_card/credit_card_brand.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:provider/provider.dart';
 import 'package:specialite_foodapp/dummyData.dart';
 import 'package:specialite_foodapp/services/paymentService.dart';
 import 'package:specialite_foodapp/screens/homeScreen.dart';
@@ -70,6 +71,8 @@ class _checkout_addNewCard extends State<checkout_addNewCard> {
           );
 
           await dbMain.updateOrders(widget.order);
+          Provider.of<Checkout>(context, listen: false).orderSummary.clear();
+
           if (refCheckoutInfo[0]){
             await dbMain.decrementBonus(refCheckoutInfo[1], context);
           }          Navigator.popUntil(context, (route) => false);

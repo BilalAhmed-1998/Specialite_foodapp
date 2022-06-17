@@ -6,6 +6,7 @@ import 'package:specialite_foodapp/classes/orderHistoryCard.dart';
 import 'package:specialite_foodapp/dummyData.dart';
 import 'package:specialite_foodapp/screens/checkoutScreen2.dart';
 import 'package:specialite_foodapp/screens/profile_homepage.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../classes/OtpInput.dart';
 import '../classes/allClasses.dart';
 
@@ -46,7 +47,7 @@ class _profile_orderState extends State<profile_order> {
               width: 12.w,
             ),
             Text(
-              'Orders',
+              AppLocalizations.of(context).orders,
               style: TextStyle(
                 color: const Color(0xff121212),
                 fontSize: 18.sp,
@@ -95,7 +96,7 @@ class _profile_orderState extends State<profile_order> {
                     ),
 
                     Text(
-                      'Ongoing Order',
+                      AppLocalizations.of(context).ongoingOrders,
                       style: TextStyle(
                         fontSize: 18.sp,
                         fontFamily: 'regular',
@@ -157,7 +158,7 @@ class _profile_orderState extends State<profile_order> {
                       width: 8.w,
                     ),
                     Text(
-                      'Order history',
+                      AppLocalizations.of(context).orderHistory,
                       style: TextStyle(
                         fontSize: 18.sp,
                         fontFamily: 'regular',

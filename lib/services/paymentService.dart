@@ -12,15 +12,15 @@ class StripeTransactionResponse {
 
 class StripeService {
   static String apiBase = 'https://api.stripe.com/v1';
-  static String secret =
-      'sk_test_51JWNN2Gtvb5UXlRBapsj5WYfgYXSaPPFTA8N3E9rdbKWKepHTk2kcdHjKCHsk5BSBl8HbDgBowVHzVYeC9cbDjsX00RbijQGWh';
+  static String secret ='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';
+      //TEST'sk_test_51JWNN2Gtvb5UXlRBapsj5WYfgYXSaPPFTA8N3E9rdbKWKepHTk2kcdHjKCHsk5BSBl8HbDgBowVHzVYeC9cbDjsX00RbijQGWh';
   static Map<String, String> headers = {
     'Authorization': 'Bearer ${StripeService.secret}',
     'Content-Type': 'application/x-www-form-urlencoded'
   };
   static init() async {
-    Stripe.publishableKey =
-        'pk_test_51JWNN2Gtvb5UXlRBu0HdNPLc4wr9Ezp76XGzqWEtOSHdxry6tBGYaR7amXqlmbw0CsStrNLKXBXr87DWs02vBLBm00qnimaBVa';
+    Stripe.publishableKey ='pk_live_51JWNN2Gtvb5UXlRB1IqSh6hlKiTYvU4xaGzEzY73GZsMqX899hJOfqrgYcciaQ25nlaqruTlcH4fA8t7o9D9GObJ00OK3fQL6Q';
+        //TEST 'pk_test_51JWNN2Gtvb5UXlRBu0HdNPLc4wr9Ezp76XGzqWEtOSHdxry6tBGYaR7amXqlmbw0CsStrNLKXBXr87DWs02vBLBm00qnimaBVa';
     await Stripe.instance.applySettings();
   }
 
@@ -34,19 +34,19 @@ class StripeService {
     try {
       var paymentIntent =
           await StripeService.createPaymentIntent(amount, currency);
-      final billingDetails = BillingDetails(
-        name: 'shaheer',
-        email: 'email@stripe.com',
-        phone: '+48888000888',
-        address: Address(
-          city: 'Houston',
-          country: 'JP',
-          line1: '1459  Circle Drive',
-          line2: '',
-          state: 'Tokyo',
-          postalCode: '77063',
-        ),
-      );
+      // final billingDetails = BillingDetails(
+      //   name: 'shaheer',
+      //   email: 'email@stripe.com',
+      //   phone: '+48888000888',
+      //   address: Address(
+      //     city: 'Houston',
+      //     country: 'JP',
+      //     line1: '1459  Circle Drive',
+      //     line2: '',
+      //     state: 'Tokyo',
+      //     postalCode: '77063',
+      //   ),
+      // );
       //await Stripe.instance.dangerouslyUpdateCardDetails(card);
       print(card);
       var paymentMethod = await StripeService()._createPaymentMethod(

@@ -26,6 +26,7 @@ bool referralApplied=false;
 List<Order> ongoingOrders = [];
 List<Order> orderHistory = [];
 List<Restaurant> nearbyList=[];
+List<String> favListIds = [];
 List<Restaurant> favList=[];
 List<Restaurant> allRestaurants = [];
 ///Change Notifier Provider Instance///

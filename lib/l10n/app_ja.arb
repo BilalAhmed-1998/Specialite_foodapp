@@ -73,6 +73,14 @@
   "verification": "確認コードの認証",
   "codeIsSend": "携帯電話に送られた番号を入力してください",
   "didNotReceive": "確認コードを再送する",
-  "verifyNumber": "完了"
-
+  "verifyNumber": "完了",
+  "successfullyCopied": "コピーしました",
+  "ongoingOrders": "予約中の注文",
+  "orderHistory": "注文履歴",
+  "user": "ユーザー名",
+  "enterReferral": "紹介コードを入力",
+  "pleaseVerifyPhone": "携帯番号確認をお願いします",
+  "youAndYourFriendWill": "お友達が紹介コードを使いSpecialiteを利用すると、あなたも¥500割引を受けられます。",
+  "apply": "送信",
+  "loading": "炉料..."
 }

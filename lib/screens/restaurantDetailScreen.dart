@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +12,7 @@ import 'package:specialite_foodapp/classes/restaurantItemCard.dart';
 import 'package:specialite_foodapp/dummyData.dart';
 import 'package:specialite_foodapp/screens/orderScreen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class restaurantDetailScreen extends StatefulWidget {
   //const restaurantDetailScreen({Key? key}) : super(key: key);
@@ -324,6 +327,7 @@ class _restaurantDetailScreenState extends State<restaurantDetailScreen> {
                     tempList.add(widget.restaurant.restaurantItems[i]);
 
                     mainCheckout.orderSummary.add(CheckoutItems(
+                      dishId: widget.restaurant.restaurantItems[i].dishId,
                         image: widget.restaurant.restaurantItems[i].image,
                         title:  widget.restaurant.restaurantItems[i].itemTitle,
                         price: widget.restaurant.restaurantItems[i].timeCost.values.elementAt(0),
@@ -333,7 +337,24 @@ class _restaurantDetailScreenState extends State<restaurantDetailScreen> {
                   }
                 }
 
+                ///sorting keys of selected maps of dishes
+                ///that have been passed to next screen
 
+                for(var i =0;i<tempList.length;i++){
+
+                var keysString = tempList[i].timeCost.keys.toList();
+                List <int> sortedKeys = keysString.map(int.parse).toList();
+                sortedKeys.sort();
+                var SortedMap = {
+                  for (var key in sortedKeys)
+                    key.toString(): tempList[i].timeCost[key.toString()],
+                };
+                tempList[i].timeCost = SortedMap;
+
+                mainCheckout.orderSummary[i].price = tempList[i].timeCost.values.elementAt(0);
+                mainCheckout.orderSummary[i].time = tempList[i].timeCost.keys.elementAt(0);
+
+                }
 
                 mainCheckout.calculateSubTotal();
 
@@ -341,6 +362,7 @@ class _restaurantDetailScreenState extends State<restaurantDetailScreen> {
                   MaterialPageRoute(
                       builder: (context) =>
                           orderScreen(
+                            restId: widget.restaurant.uid,
                             appBarTitle: widget.restaurant.title,
                             noOfSeats: widget.restaurant.seatsLeft,
                             dineIn: widget.restaurant.dineIn,

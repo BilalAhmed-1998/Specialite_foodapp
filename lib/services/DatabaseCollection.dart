@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:specialite_foodapp/classes/allClasses.dart';
 import 'package:specialite_foodapp/dummyData.dart';
@@ -78,6 +79,7 @@ class DatabaseCollection {
         if (data['referralBonus'] > 0) {
           return [true, data['referredFrom']];
         }
+        return [false, ""];
       }else{
         return [false, ""];
       }
@@ -200,6 +202,7 @@ class DatabaseCollection {
         restaurantItems: [
           for (var j = 0; j < dishDocs.size; j++)
             RestaurantItem(
+              dishId: dishDocs.docs[j].id,
               itemTitle: dishDocs.docs[j].get('name'),
               description: dishDocs.docs[j].get('description'),
               lengthTimeCost: dishDocs.docs[j].get('dynamicPrice').length,
@@ -249,6 +252,60 @@ class DatabaseCollection {
     return false;
   }
 
+  Future getFavtList() async {
+
+    List<String> Uids = [];
+    var favtUids =  await userCollection.doc(FirebaseAuth.instance.currentUser.uid).collection("FavtList").get();
+
+    for(var j =0;j<favtUids.docs.length;j++) {
+      Uids.add(favtUids.docs[j].id);
+    }
+
+     var value = await restCollection
+         .where(FieldPath.documentId, whereIn: Uids)
+         .get();
+
+    for (var i = 0; i < value.size; i++) {
+      var imgDocs = await restCollection.doc(value.docs[i].id).collection('Images').get();
+      var dishDocs = await restCollection.doc(value.docs[i].id).collection('dishes').get();
+      bool exists = await checkFavtList(value.docs[i].id, BuildContext);
+
+      favList.add(Restaurant(
+        uid: value.docs[i].id,
+        joinDate: value.docs[i].get('joinedAt'),
+        totalRating: value.docs[i].get('rating'),
+        title: value.docs[i].get('name'),
+        description: value.docs[i].get('tagline'),
+        rating: value.docs[i].get('rating'),
+        favt: exists,
+        address: value.docs[i].get('address'),
+        dineIn: value.docs[i].get('dineIn'),
+        seatsLeft: value.docs[i].get('seats'),
+        open: value.docs[i].get('open'),
+        geoPoints: value.docs[i].get('coordinates'),
+        state: value.docs[i].get('state'),
+        images: [
+          for (var j = 0; j < imgDocs.size; j++)
+            imgDocs.docs[j].data().values.elementAt(0),
+        ],
+        restaurantItems: [
+          for (var j = 0; j < dishDocs.size; j++)
+            RestaurantItem(
+              dishId: dishDocs.docs[j].id,
+              itemTitle: dishDocs.docs[j].get('name'),
+              description: dishDocs.docs[j].get('description'),
+              lengthTimeCost: dishDocs.docs[j].get('dynamicPrice').length,
+              sale: dishDocs.docs[j].get('averageprice'),
+              timeCost: dishDocs.docs[j].get('dynamicPrice'),
+              image: dishDocs.docs[j].get('imageUrl'),
+            ),
+        ],
+      ));
+    }
+
+    return true;
+  }
+
   Future<bool> deleteFavtList(String uid) async {
     if (FirebaseAuth.instance.currentUser != null) {
       await userCollection
@@ -274,9 +331,11 @@ class DatabaseCollection {
       'price': order.subtotal,
       'seats': order.seats,
       'timeOfOrder': order.dateTime,
+      'orderPlaceTime': Timestamp.now(),
       'dishes': [
         for (var i = 0; i < order.orderSummary.length; i++)
           {
+            'dishId': order.orderSummary[i].dishId,
             'dishName': order.orderSummary[i].title,
             'quantity': order.orderSummary[i].quantity,
             'price': order.orderSummary[i].price,
@@ -292,6 +351,7 @@ class DatabaseCollection {
   Future<bool> getOngoingOrders() async {
     var orderDocs = await orderCollection
         .where('customerId', isEqualTo: FirebaseAuth.instance.currentUser.uid)
+        .where('status', isNotEqualTo: 'completed')
         .get();
 
     for (var i = 0; i < orderDocs.size; i++) {
@@ -354,5 +414,60 @@ class DatabaseCollection {
 
 
 
+  }
+
+
+  ///Timing fetching depends on day ///
+
+  Future getSpecificDatePrices(String restId,String dishId,String docId)async{
+
+
+    var timings = await restCollection.doc(restId).collection('dishes').doc(dishId).collection('specificTimings')
+    .doc(docId).get().then((value) => {
+      
+      if(value.exists){
+        value.get('timings')
+      }
+      else{
+        false
+      }
+      
+    });
+
+    var valueMap = timings.elementAt(0).elementAt(0);
+
+    if(valueMap!=false){
+
+      var keysString = valueMap.keys.toList();
+      List <dynamic> sortedKeys = keysString.map(int.parse).toList();
+      sortedKeys.sort();
+      var sortedMap = {
+        for (var key in sortedKeys)
+          key.toString(): valueMap[key.toString()],
+      };
+      valueMap = sortedMap;
+
+    }
+
+    return (valueMap);
+
+
+  }
+
+  Future updateProfileImage()async{
+    if (myimage == null){
+      return null;
+    }
+    try{
+      final ref = FirebaseStorage.instance.ref().child('userPictures').child(
+          FirebaseAuth.instance.currentUser.uid
+      );
+      await ref.putFile(myimage);
+
+      String url = await ref.getDownloadURL();
+      return url;
+    }catch(e){
+      print('error uploading image');
+    }
   }
 }

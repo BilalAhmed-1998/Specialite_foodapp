@@ -156,7 +156,7 @@ class _profile_phoneState extends State<profile_phone> {
 
                 FirebaseAuth auth = FirebaseAuth.instance;
                 await auth.verifyPhoneNumber(
-                  phoneNumber: '+92'+phoneNo,
+                  phoneNumber: '+81'+phoneNo,
 
                   verificationFailed: (FirebaseAuthException e) {
                     if (e.code == 'invalid-phone-number') {

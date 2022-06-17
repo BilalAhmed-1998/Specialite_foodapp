@@ -12,6 +12,7 @@ import 'package:specialite_foodapp/screens/profile_dialogue.dart';
 import 'package:specialite_foodapp/screens/profile_homepage.dart';
 import 'package:specialite_foodapp/screens/profile_refer.dart';
 import 'package:specialite_foodapp/screens/profile_verify.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class profile_enterReferral extends StatefulWidget {
   static const routeName = '/profile_enterReferral';
@@ -50,7 +51,7 @@ class _profile_enterReferralState extends State<profile_enterReferral> {
               width: 12.w,
             ),
             Text(
-              'Enter Referral code',
+              AppLocalizations.of(context).enterReferral,
               style: TextStyle(
                 color: const Color(0xff121212),
                 fontSize: 18.sp,
@@ -138,7 +139,7 @@ class _profile_enterReferralState extends State<profile_enterReferral> {
                   height: 12.h,
                 ),
                 Text(
-                  'You and your friend will be given a discount of 500¥. ' ,
+                  AppLocalizations.of(context).youAndYourFriendWill ,
                   style: TextStyle(
                     color: Color(0xff555555),
                     fontSize: 14.sp,
@@ -179,7 +180,7 @@ class _profile_enterReferralState extends State<profile_enterReferral> {
                 ),
                 child: Center(
                   child: Text(
-                    'Apply',
+                    AppLocalizations.of(context).apply,
                     style: TextStyle(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w500,

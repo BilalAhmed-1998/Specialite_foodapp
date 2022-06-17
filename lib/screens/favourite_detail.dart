@@ -296,10 +296,10 @@ class _favourite_detailState extends State<favourite_detail> {
                         zoom: 14.0),
                     myLocationEnabled: false,
                     zoomControlsEnabled: false,
-                    zoomGesturesEnabled: false,
-                    rotateGesturesEnabled: false,
-                    scrollGesturesEnabled: false,
-                    tiltGesturesEnabled: false,
+                    zoomGesturesEnabled: true,
+                    rotateGesturesEnabled: true,
+                    scrollGesturesEnabled: true,
+                    tiltGesturesEnabled: true,
 
                     markers: {Marker(
                   icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),

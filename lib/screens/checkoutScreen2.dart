@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 
 import '../classes/allClasses.dart';
@@ -83,7 +84,7 @@ class _checkoutScreen2State extends State<checkoutScreen2> {
                               width: 8.w,
                             ),
                             Text(
-                              "Order Summary",
+                              AppLocalizations.of(context).orderSummary,
                               style: TextStyle(
                                 fontSize: 18.sp,
                                 color: Colors.black,
@@ -94,7 +95,7 @@ class _checkoutScreen2State extends State<checkoutScreen2> {
                           ],
                         ),
                         Text(
-                          "  "+DateFormat('dd MMMM','ja').format(widget.order.dateTime.toDate())+ "（木）"+DateFormat.Hm().format(widget.order.dateTime.toDate()),
+                          "  "+DateFormat('y年 MMMM dEE','ja').format(widget.order.dateTime.toDate())+ "（木）"+DateFormat.Hm().format(widget.order.dateTime.toDate()),
                           style: TextStyle(
                             fontSize: 14.sp,
                             color: Colors.grey.shade800,
@@ -158,7 +159,7 @@ class _checkoutScreen2State extends State<checkoutScreen2> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Subtotal",
+                              AppLocalizations.of(context).subtotal,
                               style: TextStyle(
                                 fontSize: 14.sp,
                                 color: Colors.grey.shade700,
@@ -184,14 +185,14 @@ class _checkoutScreen2State extends State<checkoutScreen2> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Service Fee",
+                              AppLocalizations.of(context).serviceFee,
                               style: TextStyle(
                                 fontSize: 14.sp,
                                 color: Colors.grey.shade700,
                               ),
                             ),
                             Text(
-                              "% $serviceFee",
+                              "% ${serviceFee.toInt()}",
                               style: TextStyle(
                                 fontSize: 14.sp,
                                 color: Color(0xff555555),
@@ -207,14 +208,14 @@ class _checkoutScreen2State extends State<checkoutScreen2> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Tax",
+                              AppLocalizations.of(context).tax,
                               style: TextStyle(
                                 fontSize: 14.sp,
                                 color: Colors.grey.shade700,
                               ),
                             ),
                             Text(
-                              "% $tax",
+                              "% ${tax.toInt()}",
                               style: TextStyle(
                                 fontSize: 14.sp,
                                 color: Color(0xff555555),
@@ -246,7 +247,7 @@ class _checkoutScreen2State extends State<checkoutScreen2> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Total",
+                          AppLocalizations.of(context).total,
                           style: TextStyle(
                             fontSize: 14.sp,
                             color: Colors.black,

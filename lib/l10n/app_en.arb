@@ -70,7 +70,20 @@
     "verification": "Verification",
     "codeIsSend": "Code is send to",
     "didNotReceive": "Didn,t receive code? Request again",
-    "verifyNumber": "Verify number"
+    "verifyNumber": "Verify number",
+    "successfullyCopied": "Successfully Copied",
+    "ongoingOrders": "Ongoing Orders",
+    "orderHistory": "Order history",
+    "user": "User",
+    "enterReferral": "Enter Referral code",
+    "pleaseVerifyPhone": "Please verify your phon...",
+    "youAndYourFriendWill": "You and your friend will be given a discount of ¥500. ",
+    "apply": "Apply",
+    "loading": "Loading..."
+
+
+
+
 
 
 

@@ -17,7 +17,7 @@ class restaurant_search extends StatefulWidget {
 
 class _restaurant_searchState extends State<restaurant_search> {
   List<Restaurant> mainShowList=[];
-  List<String> searches=['SeaFood','Cakes','Drinks','Lunch'];
+  List<String> searches=[];
 
   void matchString(String query) {
     List<Restaurant> matchQuery = [];
@@ -73,7 +73,7 @@ class _restaurant_searchState extends State<restaurant_search> {
             Container(
               alignment: Alignment.centerLeft,
               child: Text(
-                mainShowList.length!=0?'${mainShowList.length} restaurants found':AppLocalizations.of(context).popSearch,
+                mainShowList.length!=0?'${mainShowList.length} restaurants found':'',//AppLocalizations.of(context).popSearch,
 
                 style: TextStyle(
                   color: Colors.black,

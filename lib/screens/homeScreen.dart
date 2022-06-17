@@ -27,15 +27,16 @@ class homeScreen extends StatefulWidget {
 }
 
 class _homeScreenState extends State<homeScreen> {
-  void fcm()async{
+  void fcm() async {
     String fcm = await FirebaseMessaging.instance.getToken();
     print(fcm);
   }
+
   @override
   void initState() {
     super.initState();
-
   }
+
   int navigationItem = 0;
   @override
   Widget build(BuildContext context) {
@@ -79,534 +80,576 @@ class _homeScreenState extends State<homeScreen> {
         centerTitle: true,
         automaticallyImplyLeading: false,
       ),
-      body: (allRestaurants.isEmpty)?
-      FutureBuilder(
-          future: dbMain.getRestaurants(homeMainCity),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if(snapshot.hasData){
-
-              return
-              SingleChildScrollView(
-                child: Container(
-                  // padding: EdgeInsets.symmetric(horizontal: 24.w,vertical: 16.h),
-                  color: Color(0xffF0F3FD),
-                  child:
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      ///city name///
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(24.w, 16.h, 0, 12.h),
-                        child: DropdownButton(
-
-                            icon: Icon(
-                              Icons.location_on,
-                              color: Color(0xfffdb601),
-                              size: 30.sp,
-                            ),
-                            value: homeMainCity,
-                            // items: items,
-                            items: cities.map((String items) {
-                              return DropdownMenuItem(
-
-                                value: items,
-                                child: Text(items,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 24.sp,
-                                    fontWeight: FontWeight.normal,
-                                  ),),
-                              );
-                            }).toList(),
-                            onChanged: (val) async{
-                              homeMainCity = val;
-                              allRestaurants.clear();
-                              Navigator.popAndPushNamed(context, homeScreen.routeName);
-
-
-
-                            }),
-                      ),
-                      allRestaurants.isNotEmpty?
-                      Column(
+      body: (allRestaurants.isEmpty)
+          ? FutureBuilder(
+              future: dbMain.getRestaurants(homeMainCity),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  return SingleChildScrollView(
+                    child: Container(
+                      // padding: EdgeInsets.symmetric(horizontal: 24.w,vertical: 16.h),
+                      color: Color(0xffF0F3FD),
+                      child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-
-                          /// Swiper card 1 (Big one) ///
-                          SizedBox(
-                            height: 222.h,
-                            width: width,
-                            child: Swiper(
-                              itemWidth: 500,
-                              layout: SwiperLayout.DEFAULT,
-                              scrollDirection: Axis.horizontal,
-                              loop: true,
-                              itemCount: allRestaurants.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => restaurantDetailScreen(
-                                          restaurant: allRestaurants[index],
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  child: restaurantCard(
-                                    height: 222.h,
-                                    width: 342.w,
-                                    restaurant: allRestaurants[index],
-                                  ),
-                                );
-                              },
-                              viewportFraction: 0.85,
-                              scale: 0.9,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 28.h,
-                          ),
-
-                          ///Text (Specialite for you!)///
+                          ///city name///
                           Padding(
-                            padding: EdgeInsets.fromLTRB(24.w, 5.h, 0, 12.h),
-                            child: Text(
-                              "Specialite for you!",
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20.sp,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                            padding: EdgeInsets.fromLTRB(24.w, 16.h, 0, 12.h),
+                            child: DropdownButton(
+                                icon: Icon(
+                                  Icons.location_on,
+                                  color: Color(0xfffdb601),
+                                  size: 30.sp,
+                                ),
+                                value: homeMainCity,
+                                // items: items,
+                                items: cities.map((String items) {
+                                  return DropdownMenuItem(
+                                    value: items,
+                                    child: Text(
+                                      items,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 24.sp,
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                                onChanged: (val) async {
+                                  homeMainCity = val;
+                                  allRestaurants.clear();
+                                  Navigator.popAndPushNamed(
+                                      context, homeScreen.routeName);
+                                }),
                           ),
+                          allRestaurants.isNotEmpty
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    /// Swiper card 1 (Big one) ///
+                                    SizedBox(
+                                      height: 222.h,
+                                      width: width,
+                                      child: Swiper(
+                                        itemWidth: 500,
+                                        layout: SwiperLayout.DEFAULT,
+                                        scrollDirection: Axis.horizontal,
+                                        loop: true,
+                                        itemCount: allRestaurants.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return InkWell(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      restaurantDetailScreen(
+                                                    restaurant:
+                                                        allRestaurants[index],
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            child: restaurantCard(
+                                              height: 222.h,
+                                              width: 342.w,
+                                              restaurant: allRestaurants[index],
+                                            ),
+                                          );
+                                        },
+                                        viewportFraction: 0.85,
+                                        scale: 0.9,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 28.h,
+                                    ),
 
-                          /// Swiper card 2 (small one)///
-                          Container(
-                            height: 235.h,
-                            width: width,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            margin: EdgeInsets.fromLTRB(24.w, 0, 0, 28.h),
-                            child: ListView.builder(
-                              padding: EdgeInsets.only(right: 24.w),
-                              scrollDirection: Axis.horizontal,
-                              itemCount: allRestaurants.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => restaurantDetailScreen(
-                                          restaurant: allRestaurants[index],
+                                    ///Text (Specialite for you!)///
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(
+                                          24.w, 5.h, 0, 12.h),
+                                      child: Text(
+                                        "Specialite for you!",
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 20.sp,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                    );
-                                  },
-                                  child: restaurantCard2(
-                                    height: 200.h,
-                                    width: 244.w,
-                                    restaurant: allRestaurants[index],
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                          // SizedBox(height: 28.h,),
+                                    ),
 
-                          ///Text (Good Deals!)///
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(24.w, 5.h, 0, 12.h),
-                            child: Text(
-                              AppLocalizations.of(context).goodDeals,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20.sp,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
+                                    /// Swiper card 2 (small one)///
+                                    Container(
+                                      height: 235.h,
+                                      width: width,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      margin:
+                                          EdgeInsets.fromLTRB(24.w, 0, 0, 28.h),
+                                      child: ListView.builder(
+                                        padding: EdgeInsets.only(right: 24.w),
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: allRestaurants.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return InkWell(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      restaurantDetailScreen(
+                                                    restaurant:
+                                                        allRestaurants[index],
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            child: restaurantCard2(
+                                              height: 200.h,
+                                              width: 244.w,
+                                              restaurant: allRestaurants[index],
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    // SizedBox(height: 28.h,),
 
-                          /// Swiper card 3 (small one)///
-                          Container(
-                            height: 235.h,
-                            width: width,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            margin: EdgeInsets.fromLTRB(24.w, 0, 0, 28.h),
-                            child: ListView.builder(
-                              padding: EdgeInsets.only(right: 24.w),
-                              scrollDirection: Axis.horizontal,
-                              itemCount: allRestaurants.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => restaurantDetailScreen(
-                                          restaurant: allRestaurants[index],
+                                    ///Text (Good Deals!)///
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(
+                                          24.w, 5.h, 0, 12.h),
+                                      child: Text(
+                                        AppLocalizations.of(context).goodDeals,
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 20.sp,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                    );
-                                  },
-                                  child: restaurantCard2(
-                                    height: 200.h,
-                                    width: 244.w,
-                                    restaurant: allRestaurants[index],
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                          // SizedBox(height: 28.h,),
+                                    ),
 
-                          ///Text (New on Specialite)///
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(24.w, 5.h, 0, 12.h),
-                            child: Text(
-                              AppLocalizations.of(context).newOnSpecialite,
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 20.sp,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
+                                    /// Swiper card 3 (small one)///
+                                    Container(
+                                      height: 235.h,
+                                      width: width,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      margin:
+                                          EdgeInsets.fromLTRB(24.w, 0, 0, 28.h),
+                                      child: ListView.builder(
+                                        padding: EdgeInsets.only(right: 24.w),
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: allRestaurants.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return InkWell(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      restaurantDetailScreen(
+                                                    restaurant:
+                                                        allRestaurants[index],
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            child: restaurantCard2(
+                                              height: 200.h,
+                                              width: 244.w,
+                                              restaurant: allRestaurants[index],
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    // SizedBox(height: 28.h,),
 
-                          /// Swiper card 4 (small one)///
-                          Container(
-                            height: 235.h,
-                            width: width,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            margin: EdgeInsets.fromLTRB(24.w, 0, 0, 28.h),
-                            child: ListView.builder(
-                              padding: EdgeInsets.only(right: 24.w),
-                              scrollDirection: Axis.horizontal,
-                              itemCount: allRestaurants.length,
-                              itemBuilder: (BuildContext context, int index) {
-                              if(allRestaurants[index].joinInMonth()){
-                                return InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => restaurantDetailScreen(
-                                          restaurant: allRestaurants[index],
+                                    ///Text (New on Specialite)///
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(
+                                          24.w, 5.h, 0, 12.h),
+                                      child: Text(
+                                        AppLocalizations.of(context)
+                                            .newOnSpecialite,
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 20.sp,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                    );
-                                  },
-                                  child: restaurantCard2(
-                                    height: 200.h,
-                                    width: 244.w,
-                                    restaurant: allRestaurants[index],
+                                    ),
+
+                                    /// Swiper card 4 (small one)///
+                                    Container(
+                                      height: 235.h,
+                                      width: width,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      margin:
+                                          EdgeInsets.fromLTRB(24.w, 0, 0, 28.h),
+                                      child: ListView.builder(
+                                        padding: EdgeInsets.only(right: 24.w),
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: allRestaurants.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          if (allRestaurants[index]
+                                              .joinInMonth()) {
+                                            return InkWell(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        restaurantDetailScreen(
+                                                      restaurant:
+                                                          allRestaurants[index],
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              child: restaurantCard2(
+                                                height: 200.h,
+                                                width: 244.w,
+                                                restaurant:
+                                                    allRestaurants[index],
+                                              ),
+                                            );
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                    // SizedBox(height: 28.h,),
+                                  ],
+                                )
+                              : Padding(
+                                  padding: EdgeInsets.fromLTRB(12, 20, 12, 0),
+                                  child: Text(
+                                    "このエリアにはお店が登録されていません。他のエリアを選択し、もう一度検索をしてください。",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 15,
+                                    ),
                                   ),
-                                );
-                              }
-                              },
-                            ),
-                          ),
-                          // SizedBox(height: 28.h,),
+                                ),
                         ],
-                      ):
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(12,20,12,0),
-                        child: Text("このエリアにはお店が登録されていません。他のエリアを選択し、もう一度検索をしてください。",
-                        textAlign: TextAlign.center,
-                          style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 15,
-                        ),),
                       ),
-                    ],
-                  ),
+                    ),
+                  );
+                } else {
+                  return loadingScreen();
+                }
+              })
+          : SingleChildScrollView(
+              child: Container(
+                // padding: EdgeInsets.symmetric(horizontal: 24.w,vertical: 16.h),
+                color: Color(0xffF0F3FD),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    ///city name///
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(24.w, 16.h, 0, 12.h),
+                      child: DropdownButton(
+                          icon: Icon(
+                            Icons.location_on,
+                            color: Color(0xfffdb601),
+                            size: 30.sp,
+                          ),
+                          value: homeMainCity,
+                          // items: items,
+                          items: cities.map((String items) {
+                            return DropdownMenuItem(
+                              value: items,
+                              child: Text(
+                                items,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 24.sp,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (val) async {
+                            homeMainCity = val;
+                            allRestaurants.clear();
+                            Navigator.popAndPushNamed(
+                                context, homeScreen.routeName);
+                          }),
+                    ),
+                    allRestaurants.isNotEmpty
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              /// Swiper card 1 (Big one) ///
+                              SizedBox(
+                                height: 222.h,
+                                width: width,
+                                child: Swiper(
+                                  itemWidth: 500,
+                                  layout: SwiperLayout.DEFAULT,
+                                  scrollDirection: Axis.horizontal,
+                                  loop: true,
+                                  itemCount: allRestaurants.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                restaurantDetailScreen(
+                                              restaurant: allRestaurants[index],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: restaurantCard(
+                                        height: 222.h,
+                                        width: 342.w,
+                                        restaurant: allRestaurants[index],
+                                      ),
+                                    );
+                                  },
+                                  viewportFraction: 0.85,
+                                  scale: 0.9,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 28.h,
+                              ),
+
+                              ///Text (Specialite for you!)///
+                              Padding(
+                                padding:
+                                    EdgeInsets.fromLTRB(24.w, 5.h, 0, 12.h),
+                                child: Text(
+                                  "Specialite for you!",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+
+                              /// Swiper card 2 (small one)///
+                              Container(
+                                height: 235.h,
+                                width: width,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                margin: EdgeInsets.fromLTRB(24.w, 0, 0, 28.h),
+                                child: ListView.builder(
+                                  padding: EdgeInsets.only(right: 24.w),
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: allRestaurants.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                restaurantDetailScreen(
+                                              restaurant: allRestaurants[index],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: restaurantCard2(
+                                        height: 200.h,
+                                        width: 244.w,
+                                        restaurant: allRestaurants[index],
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                              // SizedBox(height: 28.h,),
+
+                              ///Text (Good Deals!)///
+                              Padding(
+                                padding:
+                                    EdgeInsets.fromLTRB(24.w, 5.h, 0, 12.h),
+                                child: Text(
+                                  AppLocalizations.of(context).goodDeals,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+
+                              /// Swiper card 3 (small one)///
+                              Container(
+                                height: 235.h,
+                                width: width,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                margin: EdgeInsets.fromLTRB(24.w, 0, 0, 28.h),
+                                child: ListView.builder(
+                                  padding: EdgeInsets.only(right: 24.w),
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: allRestaurants.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                restaurantDetailScreen(
+                                              restaurant: allRestaurants[index],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: restaurantCard2(
+                                        height: 200.h,
+                                        width: 244.w,
+                                        restaurant: allRestaurants[index],
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                              // SizedBox(height: 28.h,),
+
+                              ///Text (New on Specialite)///
+                              Padding(
+                                padding:
+                                    EdgeInsets.fromLTRB(24.w, 5.h, 0, 12.h),
+                                child: Text(
+                                  AppLocalizations.of(context).newOnSpecialite,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+
+                              /// Swiper card 4 (small one)///
+                              Container(
+                                height: 235.h,
+                                width: width,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                margin: EdgeInsets.fromLTRB(24.w, 0, 0, 28.h),
+                                child: ListView.builder(
+                                  padding: EdgeInsets.only(right: 24.w),
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: allRestaurants.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    if (allRestaurants[index].joinInMonth()) {
+                                      return InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  restaurantDetailScreen(
+                                                restaurant:
+                                                    allRestaurants[index],
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: restaurantCard2(
+                                          height: 200.h,
+                                          width: 244.w,
+                                          restaurant: allRestaurants[index],
+                                        ),
+                                      );
+                                    }
+                                  },
+                                ),
+                              ),
+                              // SizedBox(height: 28.h,),
+                            ],
+                          )
+                        : Padding(
+                            padding: EdgeInsets.fromLTRB(12, 20, 12, 0),
+                            child: Text(
+                              "このエリアにはお店が登録されていません。他のエリアを選択し、もう一度検索をしてください。",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
+                  ],
                 ),
-              );
-            }
-            else{
-              return loadingScreen();
-            }
-
-          }
-      ):
-      SingleChildScrollView(
-        child: Container(
-          // padding: EdgeInsets.symmetric(horizontal: 24.w,vertical: 16.h),
-          color: Color(0xffF0F3FD),
-          child:
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              ///city name///
-              Padding(
-                padding: EdgeInsets.fromLTRB(24.w, 16.h, 0, 12.h),
-                child: DropdownButton(
-
-                    icon: Icon(
-                      Icons.location_on,
-                      color: Color(0xfffdb601),
-                      size: 30.sp,
-                    ),
-                    value: homeMainCity,
-                    // items: items,
-                    items: cities.map((String items) {
-                      return DropdownMenuItem(
-
-                        value: items,
-                        child: Text(items,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 24.sp,
-                            fontWeight: FontWeight.normal,
-                          ),),
-                      );
-                    }).toList(),
-                    onChanged: (val) async{
-                      homeMainCity = val;
-                      allRestaurants.clear();
-                      Navigator.popAndPushNamed(context, homeScreen.routeName);
-
-
-
-                    }),
               ),
-              allRestaurants.isNotEmpty?
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-
-                  /// Swiper card 1 (Big one) ///
-                  SizedBox(
-                    height: 222.h,
-                    width: width,
-                    child: Swiper(
-                      itemWidth: 500,
-                      layout: SwiperLayout.DEFAULT,
-                      scrollDirection: Axis.horizontal,
-                      loop: true,
-                      itemCount: allRestaurants.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => restaurantDetailScreen(
-                                  restaurant: allRestaurants[index],
-                                ),
-                              ),
-                            );
-                          },
-                          child: restaurantCard(
-                            height: 222.h,
-                            width: 342.w,
-                            restaurant: allRestaurants[index],
-                          ),
-                        );
-                      },
-                      viewportFraction: 0.85,
-                      scale: 0.9,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 28.h,
-                  ),
-
-                  ///Text (Specialite for you!)///
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(24.w, 5.h, 0, 12.h),
-                    child: Text(
-                      "Specialite for you!",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-
-                  /// Swiper card 2 (small one)///
-                  Container(
-                    height: 235.h,
-                    width: width,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    margin: EdgeInsets.fromLTRB(24.w, 0, 0, 28.h),
-                    child: ListView.builder(
-                      padding: EdgeInsets.only(right: 24.w),
-                      scrollDirection: Axis.horizontal,
-                      itemCount: allRestaurants.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => restaurantDetailScreen(
-                                  restaurant: allRestaurants[index],
-                                ),
-                              ),
-                            );
-                          },
-                          child: restaurantCard2(
-                            height: 200.h,
-                            width: 244.w,
-                            restaurant: allRestaurants[index],
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  // SizedBox(height: 28.h,),
-
-                  ///Text (Good Deals!)///
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(24.w, 5.h, 0, 12.h),
-                    child: Text(
-                      AppLocalizations.of(context).goodDeals,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-
-                  /// Swiper card 3 (small one)///
-                  Container(
-                    height: 235.h,
-                    width: width,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    margin: EdgeInsets.fromLTRB(24.w, 0, 0, 28.h),
-                    child: ListView.builder(
-                      padding: EdgeInsets.only(right: 24.w),
-                      scrollDirection: Axis.horizontal,
-                      itemCount: allRestaurants.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => restaurantDetailScreen(
-                                  restaurant: allRestaurants[index],
-                                ),
-                              ),
-                            );
-                          },
-                          child: restaurantCard2(
-                            height: 200.h,
-                            width: 244.w,
-                            restaurant: allRestaurants[index],
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  // SizedBox(height: 28.h,),
-
-                  ///Text (New on Specialite)///
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(24.w, 5.h, 0, 12.h),
-                    child: Text(
-                      AppLocalizations.of(context).newOnSpecialite,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-
-                  /// Swiper card 4 (small one)///
-                  Container(
-                    height: 235.h,
-                    width: width,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    margin: EdgeInsets.fromLTRB(24.w, 0, 0, 28.h),
-                    child: ListView.builder(
-                      padding: EdgeInsets.only(right: 24.w),
-                      scrollDirection: Axis.horizontal,
-                      itemCount: allRestaurants.length,
-                      itemBuilder: (BuildContext context, int index) {
-                      if(allRestaurants[index].joinInMonth()){
-                        return InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => restaurantDetailScreen(
-                                  restaurant: allRestaurants[index],
-                                ),
-                              ),
-                            );
-                          },
-                          child: restaurantCard2(
-                            height: 200.h,
-                            width: 244.w,
-                            restaurant: allRestaurants[index],
-                          ),
-                        );
-                      }
-
-                      },
-                    ),
-                  ),
-                  // SizedBox(height: 28.h,),
-                ],
-              ):
-              Padding(
-                padding: EdgeInsets.fromLTRB(12,20,12,0),
-                child: Text("このエリアにはお店が登録されていません。他のエリアを選択し、もう一度検索をしてください。",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 15,
-                  ),),
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
       bottomNavigationBar: Container(
           height: 80.h,
           color: Colors.white,
           child: Container(
             color: Colors.white,
             width: 312.w,
-            margin: EdgeInsets.only(bottom: 20.h, left: 39.w, right: 39.w),
+            margin: EdgeInsets.only(bottom: 20.h, left: 35.w, right: 35.w),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(
-                  Icons.dashboard_outlined,
-                  size: 22.sp,
-                  color: Color(0xfffdb601),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(
+                    Icons.dashboard_outlined,
+                    size: 22.sp,
+                    color: Color(0xfffdb601),
+                  ),
                 ),
                 InkWell(
-                  onTap: () {
+                  onTap: () async {
+                    if (favList.isEmpty) {
+                      showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (context) {
+                            return loadingScreen();
+                          });
+
+                      await dbMain.getFavtList();
+
+                      Navigator.pop(context);
+                    }
+
                     Navigator.pushNamed(context, checkout_favourites.routeName);
                   },
-                  child: Icon(
-                    Icons.favorite_border_outlined,
-                    size: 22.sp,
-                    color: Color(0xff7E869E),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.favorite_border_outlined,
+                      size: 22.sp,
+                      color: Color(0xff7E869E),
+                    ),
                   ),
                 ),
                 InkWell(
@@ -619,28 +662,33 @@ class _homeScreenState extends State<homeScreen> {
                               )),
                     );
                   },
-                  child: Icon(
-                    CupertinoIcons.location,
-                    size: 22.sp,
-                    color: Color(0xff7E869E),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(
+                      CupertinoIcons.location,
+                      size: 22.sp,
+                      color: Color(0xff7E869E),
+                    ),
                   ),
                 ),
                 InkWell(
                   onTap: () {
-                    if(FirebaseAuth.instance.currentUser!=null){
+                    if (FirebaseAuth.instance.currentUser != null) {
                       Navigator.pushNamed(context, profile_homepage.routeName);
-
-                    }else{
-                      ScaffoldMessenger.of(context)
-                          .showSnackBar(SnackBar(content: Text("を利用するためには、ログインが必要です。")));
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("を利用するためには、ログインが必要です。")));
                       Navigator.pushNamedAndRemoveUntil(
                           context, Wrapper.routeName, (route) => false);
                     }
                   },
-                  child: Icon(
-                    CupertinoIcons.person,
-                    size: 22.sp,
-                    color: Color(0xff7E869E),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(
+                      CupertinoIcons.person,
+                      size: 22.sp,
+                      color: Color(0xff7E869E),
+                    ),
                   ),
                 ),
               ],

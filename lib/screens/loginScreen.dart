@@ -58,9 +58,12 @@ class _loginScreenState extends State<loginScreen> {
                   color: Colors.white,
                 ),
                 child: TextField(
+
                   controller: emailController,
+
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
+
                       hoverColor: Colors.white,
                       focusColor: Colors.white,
                       fillColor: Colors.transparent,
@@ -89,6 +92,7 @@ class _loginScreenState extends State<loginScreen> {
                   color: Colors.white,
                 ),
                 child: TextField(
+
                   obscureText: obscured,
                   controller: passwordController,
                   keyboardType: TextInputType.emailAddress,

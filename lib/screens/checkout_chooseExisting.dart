@@ -4,6 +4,7 @@ import 'package:flutter_credit_card/credit_card_brand.dart';
 import 'package:flutter_credit_card/credit_card_widget.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:provider/provider.dart';
 import 'package:specialite_foodapp/screens/homeScreen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -55,6 +56,8 @@ class _checkout_chooseExisting extends State<checkout_chooseExisting> {
           );
 
           await dbMain.updateOrders(widget.order);
+          Provider.of<Checkout>(context, listen: false).orderSummary.clear();
+
           if (refCheckoutInfo[0]){
             await dbMain.decrementBonus(refCheckoutInfo[1], context);
 
