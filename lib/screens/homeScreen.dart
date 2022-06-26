@@ -452,7 +452,7 @@ class _homeScreenState extends State<homeScreen> {
 
                               /// Swiper card 2 (small one)///
                               Container(
-                                height: 235.h,
+                                height: 245.h,
                                 width: width,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8),
@@ -477,7 +477,7 @@ class _homeScreenState extends State<homeScreen> {
                                         );
                                       },
                                       child: restaurantCard2(
-                                        height: 200.h,
+                                        height: 210.h,
                                         width: 244.w,
                                         restaurant: allRestaurants[index],
                                       ),

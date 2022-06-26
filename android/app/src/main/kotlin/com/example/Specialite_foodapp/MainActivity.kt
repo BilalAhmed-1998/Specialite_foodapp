@@ -1,4 +1,4 @@
-package com.example.specialite_foodapp
+package com.foodapp.specialite_foodapp
 
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.android.FlutterFragmentActivity

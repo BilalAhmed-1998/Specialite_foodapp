@@ -257,6 +257,11 @@ class DatabaseCollection {
     List<String> Uids = [];
     var favtUids =  await userCollection.doc(FirebaseAuth.instance.currentUser.uid).collection("FavtList").get();
 
+    if(favtUids.size==0){
+
+      return;
+
+    }
     for(var j =0;j<favtUids.docs.length;j++) {
       Uids.add(favtUids.docs[j].id);
     }

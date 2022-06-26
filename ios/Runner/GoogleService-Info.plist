@@ -3,9 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>1020440603577-c7vtuu2dr2umln2d7cckdefkgg01o4p7.apps.googleusercontent.com</string>
+	<string>1020440603577-lg3aoa94tih9i2n1hc7nukspjahcudv2.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.1020440603577-c7vtuu2dr2umln2d7cckdefkgg01o4p7</string>
+	<string>com.googleusercontent.apps.1020440603577-lg3aoa94tih9i2n1hc7nukspjahcudv2</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>1020440603577-cv2u6gfgc56dqpbs0hughplp88l58ias.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyBk9j2-tSw-93_sPkQ6Fs5c-bAn7yigtWU</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.specialiteFoodapp</string>
+	<string>com.foodapp.specialiteFoodapp</string>
 	<key>PROJECT_ID</key>
 	<string>specialite-199f0</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,6 +31,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1020440603577:ios:cd124709df71d81162e468</string>
+	<string>1:1020440603577:ios:cd50d41c5aa7b1ce62e468</string>
+	<key>DATABASE_URL</key>
+	<string>https://specialite-199f0-default-rtdb.firebaseio.com</string>
 </dict>
 </plist>

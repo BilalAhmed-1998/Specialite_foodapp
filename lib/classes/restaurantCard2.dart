@@ -23,13 +23,15 @@ class _restaurantCard2State extends State<restaurantCard2> {
       Container(
       margin: EdgeInsets.only(right: 8.w),
       width: this.widget.width,
-      height: this.widget.height,
+      //height: this.widget.height,
       child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children:[
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: Container(
+
               width: this.widget.width,
               height: 152.h,
               child: Stack(
@@ -43,7 +45,7 @@ class _restaurantCard2State extends State<restaurantCard2> {
                   bottom: 12.h,
                   child: Container(
                     width: 57.w,
-                    height: 26.h,
+                    //height: 26.h,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(16.5),
                         gradient: LinearGradient(
@@ -105,12 +107,15 @@ class _restaurantCard2State extends State<restaurantCard2> {
                     ],)
                 ]),
                 SizedBox(height: 4.h,),
-                Text(this.widget.restaurant.description,
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    color: Colors.black,
-                    fontWeight: FontWeight.normal,
-                  ),),
+                Container(
+                  height: 20.h,
+                  child: Text(this.widget.restaurant.description,
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: Colors.black,
+                      fontWeight: FontWeight.normal,
+                    ),),
+                ),
 
 
               ],

@@ -19,6 +19,15 @@ class splashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
 
     Future.delayed(Duration(microseconds: duration,), () async{
+
+
+
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Your Location Services are Disabled!")));
+
+      }
       currentCoordinates = await LocationService.determinePosition();
       currentCoordinates = Position(latitude: 35.694845729866785,longitude:139.70238006570884); //japan
       List<Placemark> placeMarks = await placemarkFromCoordinates(currentCoordinates.latitude,currentCoordinates.longitude,localeIdentifier: 'ja');
@@ -77,5 +86,32 @@ class splashScreen extends StatelessWidget {
 
           ],
         ));
+
+  }
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    return await Geolocator.getCurrentPosition();
   }
 }

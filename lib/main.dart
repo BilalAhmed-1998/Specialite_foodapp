@@ -74,7 +74,7 @@ class MyApp extends StatelessWidget {
           ],
           supportedLocales: const [
             Locale('ja'),
-           // Locale('en'),
+         //  Locale('en'),
           ],
           theme: ThemeData(
             fontFamily: "regular"

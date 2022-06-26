@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.specialite_foodapp">
+    package="com.foodapp.specialite_foodapp">
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -31,7 +31,7 @@
                 />
             <meta-data
                 android:name="com.google.firebase.messaging.default_notification_channel_id"
-                android:value="com.example.specialite_foodapp"/>
+                android:value="com.foodapp.specialite_foodapp"/>
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
