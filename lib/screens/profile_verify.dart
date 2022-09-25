@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:specialite_foodapp/dummyData.dart';
 import 'package:specialite_foodapp/screens/profile_phone.dart';
-import 'package:specialite_foodapp/screens/profile_refer.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 

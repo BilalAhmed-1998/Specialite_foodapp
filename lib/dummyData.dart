@@ -1,9 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:specialite_foodapp/services/DatabaseCollection.dart';
 
 import 'classes/allClasses.dart';

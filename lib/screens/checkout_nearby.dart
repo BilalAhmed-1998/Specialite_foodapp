@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:specialite_foodapp/classes/favourites_card.dart';
 import 'package:specialite_foodapp/dummyData.dart';
 import 'package:specialite_foodapp/screens/checkout_favourites.dart';
@@ -79,24 +78,7 @@ class _nearbyState extends State<nearby> {
                         color: Colors.black,
                         fontWeight: FontWeight.w600,
                       ),
-                    ),
-                    // Container(
-                    //   height: 25.h,
-                    //   width: 71.w,
-                    //   decoration: BoxDecoration(
-                    //       color: Color(0xffFF5252).withOpacity(0.15),
-                    //       borderRadius: BorderRadius.circular(16.5)),
-                    //   child: Center(
-                    //     child: Text(
-                    //       '20 - 30 min',
-                    //       style: TextStyle(
-                    //         fontSize: 8.sp,
-                    //         color: Color(0xffFF5252),
-                    //         fontWeight: FontWeight.w600,
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
+                    )
                   ],
                 )),
             SizedBox(
@@ -109,8 +91,8 @@ class _nearbyState extends State<nearby> {
               child: GoogleMap(
                 mapType: MapType.normal,
                 initialCameraPosition: campos,
-                myLocationEnabled: false,
-                zoomControlsEnabled: false,
+                myLocationEnabled: true,
+                zoomControlsEnabled: true,
                  zoomGesturesEnabled: true,
                  scrollGesturesEnabled: true,
                  markers: {pickUpLocMarker,},
@@ -120,10 +102,7 @@ class _nearbyState extends State<nearby> {
                     myMapController = controller;
                   });
                 },
-
               ),
-
-
             ),
             SizedBox(
               height: 28.h,
@@ -172,21 +151,27 @@ class _nearbyState extends State<nearby> {
                 ),
                 InkWell(
                   onTap: () async {
-                    if (favList.isEmpty) {
-                      showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (context) {
-                            return loadingScreen();
-                          });
+                    if (FirebaseAuth.instance.currentUser != null) {
 
-                      await dbMain.getFavtList();
+                      if (favList.isEmpty) {
+                        showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) {
+                              return loadingScreen();
+                            });
 
-                      Navigator.pop(context);
+                        await dbMain.getFavtList();
+
+                        Navigator.pop(context);
+                      }
+                      Navigator.pushNamed(context, checkout_favourites.routeName);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("を利用するためには、ログインが必要です。")));
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, Wrapper.routeName, (route) => false);
                     }
-
-
-                    Navigator.pushNamed(context, checkout_favourites.routeName);
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),

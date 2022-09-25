@@ -1,15 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:specialite_foodapp/main.dart';
-import 'package:specialite_foodapp/screens/checkout_chooseExisting.dart';
 import 'package:specialite_foodapp/screens/checkout_paymentSelection.dart';
-import 'package:specialite_foodapp/screens/profile_homepage.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../classes/allClasses.dart';

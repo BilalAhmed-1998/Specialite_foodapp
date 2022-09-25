@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import 'package:specialite_foodapp/dummyData.dart';
 import 'package:specialite_foodapp/services/paymentService.dart';
 import 'package:specialite_foodapp/screens/homeScreen.dart';
-
 import '../classes/allClasses.dart';
 import 'loadingScreen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

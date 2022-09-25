@@ -1,18 +1,16 @@
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:io' show Platform;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
 import 'package:specialite_foodapp/screens/homeScreen.dart';
 import 'package:specialite_foodapp/screens/signUpScreen.dart';
-
 import '../services/authService.dart';
-import 'loadingScreen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class loginScreen extends StatefulWidget {
-  //const loginScreen({Key? key}) : super(key: key);
   static const routeName = '/loginScreen';
 
   @override
@@ -270,8 +268,42 @@ class _loginScreenState extends State<loginScreen> {
                 ),
               ),
               SizedBox(
-                height: 45.h,
+                height: 25.h,
               ),
+              ///sign in with Apple///
+              (Platform.isIOS)?
+              InkWell(
+                onTap: ()async{
+                  await AuthService().signInWithApple(context);
+                },
+                child: Container(
+                  width: 342.w,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  padding: EdgeInsets.all(12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Icon(Icons.apple,
+                      size: 30,),
+                      SizedBox(width: 54.w,),
+                      Text(AppLocalizations.of(context).signApple,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16.sp,
+                        ),),
+
+                    ],
+                  ),
+                ),
+              ):Container(),
+              (Platform.isIOS)?
+              SizedBox(
+                height: 15.h,
+              ):Container(),
+              ///sign in with google///
               InkWell(
                 onTap: ()async{
 
@@ -303,21 +335,12 @@ class _loginScreenState extends State<loginScreen> {
                 ),
               ),
               SizedBox(
-                height: 45.h,
+                height: 35.h,
               ),
               InkWell(
                 onTap: ()  {
 
                   Navigator.pushNamed(context, homeScreen.routeName);
-                  // showDialog(
-                  //     context: context,
-                  //     barrierDismissible: false,
-                  //     builder: (context) {
-                  //       return loadingScreen();
-                  //     });
-                  //  await AuthService().signInAnon(context);
-                  //
-                  // Navigator.pop(context);
                 },
                 child: Text(
                   AppLocalizations.of(context).continueGuest,

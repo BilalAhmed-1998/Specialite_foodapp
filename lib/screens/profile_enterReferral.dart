@@ -1,17 +1,9 @@
-import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:specialite_foodapp/classes/referralCard.dart';
 import 'package:specialite_foodapp/dummyData.dart';
-import 'package:specialite_foodapp/screens/profile_copied.dart';
-import 'package:specialite_foodapp/screens/profile_dialogue.dart';
 import 'package:specialite_foodapp/screens/profile_homepage.dart';
-import 'package:specialite_foodapp/screens/profile_refer.dart';
-import 'package:specialite_foodapp/screens/profile_verify.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class profile_enterReferral extends StatefulWidget {

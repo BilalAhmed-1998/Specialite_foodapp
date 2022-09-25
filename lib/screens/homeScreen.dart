@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -628,20 +627,27 @@ class _homeScreenState extends State<homeScreen> {
                 ),
                 InkWell(
                   onTap: () async {
-                    if (favList.isEmpty) {
-                      showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (context) {
-                            return loadingScreen();
-                          });
+                    if (FirebaseAuth.instance.currentUser != null) {
+                      if (favList.isEmpty) {
+                        showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) {
+                              return loadingScreen();
+                            });
 
-                      await dbMain.getFavtList();
+                        await dbMain.getFavtList();
 
-                      Navigator.pop(context);
+                        Navigator.pop(context);
+                      }
+                      Navigator.pushNamed(
+                          context, checkout_favourites.routeName);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text("を利用するためには、ログインが必要です。")));
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, Wrapper.routeName, (route) => false);
                     }
-
-                    Navigator.pushNamed(context, checkout_favourites.routeName);
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -654,13 +660,20 @@ class _homeScreenState extends State<homeScreen> {
                 ),
                 InkWell(
                   onTap: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => nearby(
-                                favList: allRestaurants,
-                              )),
-                    );
+                    if (currentCoordinates.longitude != null &&
+                        currentCoordinates.latitude != null) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => nearby(
+                                  favList: allRestaurants,
+                                )),
+                      );
+                    }else{
+
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text("Your Location Services are Disabled!")));
+                    }
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),

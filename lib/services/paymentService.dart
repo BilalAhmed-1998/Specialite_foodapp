@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_stripe/flutter_stripe.dart';
-//import 'package:stripe_payment/stripe_payment.dart';
 
 
 class StripeTransactionResponse {
@@ -62,7 +61,7 @@ class StripeService {
       var response = await Stripe.instance.confirmPayment(
           paymentIntent['client_secret'],
           PaymentMethodParams.cardFromMethodId(
-              paymentMethodId: paymentMethod["id"])
+               paymentMethodData: paymentMethod["id"])
       );
       print(response.status);
       print(response);

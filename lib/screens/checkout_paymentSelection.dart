@@ -1,8 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:specialite_foodapp/dummyData.dart';
 import 'package:specialite_foodapp/screens/checkout_addNewCard.dart';
 import 'package:specialite_foodapp/screens/checkout_chooseExisting.dart';

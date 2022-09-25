@@ -13,8 +13,8 @@ import 'package:specialite_foodapp/screens/orderScreen.dart';
 import 'package:specialite_foodapp/screens/homeScreen.dart';
 import 'package:specialite_foodapp/screens/loadingScreen.dart';
 import 'package:specialite_foodapp/screens/loginScreen.dart';
-import 'package:specialite_foodapp/screens/orderScreen.dart';
 import 'package:specialite_foodapp/screens/profile_copied.dart';
+import 'package:specialite_foodapp/screens/profile_deletion.dart';
 import 'package:specialite_foodapp/screens/profile_dialogue.dart';
 import 'package:specialite_foodapp/screens/profile_edit.dart';
 import 'package:specialite_foodapp/screens/profile_enterReferral.dart';
@@ -26,16 +26,12 @@ import 'package:specialite_foodapp/screens/profile_refer.dart';
 import 'package:specialite_foodapp/screens/profile_verify.dart';
 import 'package:specialite_foodapp/screens/restaurant_search.dart';
 import 'package:specialite_foodapp/screens/signUpScreen.dart';
-import 'package:specialite_foodapp/screens/streamTest.dart';
 import 'package:specialite_foodapp/services/wrapper.dart';
-
-
-
 
 final Map <String,WidgetBuilder> routes =  {
 
   Wrapper.routeName: (context) => Wrapper(),
-  UserInformation.routeName: (context) => UserInformation(),
+  profile_deletion.routeName: (context) => profile_deletion(),
   loginScreen.routeName: (context) => loginScreen(),
   signUpScreen.routeName:(context) => signUpScreen(),
   emailVerificationScreen.routeName:(context) => emailVerificationScreen(),

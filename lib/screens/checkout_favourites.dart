@@ -46,9 +46,16 @@ class _checkout_favouritesState extends State<checkout_favourites> {
               if (favList[index].favt) {
                 return InkWell(
                   onTap: () {
-                    Navigator.push(context,MaterialPageRoute(
-                      builder: (context) => favourite_detail(restaurant: favList[index]),
-                    ));
+                    if(currentCoordinates.longitude !=null && currentCoordinates.latitude!=null){
+                      Navigator.push(context,MaterialPageRoute(
+                        builder: (context) => favourite_detail(restaurant: favList[index]),
+                      ));
+                    }else{
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text("Your Location Services are Disabled!")));
+                      Navigator.pop(context);
+                    }
+
                   },
                   child: favourites_card(fav: favList[index]),
                 );
@@ -99,14 +106,20 @@ class _checkout_favouritesState extends State<checkout_favourites> {
                 ),
                 InkWell(
                   onTap: (){
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => nearby(
-                          favList: allRestaurants,
-                        )
-                      ),
-                    );
+                    if (currentCoordinates.longitude != null &&
+                        currentCoordinates.latitude != null) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => nearby(
+                              favList: allRestaurants,
+                            )),
+                      );
+                    }else{
+
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text("Your Location Services are Disabled!")));
+                    }
 
                   },
                   child: Padding(

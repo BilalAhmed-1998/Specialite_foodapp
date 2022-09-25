@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 
 class loadingScreen extends StatelessWidget {
  // const loadingScreen({Key? key}) : super(key: key);

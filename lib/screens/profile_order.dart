@@ -1,14 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
 import 'package:specialite_foodapp/classes/orderHistoryCard.dart';
 import 'package:specialite_foodapp/dummyData.dart';
 import 'package:specialite_foodapp/screens/checkoutScreen2.dart';
 import 'package:specialite_foodapp/screens/profile_homepage.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../classes/OtpInput.dart';
-import '../classes/allClasses.dart';
 
 class profile_order extends StatefulWidget {
   static const routeName = '/profile_order';

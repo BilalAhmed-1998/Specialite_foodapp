@@ -1,12 +1,12 @@
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:geocoding/geocoding.dart';
 /// Determine the current position of the device.
 ///
 /// When the location services are not enabled or permissions
 /// are denied the `Future` will return an error.
 class LocationService{
 
-  static Future<Position> determinePosition() async {
+  static Future determinePosition(context) async {
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -16,7 +16,11 @@ class LocationService{
       // Location services are not enabled don't continue
       // accessing the position and request users of the
       // App to enable the location services.
-      return Future.error('Location services are disabled.');
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Your Location Services are Disabled!")));
+
+
+      return 'Location services are disabled.';
     }
 
     permission = await Geolocator.checkPermission();
@@ -28,14 +32,19 @@ class LocationService{
         // Android's shouldShowRequestPermissionRationale
         // returned true. According to Android guidelines
         // your App should show an explanatory UI now.
-        return Future.error('Location permissions are denied');
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Location permissions are denied.Kindly give permission to location Services")));
+
+        return 'Location permissions are denied.Kindly give permission to location Services';
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
       // Permissions are denied forever, handle appropriately.
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Location permissions are permanently denied, we cannot request permissions.")));
+      return
+          'Location permissions are permanently denied, we cannot request permissions.';
     }
 
     // When we reach here, permissions are granted and we can

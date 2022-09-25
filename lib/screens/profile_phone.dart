@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:specialite_foodapp/dummyData.dart';
-import 'package:specialite_foodapp/screens/profile_copied.dart';
 import 'package:specialite_foodapp/screens/profile_dialogue.dart';
 import 'package:specialite_foodapp/screens/profile_refer.dart';
 import 'package:specialite_foodapp/screens/profile_verify.dart';

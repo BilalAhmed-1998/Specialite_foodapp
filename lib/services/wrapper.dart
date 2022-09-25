@@ -1,21 +1,13 @@
 
-
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
-import 'package:specialite_foodapp/dummyData.dart';
-import 'package:specialite_foodapp/screens/checkout_paymentSelection.dart';
-import 'package:specialite_foodapp/screens/emailVerificationScreen.dart';
 import 'package:specialite_foodapp/screens/homeScreen.dart';
-import 'package:specialite_foodapp/screens/loadingScreen.dart';
 import 'package:specialite_foodapp/screens/loginScreen.dart';
 
 import '../classes/allClasses.dart';
 
 class Wrapper extends StatelessWidget {
   static const routeName = '/Wrapper';
-  //const Wrapper({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

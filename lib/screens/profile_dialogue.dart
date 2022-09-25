@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../dummyData.dart';
-
-
 class profile_dialogue extends StatelessWidget {
   static const routeName = '/profile_dialogue';
 

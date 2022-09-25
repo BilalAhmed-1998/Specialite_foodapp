@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,7 +9,6 @@ import '../dummyData.dart';
 import '../services/locationService.dart';
 
 class splashScreen extends StatelessWidget {
-  //const splash_screen({Key key}) : super(key: key);
   static const routeName = '/splash_screen';
   int duration = 0;
   String goTopage = "";
@@ -20,26 +20,21 @@ class splashScreen extends StatelessWidget {
 
     Future.delayed(Duration(microseconds: duration,), () async{
 
+      dynamic currentcoordinates = await LocationService.determinePosition(context);
+      if(currentcoordinates.runtimeType != String ){
+        currentCoordinates = currentcoordinates;
+        List<Placemark> placeMarks = await placemarkFromCoordinates(currentCoordinates.latitude,currentCoordinates.longitude,localeIdentifier: 'ja');
+        bool exist = false;
 
-
-      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Your Location Services are Disabled!")));
-
-      }
-      currentCoordinates = await LocationService.determinePosition();
-      currentCoordinates = Position(latitude: 35.694845729866785,longitude:139.70238006570884); //japan
-      List<Placemark> placeMarks = await placemarkFromCoordinates(currentCoordinates.latitude,currentCoordinates.longitude,localeIdentifier: 'ja');
-      bool exist = false;
-
-      for (var item in cities) {
-        if(placeMarks[0].administrativeArea.contains(item) && placeMarks[0].locality.contains(item)){
-          exist = true;
-          homeMainCity = item;
-          break;
+        for (var item in cities) {
+          if(placeMarks[0].administrativeArea.contains(item) && placeMarks[0].locality.contains(item)){
+            exist = true;
+            homeMainCity = item;
+            break;
+          }
         }
       }
+
       Navigator.pushNamed(context, goTopage);
     });
 

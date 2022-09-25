@@ -2,14 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
 import 'package:specialite_foodapp/classes/prrofileCard.dart';
 import 'package:specialite_foodapp/dummyData.dart';
 import 'package:specialite_foodapp/screens/checkout_favourites.dart';
-import 'package:specialite_foodapp/screens/checkout_paymentSelection.dart';
 import 'package:specialite_foodapp/screens/homeScreen.dart';
 import 'package:specialite_foodapp/screens/checkout_nearby.dart';
-import 'package:specialite_foodapp/screens/loginScreen.dart';
+import 'package:specialite_foodapp/screens/profile_deletion.dart';
 import 'package:specialite_foodapp/screens/profile_edit.dart';
 import 'package:specialite_foodapp/screens/profile_refer.dart';
 import 'package:specialite_foodapp/screens/profile_order.dart';
@@ -143,27 +141,24 @@ class _profile_homepageState extends State<profile_homepage> {
               height: 24.h,
             ),
             Container(
-              width: 342.w,
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xff8a959e).withOpacity(0.2),
-                    spreadRadius: 0,
-                    blurRadius: 40,
-                    offset: const Offset(0, 8),
-                  )
-                ],
-                borderRadius: BorderRadius.circular(8),
-                color: Colors.white,
-              ),
-              child: Column(
-                children: [
+                width: 342.w,
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xff8a959e).withOpacity(0.2),
+                      spreadRadius: 0,
+                      blurRadius: 40,
+                      offset: const Offset(0, 8),
+                    )
+                  ],
+                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.white,
+                ),
+                child: Column(children: [
                   InkWell(
                       enableFeedback: true,
                       onTap: () async {
-
-
-                        if(ongoingOrders.isEmpty){
+                        if (ongoingOrders.isEmpty) {
                           showDialog(
                               context: context,
                               barrierDismissible: false,
@@ -173,10 +168,9 @@ class _profile_homepageState extends State<profile_homepage> {
 
                           await dbMain.getOngoingOrders();
                           Navigator.pop(context);
-
                         }
 
-                        if(orderHistory.isEmpty){
+                        if (orderHistory.isEmpty) {
                           showDialog(
                               context: context,
                               barrierDismissible: false,
@@ -186,14 +180,11 @@ class _profile_homepageState extends State<profile_homepage> {
 
                           await dbMain.getCompletedOrders();
                           Navigator.pop(context);
-
                         }
-
-
-
                         Navigator.pushNamed(context, profile_order.routeName);
                       },
-                      child: profileCard("assets/images/pro3.png", AppLocalizations.of(context).orders)),
+                      child: profileCard("assets/images/pro3.png",
+                          AppLocalizations.of(context).orders)),
                   Divider(
                     height: 1.h,
                     color: const Color(0xffDFDFDF),
@@ -203,12 +194,16 @@ class _profile_homepageState extends State<profile_homepage> {
                       enableFeedback: true,
                       onTap: () {
                         if (FirebaseAuth.instance.currentUser != null) {
-                          refCode = FirebaseAuth.instance.currentUser.phoneNumber!=null?FirebaseAuth.instance.currentUser.uid:AppLocalizations.of(context).pleaseVerifyPhone;
+                          refCode = FirebaseAuth
+                                      .instance.currentUser.phoneNumber !=
+                                  null
+                              ? FirebaseAuth.instance.currentUser.uid
+                              : AppLocalizations.of(context).pleaseVerifyPhone;
                         }
                         Navigator.pushNamed(context, profile_refer.routeName);
                       },
-                      child: profileCard(
-                          "assets/images/pro4.png", AppLocalizations.of(context).referFriend)),
+                      child: profileCard("assets/images/pro4.png",
+                          AppLocalizations.of(context).referFriend)),
                   Divider(
                     height: 1.h,
                     color: const Color(0xffDFDFDF),
@@ -216,29 +211,46 @@ class _profile_homepageState extends State<profile_homepage> {
                   ),
                   InkWell(
                       enableFeedback: true,
-                      onTap: () async{
-                        if (FirebaseAuth.instance.currentUser != null)
-                          {refCode = FirebaseAuth.instance.currentUser.uid;}
-                        dynamic temp = [false,""];
+                      onTap: () async {
+                        if (FirebaseAuth.instance.currentUser != null) {
+                          refCode = FirebaseAuth.instance.currentUser.uid;
+                        }
+                        dynamic temp = [false, ""];
                         temp = await dbMain.checkReferralBonus(context);
-                        if (temp[1]!=""){
-                          referralApplied=true;
+                        if (temp[1] != "") {
+                          referralApplied = true;
                         }
                         Navigator.pushNamed(
                             context, profile_enterReferral.routeName);
                       },
-                      child: profileCard(
-                          "assets/images/pro4.png", AppLocalizations.of(context).enterReferral)),
+                      child: profileCard("assets/images/pro4.png",
+                          AppLocalizations.of(context).enterReferral)),
                   Divider(
                     height: 1.h,
                     color: const Color(0xffDFDFDF),
                     thickness: 2,
                   ),
-
                   InkWell(
                       enableFeedback: true,
-                      onTap: () {},
-                      child: profileCard("assets/images/pro6.png", AppLocalizations.of(context).setting)),
+                      onTap: () {
+                        Navigator.pushNamed(context, profile_edit.routeName);
+                      },
+                      child: profileCard("assets/images/pro6.png",
+                          AppLocalizations.of(context).setting)),
+                  Divider(
+                    height: 1.h,
+                    color: const Color(0xffDFDFDF),
+                    thickness: 2,
+                  ),
+                  InkWell(
+                    enableFeedback: true,
+                    onTap: () async {
+
+                      Navigator.pushNamed(context, profile_deletion.routeName);
+                    },
+                    child: profileCard(
+                        "assets/images/pro15.png",
+                        "アカウントの削除"),),
                   Divider(
                     height: 1.h,
                     color: const Color(0xffDFDFDF),
@@ -266,9 +278,8 @@ class _profile_homepageState extends State<profile_homepage> {
                           (FirebaseAuth.instance.currentUser != null)
                               ? AppLocalizations.of(context).logout
                               : AppLocalizations.of(context).login)),
-                ],
-              ),
-            ),
+
+                ])),
           ],
         ),
       ),
@@ -296,7 +307,7 @@ class _profile_homepageState extends State<profile_homepage> {
                   ),
                 ),
                 InkWell(
-                  onTap: () async{
+                  onTap: () async {
                     if (favList.isEmpty) {
                       showDialog(
                           context: context,
@@ -322,13 +333,20 @@ class _profile_homepageState extends State<profile_homepage> {
                 ),
                 InkWell(
                   onTap: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => nearby(
-                                favList: nearbyList,
-                              )),
-                    );
+                    if (currentCoordinates.longitude != null &&
+                        currentCoordinates.latitude != null) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => nearby(
+                              favList: allRestaurants,
+                            )),
+                      );
+                    }else{
+
+                      ScaffoldMessenger.of(context)
+                          .showSnackBar(SnackBar(content: Text("Your Location Services are Disabled!")));
+                    }
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
