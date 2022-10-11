@@ -16,7 +16,6 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-
   cupertino_icons: ^1.0.2
   flutter_screenutil: ^5.2.0
   flutter_swiper: ^1.1.6
@@ -30,7 +29,7 @@ dependencies:
   google_sign_in: ^5.2.4
   cloud_firestore: ^3.1.10
   firebase_storage: ^10.2.17
-  image_picker: ^0.8.4+4
+  image_picker: ^0.8.6
   flutter_stripe: ^4.0.0
   firebase_messaging: ^11.2.12
   http: ^0.13.4
@@ -42,7 +41,6 @@ dependencies:
   location: ^4.4.0
   the_apple_sign_in: ^1.1.1
 #  firebase_crashlytics: ^2.8.2
-
 
 dev_dependencies:
   flutter_test:
