@@ -53,7 +53,7 @@ class orderScreen extends StatefulWidget {
 class _orderScreenState extends State<orderScreen> {
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
-  List<bool> isSelected = [false, true];
+  List<bool> isSelected = [true, false];
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +118,7 @@ class _orderScreenState extends State<orderScreen> {
                     },
                     children: [
                       ClipRRect(
-                        child: Container(
+                        child: SizedBox(
                           width: 171.w,
                           height: 40.h,
                           child: Center(
@@ -148,7 +148,7 @@ class _orderScreenState extends State<orderScreen> {
                     ]),
               ),
               SizedBox(
-                height: 28.h,
+                height: 20.h,
               ),
               (widget.dineIn == true && isSelected[0] == true)
                   ? Container(
@@ -196,7 +196,7 @@ class _orderScreenState extends State<orderScreen> {
                             ],
                           ),
                           Text(
-                            this.widget.noOfSeats.toString(),
+                            widget.noOfSeats.toString(),
                             style: TextStyle(
                               fontSize: 14.sp,
                               color: Colors.grey.shade600,
@@ -208,186 +208,11 @@ class _orderScreenState extends State<orderScreen> {
                     )
                   : Container(),
               SizedBox(
-                height: 20.h,
+                height: 15.h,
               ),
 
               ///Calendar///
-              Container(
-                width: 342.w,
-                height: 200,
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color(0xff0A0A0A).withOpacity(0.05),
-                      spreadRadius: 0,
-                      blurRadius: 12.sp,
-                      offset: Offset(0, 4),
-                    )
-                  ],
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: TableCalendar(
-                  locale: 'ja',
-                  focusedDay: _focusedDay,
-                  firstDay: DateTime.now(),
-                  lastDay: DateTime.utc(2025, 1, 1),
-                  shouldFillViewport: true,
-                  sixWeekMonthsEnforced: true,
-                  calendarFormat: CalendarFormat.week,
-                  daysOfWeekVisible: true,
-                  headerStyle: HeaderStyle(
-                      titleTextStyle: TextStyle(
-                        color: Colors.white,
-                      ),
-                      rightChevronVisible: false,
-                      formatButtonShowsNext: false,
-                      formatButtonVisible: false,
-                      // titleTextFormatter: DateTime.now().day,
-                      leftChevronIcon: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.calendar_today_outlined,
-                                  color: Color(0xfffdb601),
-                                ),
-                                SizedBox(
-                                  width: 12.w,
-                                ),
-                                Text(
-                                  AppLocalizations.of(context).calendar,
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 18.sp,
-                                      fontWeight: FontWeight.w600),
-                                )
-                              ],
-                            ),
-                            SizedBox(
-                              height: 3.h,
-                            ),
-                            Text(
-                              DateFormat('y年 MMMM dEE', 'ja')
-                                  .format(_selectedDay),
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                color: Color(0xff555555),
-                              ),
-                            )
-                          ])),
-                  calendarStyle: CalendarStyle(
-                    selectedTextStyle: TextStyle(color: Colors.black),
-                    todayDecoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.5),
-                      shape: BoxShape.circle,
-                    ),
-                    selectedDecoration: BoxDecoration(
-                      color: Color(0xfffdb601),
-                      shape: BoxShape.circle,
-
-                      //borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  selectedDayPredicate: (day) {
-                    return isSameDay(_selectedDay, day);
-                  },
-                  onDaySelected: (selectedDay, focusedDay) async {
-
-                    if(selectedDay.toString().substring(0,10) != _selectedDay.toString().substring(0,10)) {
-                      print(selectedDay.toString().substring(0, 10));
-                      print("matched!!");
-                      print(_selectedDay.toString().substring(0, 10));
-
-
-                      showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (context) {
-                            return loadingScreen();
-                          });
-
-                      ///truncating w.r.t doc ids yyyy-mm-dd///
-
-                      // String today = DateFormat('yyyy-m-dd').format(_selectedDay);
-                      String docId = selectedDay.toString().substring(0, 10);
-
-                      ///async function calling for changing timings of map///
-
-                      for (var i = 0; i < widget.selectedItems.length; i++) {
-                        dynamic timings = await dbMain.getSpecificDatePrices(
-                            widget.restId, widget.selectedItems[i].dishId,
-                            docId);
-
-                        if (timings != false) {
-                          setState(() {
-                            _selectedDay = selectedDay;
-                            _focusedDay =
-                                focusedDay; // update `_focusedDay` here as well
-
-                            widget.selectedItems[i].timeCost = timings;
-
-                            ///reseting radio buttons for new timings///
-
-                            for (var radio = 0;
-                            radio < widget.selectedItems[i].lengthTimeCost;
-                            radio++) {
-                              widget.radiobools[i][radio] = false;
-                            }
-
-                            ///making first radio button checked
-                            widget.radiobools[i][0] = true;
-
-                            ///updating notifier class for change in cost///
-                            mainCheckout.changeTimeSlot(
-                                i,
-                                widget.selectedItems[i].timeCost.keys
-                                    .elementAt(0),
-                                widget.selectedItems[i].timeCost.values
-                                    .elementAt(0));
-                            mainCheckout.calculateSubTotal();
-                          });
-                        } else {
-                          print("false");
-                          setState(() {
-                            _selectedDay = selectedDay;
-                            _focusedDay =
-                                focusedDay; // update `_focusedDay` here as well
-
-                            widget.selectedItems[i].timeCost =
-                            widget.basicPriceMap[0];
-
-                            ///reseting radio buttons for new timings///
-
-                            for (var radio = 0;
-                            radio < widget.selectedItems[i].lengthTimeCost;
-                            radio++) {
-                              widget.radiobools[i][radio] = false;
-                            }
-
-                            ///making first radio button checked
-                            widget.radiobools[i][0] = true;
-
-                            ///updating notifier class for change in cost///
-                            mainCheckout.changeTimeSlot(
-                                i,
-                                widget.selectedItems[i].timeCost.keys
-                                    .elementAt(0),
-                                widget.selectedItems[i].timeCost.values
-                                    .elementAt(0));
-                            mainCheckout.calculateSubTotal();
-                          });
-                        }
-                      } //loop end//
-                      Navigator.pop(context);
-                    }
-
-                  },
-                ),
-              ),
+              _buildCalendar(),
               SizedBox(
                 height: 20.h,
               ),
@@ -460,7 +285,7 @@ class _orderScreenState extends State<orderScreen> {
                             width: 34.w,
                             height: 34.w,
                             child: Image.network(
-                              this.widget.selectedItems[selectedItemNo].image,
+                              widget.selectedItems[selectedItemNo].image,
                               fit: BoxFit.fill,
                             ),
                           ),
@@ -468,7 +293,7 @@ class _orderScreenState extends State<orderScreen> {
                             width: 8.w,
                           ),
                           Text(
-                            this.widget.selectedItems[selectedItemNo].itemTitle,
+                            widget.selectedItems[selectedItemNo].itemTitle,
                             style: TextStyle(
                               fontSize: 14.sp,
                               color: Colors.black,
@@ -490,7 +315,6 @@ class _orderScreenState extends State<orderScreen> {
                                   widget.selectedItems[selectedItemNo]
                                       .lengthTimeCost;
                               radioNo++)
-                            //for(var radioNo in widget.selectedItems[selectedItemNo].timeCost.keys.toList()..sort())
                             Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -511,42 +335,52 @@ class _orderScreenState extends State<orderScreen> {
                                             onChanged: (index) {
                                               setState(() {
                                                 ///making all radio buttons unchecked
-                                                for (var i = 0;
-                                                    i <
-                                                        widget
-                                                            .selectedItems[
-                                                                selectedItemNo]
-                                                            .lengthTimeCost;
-                                                    i++) {
-                                                  if (i != radioNo) {
-                                                    widget.radiobools[
-                                                            selectedItemNo][i] =
-                                                        false;
+                                                for (var j = 0;
+                                                    j <
+                                                        widget.selectedItems
+                                                            .length;
+                                                    j++) {
+                                                  for (var i = 0;
+                                                      i <
+                                                          widget
+                                                              .selectedItems[j]
+                                                              .lengthTimeCost;
+                                                      i++) {
+                                                    if (i != radioNo) {
+                                                      widget.radiobools[j][i] =
+                                                          false;
+                                                    }
                                                   }
                                                 }
 
                                                 ///making selected one radio checked ///
-                                                widget.radiobools[
-                                                        selectedItemNo]
-                                                    [radioNo] = true;
+                                                for (var j = 0;
+                                                    j <
+                                                        widget.selectedItems
+                                                            .length;
+                                                    j++) {
+                                                  widget.radiobools[j]
+                                                      [radioNo] = true;
+                                                }
                                               });
 
                                               /// updating maincheckout for the timeslots///
-                                              mainCheckout.changeTimeSlot(
-                                                  selectedItemNo,
-                                                  widget
-                                                      .selectedItems[
-                                                          selectedItemNo]
-                                                      .timeCost
-                                                      .keys
-                                                      .elementAt(radioNo),
-                                                  widget
-                                                      .selectedItems[
-                                                          selectedItemNo]
-                                                      .timeCost
-                                                      .values
-                                                      .elementAt(radioNo));
-                                              mainCheckout.calculateSubTotal();
+                                              for (var j = 0;
+                                                  j <
+                                                      widget
+                                                          .selectedItems.length;
+                                                  j++) {
+                                                mainCheckout.changeTimeSlot(
+                                                    j,
+                                                    widget.selectedItems[j]
+                                                        .timeCost.keys
+                                                        .elementAt(radioNo),
+                                                    widget.selectedItems[j]
+                                                        .timeCost.values
+                                                        .elementAt(radioNo));
+                                                mainCheckout
+                                                    .calculateSubTotal();
+                                              }
                                             }),
                                         Text(
                                           widget.selectedItems[selectedItemNo]
@@ -562,11 +396,13 @@ class _orderScreenState extends State<orderScreen> {
                                   (!widget.radiobools[selectedItemNo][radioNo])
                                       ? Text(
                                           "¥ " +
-                                              widget
-                                                  .selectedItems[selectedItemNo]
-                                                  .timeCost
-                                                  .values
-                                                  .elementAt(radioNo)
+                                              formatter
+                                                  .format(widget
+                                                      .selectedItems[
+                                                          selectedItemNo]
+                                                      .timeCost
+                                                      .values
+                                                      .elementAt(radioNo))
                                                   .toString(),
                                           style: TextStyle(
                                             fontSize: 14.sp,
@@ -658,12 +494,13 @@ class _orderScreenState extends State<orderScreen> {
                                             ),
                                             Text(
                                               "¥ " +
-                                                  widget
-                                                      .selectedItems[
-                                                          selectedItemNo]
-                                                      .timeCost
-                                                      .values
-                                                      .elementAt(radioNo)
+                                                  formatter
+                                                      .format(widget
+                                                          .selectedItems[
+                                                              selectedItemNo]
+                                                          .timeCost
+                                                          .values
+                                                          .elementAt(radioNo))
                                                       .toString(),
                                               style: TextStyle(
                                                 fontSize: 14.sp,
@@ -693,7 +530,7 @@ class _orderScreenState extends State<orderScreen> {
           children: [
             Consumer<Checkout>(
               builder: (context, orderSummary, child) => Text(
-                "¥ ${orderSummary.subtotal}",
+                "¥ ${formatter.format(orderSummary.subtotal)}",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.black,
@@ -735,6 +572,173 @@ class _orderScreenState extends State<orderScreen> {
             )
           ],
         ),
+      ),
+    );
+  }
+
+  Container _buildCalendar() {
+    return Container(
+      width: 342.w,
+      height: 200.h,
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Color(0xff0A0A0A).withOpacity(0.05),
+            spreadRadius: 0,
+            blurRadius: 12.sp,
+            offset: Offset(0, 4),
+          )
+        ],
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: TableCalendar(
+        locale: 'ja',
+        focusedDay: _focusedDay,
+        firstDay: DateTime.now(),
+        lastDay: DateTime.utc(2025, 1, 1),
+        shouldFillViewport: true,
+        sixWeekMonthsEnforced: true,
+        calendarFormat: CalendarFormat.week,
+        daysOfWeekVisible: true,
+        daysOfWeekHeight: 22,
+        headerStyle: HeaderStyle(
+            titleTextStyle: TextStyle(
+              color: Colors.white,
+            ),
+            rightChevronVisible: false,
+            formatButtonShowsNext: false,
+            formatButtonVisible: false,
+            // titleTextFormatter: DateTime.now().day,
+            leftChevronIcon: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.calendar_today_outlined,
+                        color: Color(0xfffdb601),
+                      ),
+                      SizedBox(
+                        width: 12.w,
+                      ),
+                      Text(
+                        AppLocalizations.of(context).calendar,
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.w600),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 3.h,
+                  ),
+                  Text(
+                    DateFormat('y年M月d日(E)', 'ja').format(_selectedDay),
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      color: Color(0xff555555),
+                    ),
+                  )
+                ])),
+        calendarStyle: CalendarStyle(
+          selectedTextStyle: TextStyle(color: Colors.black),
+          todayDecoration: BoxDecoration(
+            color: Colors.black.withOpacity(0.5),
+            shape: BoxShape.circle,
+          ),
+          selectedDecoration: BoxDecoration(
+            color: Color(0xfffdb601),
+            shape: BoxShape.circle,
+
+            //borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+        selectedDayPredicate: (day) {
+          return isSameDay(_selectedDay, day);
+        },
+        onDaySelected: (selectedDay, focusedDay) async {
+          if (selectedDay.toString().substring(0, 10) !=
+              _selectedDay.toString().substring(0, 10)) {
+            print(DateFormat('y年M月d日(E)', 'ja').format(_selectedDay));
+
+            showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) {
+                  return loadingScreen();
+                });
+
+            ///truncating w.r.t doc ids yyyy-mm-dd///
+
+            // String today = DateFormat('yyyy-m-dd').format(_selectedDay);
+            String docId = selectedDay.toString().substring(0, 10);
+
+            ///async function calling for changing timings of map///
+
+            for (var i = 0; i < widget.selectedItems.length; i++) {
+              dynamic timings = await dbMain.getSpecificDatePrices(
+                  widget.restId, widget.selectedItems[i].dishId, docId);
+
+              if (timings != false) {
+                setState(() {
+                  _selectedDay = selectedDay;
+                  _focusedDay = focusedDay; // update `_focusedDay` here as well
+
+                  widget.selectedItems[i].timeCost = timings;
+
+                  ///reseting radio buttons for new timings///
+
+                  for (var radio = 0;
+                      radio < widget.selectedItems[i].lengthTimeCost;
+                      radio++) {
+                    widget.radiobools[i][radio] = false;
+                  }
+
+                  ///making first radio button checked
+                  widget.radiobools[i][0] = true;
+
+                  ///updating notifier class for change in cost///
+                  mainCheckout.changeTimeSlot(
+                      i,
+                      widget.selectedItems[i].timeCost.keys.elementAt(0),
+                      widget.selectedItems[i].timeCost.values.elementAt(0));
+                  mainCheckout.calculateSubTotal();
+                });
+              } else {
+                print("false");
+                setState(() {
+                  _selectedDay = selectedDay;
+                  _focusedDay = focusedDay; // update `_focusedDay` here as well
+
+                  widget.selectedItems[i].timeCost = widget.basicPriceMap[0];
+
+                  ///reseting radio buttons for new timings///
+
+                  for (var radio = 0;
+                      radio < widget.selectedItems[i].lengthTimeCost;
+                      radio++) {
+                    widget.radiobools[i][radio] = false;
+                  }
+
+                  ///making first radio button checked
+                  widget.radiobools[i][0] = true;
+
+                  ///updating notifier class for change in cost///
+                  mainCheckout.changeTimeSlot(
+                      i,
+                      widget.selectedItems[i].timeCost.keys.elementAt(0),
+                      widget.selectedItems[i].timeCost.values.elementAt(0));
+                  mainCheckout.calculateSubTotal();
+                });
+              }
+            } //loop end//
+            Navigator.pop(context);
+          }
+        },
       ),
     );
   }

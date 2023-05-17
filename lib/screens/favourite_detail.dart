@@ -32,7 +32,6 @@ class _favourite_detailState extends State<favourite_detail> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Color(0xffF0F3FD),
       appBar: AppBar(
@@ -81,7 +80,7 @@ class _favourite_detailState extends State<favourite_detail> {
                                     image: NetworkImage(
                                       widget.restaurant.images[index],
                                     ),
-                                    fit: BoxFit.fill,
+                                    fit: BoxFit.fitWidth,
                                   ),
                                 ),
                               ]),

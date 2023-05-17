@@ -146,10 +146,10 @@ class _loginScreenState extends State<loginScreen> {
                             email: emailController.text);
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text(
-                                "A link has been sent to your email successfully!")));
+                                "パスワード再設定用のリンクを、登録メールアドレスへお送りしました。")));
                       } on Exception catch (e) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(e.toString())));
+                            SnackBar(content: Text('入力内容に誤りがあります。ログインID（メールアドレス）とパスワードが一致しません。')));
                       }
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -157,7 +157,7 @@ class _loginScreenState extends State<loginScreen> {
                     }
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text("Email Field is empty/invalid!")));
+                        content: Text("無効なメール")));
                   }
                 },
                 child: Container(
@@ -177,6 +177,11 @@ class _loginScreenState extends State<loginScreen> {
               InkWell(
                 enableFeedback: true,
                 onTap: () async {
+
+                  bool emailValid = RegExp(
+                      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                      .hasMatch(emailController.text);
+
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       duration: Duration(seconds: 1),
                       content: Row(

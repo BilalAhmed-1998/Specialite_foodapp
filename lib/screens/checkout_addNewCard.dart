@@ -35,7 +35,7 @@ class _checkout_addNewCard extends State<checkout_addNewCard> {
   showAlertDialog(BuildContext context, CardDetails _card) {
     // set up the button
     Widget okButton = TextButton(
-      child: Text("Continue"),
+      child: Text("続ける"),
       onPressed: () async {
         showDialog(
             context: context,
@@ -64,7 +64,7 @@ class _checkout_addNewCard extends State<checkout_addNewCard> {
         if(response.success){
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('transaction successful'),
+              content: Text('取引が完了しました'),
               duration: Duration(seconds: 2),
             ),
           );
@@ -80,7 +80,7 @@ class _checkout_addNewCard extends State<checkout_addNewCard> {
           Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('transaction failed'),
+              content: Text('取引に失敗しました'),
               duration: Duration(seconds: 2),
             ),
           );
@@ -88,15 +88,15 @@ class _checkout_addNewCard extends State<checkout_addNewCard> {
       },
     );
     Widget cancelButton = TextButton(
-      child: Text("Cancel"),
+      child: Text("キャンセル"),
       onPressed: () {
         Navigator.of(context).pop();
       },
     );
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Payment confirmation"),
-      content: Text("pay ${widget.amount.round()} securely. "),
+      title: Text("お支払い確認"),
+      content: Text("ご注文金額：¥${formatter.format(widget.amount.round())}"),
       actions: [
         cancelButton,
         okButton,

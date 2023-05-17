@@ -18,7 +18,7 @@ class checkout_chooseExisting extends StatefulWidget {
   int amount;
   Order order;
   List cards;
-  checkout_chooseExisting({this.amount, this.cards,this.order});
+  checkout_chooseExisting({this.amount, this.cards, this.order});
   @override
   _checkout_chooseExisting createState() => _checkout_chooseExisting();
 }
@@ -50,7 +50,7 @@ class _checkout_chooseExisting extends State<checkout_chooseExisting> {
         if(response.success){
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('transaction successful'),
+              content: Text('取引が完了しました'),
               duration: Duration(seconds: 2),
             ),
           );
@@ -60,7 +60,6 @@ class _checkout_chooseExisting extends State<checkout_chooseExisting> {
 
           if (refCheckoutInfo[0]){
             await dbMain.decrementBonus(refCheckoutInfo[1], context);
-
           }
           Navigator.popUntil(context, (route) => false);
           Navigator.pushNamed(context, homeScreen.routeName);
@@ -69,7 +68,7 @@ class _checkout_chooseExisting extends State<checkout_chooseExisting> {
           Navigator.pop(context);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('transaction failed'),
+              content: Text('取引に失敗しました'),
               duration: Duration(seconds: 2),
             ),
           );
@@ -113,11 +112,6 @@ class _checkout_chooseExisting extends State<checkout_chooseExisting> {
       },
     );
   }
-
-  payViaExistingCard(BuildContext context, card){
-
-  }
-
 
   bool check =true;
   @override

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
@@ -7,14 +6,14 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../classes/allClasses.dart';
 import '../dummyData.dart';
 
-
-
 class checkoutScreen2 extends StatefulWidget {
   static const routeName = '/checkoutScreen2';
-
+  double tax;
   Order order;
-  
-  checkoutScreen2({this.order});
+
+  checkoutScreen2({this.order}) {
+    tax = order.dineIn ? dineInTax : takeOutTax;
+  }
 
   @override
   _checkoutScreen2State createState() => _checkoutScreen2State();
@@ -52,7 +51,7 @@ class _checkoutScreen2State extends State<checkoutScreen2> {
       body: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment:MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Container(
               margin: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
@@ -65,7 +64,7 @@ class _checkoutScreen2State extends State<checkoutScreen2> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    margin:EdgeInsets.fromLTRB(12.w, 12.h, 12.w, 16.h),
+                    margin: EdgeInsets.fromLTRB(12.w, 12.h, 12.w, 16.h),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,7 +92,12 @@ class _checkoutScreen2State extends State<checkoutScreen2> {
                           ],
                         ),
                         Text(
-                          "  "+DateFormat('y年 MMMM dEE','ja').format(widget.order.dateTime.toDate())+ "（木）"+DateFormat.Hm().format(widget.order.dateTime.toDate()),
+                          "  " +
+                              DateFormat('yyyy年 MMMM dEE', 'ja')
+                                  .format(widget.order.dateTime.toDate()) +
+                              "（木）" +
+                              widget.order.orderSummary.first.time +
+                              ":00",
                           style: TextStyle(
                             fontSize: 14.sp,
                             color: Colors.grey.shade800,
@@ -103,55 +107,75 @@ class _checkoutScreen2State extends State<checkoutScreen2> {
                           height: 20.h,
                         ),
                         for (var selectedItemNo = 0;
-                        selectedItemNo < widget.order.orderSummary.length;
-                        selectedItemNo++)
-                          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                            Container(
-                              margin: EdgeInsets.only(bottom: 10.h),
-                              width: 140.w,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                    width: 8.w,
+                            selectedItemNo < widget.order.orderSummary.length;
+                            selectedItemNo++)
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(bottom: 10.h),
+                                  width: 140.w,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        width: 8.w,
+                                      ),
+                                      Text(
+                                        widget
+                                                .order
+                                                .orderSummary[selectedItemNo]
+                                                .quantity
+                                                .toString() +
+                                            ' x ' +
+                                            widget
+                                                .order
+                                                .orderSummary[selectedItemNo]
+                                                .title
+                                                .split(' ')
+                                                .last,
+                                        style: TextStyle(
+                                          fontSize: 14.sp,
+                                          color: Colors.grey.shade700,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                  Text(
-                                   widget.order.orderSummary[selectedItemNo].quantity.toString()+' x '+ widget.order.orderSummary[selectedItemNo].title
-                                        .split(' ')
-                                        .last,
+                                ),
+                                Container(
+                                  //color: Colors.amber,
+                                  alignment: Alignment.centerRight,
+                                  //width: 50,
+                                  child: Text(
+                                    "¥ " +
+                                        formatter
+                                            .format(widget
+                                                    .order
+                                                    .orderSummary[
+                                                        selectedItemNo]
+                                                    .price *
+                                                widget
+                                                    .order
+                                                    .orderSummary[
+                                                        selectedItemNo]
+                                                    .quantity)
+                                            .toString(),
                                     style: TextStyle(
                                       fontSize: 14.sp,
                                       color: Colors.grey.shade700,
-                                      fontWeight: FontWeight.w500,
                                     ),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Container(
-                              //color: Colors.amber,
-                              alignment: Alignment.centerRight,
-                              width: 70,
-                              child:
-                               Text(
-                                  "¥ " +
-                                      (widget.order.orderSummary[selectedItemNo].price *
-                                          widget.order
-                                              .orderSummary[selectedItemNo].quantity)
-                                          .toString(),
-                                  style: TextStyle(
-                                    fontSize: 14.sp,
-                                    color: Colors.grey.shade700,
+                                    textAlign: TextAlign.center,
                                   ),
-                                  textAlign: TextAlign.center,
                                 ),
-                              ),
-                          ]),
+                              ]),
                         Divider(
                           height: 30.h,
                           thickness: 1,
                         ),
+
                         ///subtotal///
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -164,20 +188,23 @@ class _checkoutScreen2State extends State<checkoutScreen2> {
                               ),
                             ),
                             Text(
-                                "¥ " + widget.order.subtotal.toString(),
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  color: Color(0xff555555),
-                                ),
-                                textAlign: TextAlign.center,
+                              "¥ " +
+                                  formatter
+                                      .format(widget.order.subtotal)
+                                      .toString(),
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                color: Color(0xff555555),
                               ),
-
+                              textAlign: TextAlign.center,
+                            ),
                           ],
                         ),
                         Divider(
                           height: 35.h,
                           thickness: 1,
                         ),
+
                         ///service fee///
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -190,17 +217,24 @@ class _checkoutScreen2State extends State<checkoutScreen2> {
                               ),
                             ),
                             Text(
-                              "% ${serviceFee.toInt()}",
+                              "¥ " +
+                                  formatter
+                                      .format(widget.order.subtotal *
+                                          serviceFee /
+                                          100)
+                                      .toString(),
                               style: TextStyle(
                                 fontSize: 14.sp,
                                 color: Color(0xff555555),
                               ),
                               textAlign: TextAlign.center,
                             ),
-
                           ],
                         ),
-                        SizedBox(height: 8.h,),
+                        SizedBox(
+                          height: 8.h,
+                        ),
+
                         ///Tax fee///
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -213,21 +247,24 @@ class _checkoutScreen2State extends State<checkoutScreen2> {
                               ),
                             ),
                             Text(
-                              "% ${tax.toInt()}",
+                              "¥ " +
+                                  formatter
+                                      .format(widget.order.subtotal *
+                                          widget.tax /
+                                          100)
+                                      .toString(),
                               style: TextStyle(
                                 fontSize: 14.sp,
                                 color: Color(0xff555555),
                               ),
                               textAlign: TextAlign.center,
                             ),
-
                           ],
                         ),
-
                       ],
                     ),
-
                   ),
+
                   ///total cost///
                   Container(
                     decoration: BoxDecoration(
@@ -237,10 +274,10 @@ class _checkoutScreen2State extends State<checkoutScreen2> {
                         bottomRight: Radius.circular(8),
                       ),
                     ),
-                    padding: EdgeInsets.symmetric(vertical: 8.h,horizontal: 12.w),
+                    padding:
+                        EdgeInsets.symmetric(vertical: 8.h, horizontal: 12.w),
                     width: 342.w,
                     height: 37.h,
-
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -253,37 +290,37 @@ class _checkoutScreen2State extends State<checkoutScreen2> {
                           ),
                         ),
                         Text(
-                            "¥ " + widget.order.subtotal.toString(),
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.center,
+                          "¥ " +
+                              formatter
+                                  .format(widget.order.subtotal)
+                                  .toString(),
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
                           ),
-
-
+                          textAlign: TextAlign.center,
+                        ),
                       ],
                     ),
                   ),
                 ],
               ),
-
             ),
-            SizedBox(height: 120.h,),
-            Container(
-              child: QrImage(
-                data: widget.order.orderId,
-                version: QrVersions.auto,
-                size: 200,
-                gapless: false,
-              )
+            SizedBox(
+              height: 120.h,
             ),
 
+            ///QR IMAGEEE!/////
+            QrImage(
+              data: widget.order.orderId,
+              version: QrVersions.auto,
+              size: 200,
+              gapless: false,
+            ),
           ],
         ),
       ),
-
     );
   }
 }

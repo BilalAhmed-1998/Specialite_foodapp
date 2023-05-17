@@ -32,7 +32,7 @@ class _favourites_cardState extends State<favourites_card> {
                     width:width,
                     child: Image.network(
                       widget.fav.images[0],
-                      fit: BoxFit.fill,
+                      fit: BoxFit.fitWidth,
                     ),
 
                   ),

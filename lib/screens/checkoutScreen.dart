@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
@@ -17,6 +16,7 @@ import 'package:specialite_foodapp/screens/homeScreen.dart';
 class checkoutScreen extends StatefulWidget {
   // const checkoutScreen({Key? key}) : super(key: key);
   static const routeName = '/checkoutScreen';
+  double tax = mainCheckout.dineIn ? dineInTax : takeOutTax;
 
   @override
   _checkoutScreenState createState() => _checkoutScreenState();
@@ -26,13 +26,12 @@ class _checkoutScreenState extends State<checkoutScreen> {
   TextEditingController promoController = TextEditingController();
   showAlertDialog(BuildContext context, String promoText, dynamic _discount) {
     // set up the button
-    Widget okButton =
-    TextButton(
-      child: Text("Continue"),
+    Widget okButton = TextButton(
+      child: Text("「続ける」"),
       onPressed: () async {
         Navigator.pop(context);
         if (((mainCheckout.subtotal +
-                    (tax * mainCheckout.subtotal / 100) +
+                    (widget.tax * mainCheckout.subtotal / 100) +
                     (serviceFee * mainCheckout.subtotal / 100)) -
                 _discount) >
             50) {
@@ -41,7 +40,7 @@ class _checkoutScreenState extends State<checkoutScreen> {
             MaterialPageRoute(
               builder: (context) => checkout_paymentSelection(
                 amount: ((mainCheckout.subtotal +
-                            (tax * mainCheckout.subtotal / 100) +
+                            (widget.tax * mainCheckout.subtotal / 100) +
                             (serviceFee * mainCheckout.subtotal / 100)) -
                         _discount)
                     .truncate(),
@@ -49,7 +48,7 @@ class _checkoutScreenState extends State<checkoutScreen> {
             ),
           );
         } else if (((mainCheckout.subtotal +
-                    (tax * mainCheckout.subtotal / 100) +
+                    (widget.tax * mainCheckout.subtotal / 100) +
                     (serviceFee * mainCheckout.subtotal / 100)) -
                 _discount) <=
             0) {
@@ -74,30 +73,31 @@ class _checkoutScreenState extends State<checkoutScreen> {
               orderSummary: mainCheckout.orderSummary,
             ),
           );
-          if (refCheckoutInfo[0]){
+          if (refCheckoutInfo[0]) {
             await dbMain.decrementBonus(refCheckoutInfo[1], context);
           }
 
           Navigator.popUntil(context, (route) => false);
           Navigator.pushNamed(context, homeScreen.routeName);
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Minimium order amount is ¥ 50")));
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text("最低注文金額はXX円です: ¥ 50")));
         }
       },
     );
     Widget cancelButton = TextButton(
-      child: Text("Cancel"),
+      child: Text("「キャンセル」"),
       onPressed: () {
         Navigator.of(context).pop();
       },
     );
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Promo"),
+      title: Text("ご注文金額確認"),
       content: Container(
         child: Text(promoText +
-            '\nYou will be charged: ${((mainCheckout.subtotal + (tax * mainCheckout.subtotal / 100) + (serviceFee * mainCheckout.subtotal / 100)) - _discount).truncate()<=0? 0 : ((mainCheckout.subtotal + (tax * mainCheckout.subtotal / 100) + (serviceFee * mainCheckout.subtotal / 100)) - _discount).truncate()}'),
+            '\nご注文金額: ¥ '
+                '${formatter.format(((mainCheckout.subtotal + (widget.tax * mainCheckout.subtotal / 100) + (serviceFee * mainCheckout.subtotal / 100)) - _discount).truncate() <= 0 ? 0 : ((mainCheckout.subtotal + (widget.tax * mainCheckout.subtotal / 100) + (serviceFee * mainCheckout.subtotal / 100)) - _discount).truncate())}'),
       ),
       actions: [
         cancelButton,
@@ -116,7 +116,6 @@ class _checkoutScreenState extends State<checkoutScreen> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
     mainCheckout = Provider.of<Checkout>(context, listen: false);
     return Scaffold(
       backgroundColor: Color(0xffF0F3FD),
@@ -190,8 +189,8 @@ class _checkoutScreenState extends State<checkoutScreen> {
                               DateFormat('yyyy年 MMMM dEE', 'ja')
                                   .format(mainCheckout.dateTime.toDate()) +
                               "（木）" +
-                              DateFormat.Hm()
-                                  .format(mainCheckout.dateTime.toDate()),
+                              mainCheckout.orderSummary.first.time +
+                              ":00",
                           style: TextStyle(
                             fontSize: 14.sp,
                             color: Colors.grey.shade800,
@@ -206,7 +205,7 @@ class _checkoutScreenState extends State<checkoutScreen> {
                           Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Container(
+                                SizedBox(
                                   // color: Colors.amber,
                                   width: 140.w,
                                   child: Row(
@@ -242,7 +241,7 @@ class _checkoutScreenState extends State<checkoutScreen> {
                                           color: Colors.grey.shade700,
                                           fontWeight: FontWeight.w500,
                                         ),
-                                      )
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -313,12 +312,13 @@ class _checkoutScreenState extends State<checkoutScreen> {
                                 Container(
                                   //color: Colors.amber,
                                   alignment: Alignment.centerRight,
-                                  width: 70,
+                                  //width: 50,
                                   child: Consumer<Checkout>(
                                     builder: (context, orderSummary, child) =>
                                         Text(
                                       "¥ " +
-                                          (mainCheckout
+                                          formatter
+                                              .format(mainCheckout
                                                       .orderSummary[
                                                           selectedItemNo]
                                                       .price *
@@ -334,8 +334,14 @@ class _checkoutScreenState extends State<checkoutScreen> {
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
-                                )
+                                ),
+                                // Icon(
+                                //   Icons.cancel_outlined,
+                                //   color: Colors.grey.shade500,
+                                //   size: 16,
+                                // )
                               ]),
+
                         Divider(
                           height: 30.h,
                           thickness: 1,
@@ -354,7 +360,10 @@ class _checkoutScreenState extends State<checkoutScreen> {
                             ),
                             Consumer<Checkout>(
                               builder: (context, orderSummary, child) => Text(
-                                "¥ " + orderSummary.subtotal.toString(),
+                                "¥ " +
+                                    formatter
+                                        .format(orderSummary.subtotal)
+                                        .toString(),
                                 style: TextStyle(
                                   fontSize: 14.sp,
                                   color: Color(0xff555555),
@@ -380,13 +389,20 @@ class _checkoutScreenState extends State<checkoutScreen> {
                                 color: Colors.grey.shade700,
                               ),
                             ),
-                            Text(
-                              "${serviceFee.toInt()} %",
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                color: Color(0xff555555),
+                            Consumer<Checkout>(
+                              builder: (context, orderSummary, child) => Text(
+                                "¥ " +
+                                    formatter
+                                        .format(serviceFee *
+                                            orderSummary.subtotal /
+                                            100)
+                                        .toString(),
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  color: Color(0xff555555),
+                                ),
+                                textAlign: TextAlign.center,
                               ),
-                              textAlign: TextAlign.center,
                             ),
                           ],
                         ),
@@ -405,13 +421,20 @@ class _checkoutScreenState extends State<checkoutScreen> {
                                 color: Colors.grey.shade700,
                               ),
                             ),
-                            Text(
-                              "${tax.toInt()} %",
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                color: Color(0xff555555),
+                            Consumer<Checkout>(
+                              builder: (context, orderSummary, child) => Text(
+                                "¥ " +
+                                    formatter
+                                        .format(widget.tax *
+                                            orderSummary.subtotal /
+                                            100)
+                                        .toString(),
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  color: Color(0xff555555),
+                                ),
+                                textAlign: TextAlign.center,
                               ),
-                              textAlign: TextAlign.center,
                             ),
                           ],
                         ),
@@ -446,12 +469,15 @@ class _checkoutScreenState extends State<checkoutScreen> {
                         Consumer<Checkout>(
                           builder: (context, orderSummary, child) => Text(
                             "¥ " +
-                                (orderSummary.subtotal +
-                                        (tax * orderSummary.subtotal / 100) +
-                                        (serviceFee *
+                                formatter
+                                    .format(orderSummary.subtotal +
+                                        (widget.tax *
                                             orderSummary.subtotal /
-                                            100))
-                                    .truncate()
+                                            100) +
+                                        (serviceFee *
+                                                orderSummary.subtotal /
+                                                100)
+                                            .truncate())
                                     .toString(),
                             style: TextStyle(
                               fontSize: 14.sp,
@@ -628,13 +654,14 @@ class _checkoutScreenState extends State<checkoutScreen> {
           color: Colors.white,
           width: width,
           height: 85.h,
-          child: Container(
+          child: SizedBox(
             width: 342.w,
             height: 26.h,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                onSurface: Color(0xffFdb601),
-                primary: Color(0xffFdb601),
+                backgroundColor: Color(0xffFdb601),
+                disabledForegroundColor: Color(0xffFdb601).withOpacity(0.38),
+                disabledBackgroundColor: Color(0xffFdb601).withOpacity(0.12),
               ),
               onPressed: () async {
                 if (FirebaseAuth.instance.currentUser != null) {
@@ -659,7 +686,7 @@ class _checkoutScreenState extends State<checkoutScreen> {
                           SnackBar(content: Text("Promo Expired")));
                     } else if (promo == 0) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Invalid Promo code")));
+                          SnackBar(content: Text("無効なプロモーションコードです")));
                     }
                   } else {
                     Navigator.pop(context);

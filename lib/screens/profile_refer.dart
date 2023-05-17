@@ -172,13 +172,13 @@ class _profile_referState extends State<profile_refer> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
+                      SizedBox(
                         width: 250.w,
                         child: Text(
                           refCode,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            fontSize: 20.sp,
+                            fontSize: 16.sp,
                             fontFamily: 'regular',
                             fontWeight: FontWeight.w700,
                             color: Color(0xff121212),
@@ -200,21 +200,24 @@ class _profile_referState extends State<profile_refer> {
                   InkWell(
                     enableFeedback: true,
                     onTap: (){
-                      Clipboard.setData(ClipboardData(text: refCode));
-                      Timer timer = Timer(Duration(milliseconds: 2000), (){
-                        Navigator.of(context, rootNavigator: true).pop();
-                      });
-                      showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (context)
-                          {
-                            return profile_copied();
-                          }).then((value){
-                        // dispose the timer in case something else has triggered the dismiss.
-                        timer?.cancel();
-                        timer = null;
-                      });
+                        if(refCode==FirebaseAuth.instance.currentUser.uid){
+                          Clipboard.setData(ClipboardData(text: refCode));
+                          Timer timer = Timer(Duration(milliseconds: 1000), (){
+                            Navigator.of(context, rootNavigator: true).pop();
+                          });
+                          showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (context)
+                              {
+                                return profile_copied();
+                              }).then((value){
+                            // dispose the timer in case something else has triggered the dismiss.
+                            timer?.cancel();
+                            timer = null;
+                          });
+                        }
+
                     },
                     child: Container(
                       height: 32.h,
@@ -242,15 +245,12 @@ class _profile_referState extends State<profile_refer> {
                 Navigator.pushNamed(context, profile_phone.routeName);
 
               }:(){
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('phone number already verified.'))
-                );
               },
               child: Container(
                 height: 56.h,
                 width: 342.w,
                 decoration: BoxDecoration(
-                  color: isVerified==false?Color(0xffFDB601):Colors.yellow[100],
+                  color: FirebaseAuth.instance.currentUser.phoneNumber==null?Color(0xffFDB601):Colors.yellow[100],
                   borderRadius: BorderRadius.circular(8),
                 ),
                 padding: EdgeInsets.only(right: 16),

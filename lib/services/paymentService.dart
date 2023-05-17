@@ -12,7 +12,8 @@ class StripeTransactionResponse {
 class StripeService {
   static String apiBase = 'https://api.stripe.com/v1';
   static String secret ='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';
-      //TEST'sk_test_51JWNN2Gtvb5UXlRBapsj5WYfgYXSaPPFTA8N3E9rdbKWKepHTk2kcdHjKCHsk5BSBl8HbDgBowVHzVYeC9cbDjsX00RbijQGWh';
+      //TEST 'sk_test_51JWNN2Gtvb5UXlRBapsj5WYfgYXSaPPFTA8N3E9rdbKWKepHTk2kcdHjKCHsk5BSBl8HbDgBowVHzVYeC9cbDjsX00RbijQGWh';
+      //LIVE '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';
   static Map<String, String> headers = {
     'Authorization': 'Bearer ${StripeService.secret}',
     'Content-Type': 'application/x-www-form-urlencoded'
@@ -20,12 +21,8 @@ class StripeService {
   static init() async {
     Stripe.publishableKey ='pk_live_51JWNN2Gtvb5UXlRB1IqSh6hlKiTYvU4xaGzEzY73GZsMqX899hJOfqrgYcciaQ25nlaqruTlcH4fA8t7o9D9GObJ00OK3fQL6Q';
         //TEST 'pk_test_51JWNN2Gtvb5UXlRBu0HdNPLc4wr9Ezp76XGzqWEtOSHdxry6tBGYaR7amXqlmbw0CsStrNLKXBXr87DWs02vBLBm00qnimaBVa';
+        //LIVE 'pk_live_51JWNN2Gtvb5UXlRB1IqSh6hlKiTYvU4xaGzEzY73GZsMqX899hJOfqrgYcciaQ25nlaqruTlcH4fA8t7o9D9GObJ00OK3fQL6Q'
     await Stripe.instance.applySettings();
-  }
-
-  static StripeTransactionResponse payViaExistingCard(
-      {String amount, String currency, card}) {
-    return StripeTransactionResponse(message: "transaction", success: true);
   }
 
   static Future<StripeTransactionResponse> payWithNewCard(
@@ -33,20 +30,6 @@ class StripeService {
     try {
       var paymentIntent =
           await StripeService.createPaymentIntent(amount, currency);
-      // final billingDetails = BillingDetails(
-      //   name: 'shaheer',
-      //   email: 'email@stripe.com',
-      //   phone: '+48888000888',
-      //   address: Address(
-      //     city: 'Houston',
-      //     country: 'JP',
-      //     line1: '1459  Circle Drive',
-      //     line2: '',
-      //     state: 'Tokyo',
-      //     postalCode: '77063',
-      //   ),
-      // );
-      //await Stripe.instance.dangerouslyUpdateCardDetails(card);
       print(card);
       var paymentMethod = await StripeService()._createPaymentMethod(
           number: card.number,
@@ -58,24 +41,21 @@ class StripeService {
       print(paymentMethod["id"]);
       print('processing payment...');
 
-      var response = await Stripe.instance.confirmPayment(
-          paymentIntent['client_secret'],
-          PaymentMethodParams.cardFromMethodId(
-               paymentMethodData: paymentMethod["id"])
+      var response = await StripeService().confirmPayment(
+          pi_id: paymentIntent["id"],
+          paymentMethod: paymentMethod["id"]
       );
-      print(response.status);
-      print(response);
-
-      if (response.status == PaymentIntentsStatus.Succeeded) {
+      print(response["status"]);
+      if (response["status"] == "succeeded") {
         return StripeTransactionResponse(
-            message: "transaction successful", success: true);
+            message: "Transaction Successful", success: true);
       } else {
         return StripeTransactionResponse(
-            message: "transaction failed", success: false);
+            message: "Transaction Failed", success: false);
       }
     } catch (err) {
       return StripeTransactionResponse(
-          message: "transaction failed: ${err.toString()}", success: false);
+          message: "Transaction Failed: ${err.toString()}", success: false);
     }
   }
 
@@ -137,4 +117,22 @@ class StripeService {
       throw 'Failed to create PaymentMethod.';
     }
   }
+  Future<Map<String, dynamic>> confirmPayment({pi_id, paymentMethod}) async {
+    String url = 'https://api.stripe.com/v1/payment_intents/${pi_id}/confirm';
+    print('Confirming Payment');
+    var response = await http.post(
+      Uri.parse(url),
+      headers: headers,
+      body: {
+        'payment_method': paymentMethod
+      },
+    );
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      print(json.decode(response.body));
+      throw 'Failed to Confirm Payment.';
+    }
+  }
+
 }

@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:specialite_foodapp/classes/allClasses.dart';
 import 'package:specialite_foodapp/dummyData.dart';
 
-import '../dummyData.dart';
 
 class DatabaseCollection {
   final CollectionReference restCollection =
@@ -121,6 +120,7 @@ class DatabaseCollection {
     }
     return 0;
   }
+
 
   ///cards related functions///
 

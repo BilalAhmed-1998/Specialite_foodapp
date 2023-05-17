@@ -47,9 +47,10 @@
 	<string>This app needs access to Library when updating or uploading profile picture of user.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app needs access to Library when updating or uploading profile picture of user.</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
-		<string>fetch</string>
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>

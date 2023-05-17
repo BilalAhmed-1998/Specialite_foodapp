@@ -63,7 +63,7 @@ class _profile_enterReferralState extends State<profile_enterReferral> {
           children: [
             referralApplied?
             Text(
-              'Referral Applied Successfully',
+              '紹介コードが適用されました',
               style: TextStyle(
                 color: Color(0xff121212),
                 fontSize: 20.sp,
@@ -78,7 +78,7 @@ class _profile_enterReferralState extends State<profile_enterReferral> {
                   height: 25.h,
                 ),
                Text(
-                  'Enter referral code',
+                 AppLocalizations.of(context).enterReferral,
                   style: TextStyle(
                     color: Color(0xff121212),
                     fontSize: 20.sp,
@@ -115,7 +115,7 @@ class _profile_enterReferralState extends State<profile_enterReferral> {
                         //contentPadding: EdgeInsets.symmetric(vertical: 10),
                         fillColor: Colors.white,
                         filled: true,
-                        hintText: 'Enter referral code',
+                        hintText: AppLocalizations.of(context).enterReferral,
                         hintStyle: TextStyle(
                             color: const Color(0xff121212),
                             fontSize: 16.sp,

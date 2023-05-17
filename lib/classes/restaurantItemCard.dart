@@ -34,10 +34,10 @@ class restaurantItemCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
+          SizedBox(
             width: 100.w,
             height: 76.h,
-            child: Image.network(this.restaurantItem.image,
+            child: Image.network(restaurantItem.image,
             fit: BoxFit.fill,),
 
           ),

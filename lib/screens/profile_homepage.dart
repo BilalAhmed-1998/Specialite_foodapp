@@ -194,9 +194,7 @@ class _profile_homepageState extends State<profile_homepage> {
                       enableFeedback: true,
                       onTap: () {
                         if (FirebaseAuth.instance.currentUser != null) {
-                          refCode = FirebaseAuth
-                                      .instance.currentUser.phoneNumber !=
-                                  null
+                          refCode = FirebaseAuth.instance.currentUser.phoneNumber != null
                               ? FirebaseAuth.instance.currentUser.uid
                               : AppLocalizations.of(context).pleaseVerifyPhone;
                         }

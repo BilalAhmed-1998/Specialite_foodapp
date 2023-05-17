@@ -27,9 +27,32 @@ class AuthService {
           email: email, password: password);
       return _userFromFirebase(result.user);
     } on FirebaseAuthException catch (e) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.message)));
-      return null;
+      print(e.code);
+
+      if(e.code == 'wrong-password')
+        {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text('入力内容に誤りがあります。ログインID（メールアドレス）とパスワードが一致しません。')));
+          return null;
+        }
+      else if(e.code == 'invalid-email')
+      {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('無効なメール')));
+        return null;
+      }
+    else if(e.code == 'user-not-found')
+    {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('ユーザーが見つかりませんでした')));
+    return null;
+    }
+      else{
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.message)));
+        return null;
+      }
+
     }
   }
 
@@ -235,6 +258,23 @@ class AuthService {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.toString())));
       return null;
+    }
+
+  }
+
+
+  //update phone credentials//
+  Future updatePhoneNumber(credential,context) async {
+
+
+    try {
+      await FirebaseAuth.instance.currentUser.updatePhoneNumber(credential);
+      return true;
+
+    } on Exception catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+      return false;
     }
 
   }

@@ -18,8 +18,8 @@ class restaurantDetailScreen extends StatefulWidget {
   Restaurant restaurant;
   List<bool> isSelectedItems;
   restaurantDetailScreen({this.restaurant}) {
-    this.isSelectedItems =
-        List.filled(this.restaurant.restaurantItems.length, false);
+    isSelectedItems =
+        List.filled(restaurant.restaurantItems.length, false);
   }
   @override
   _restaurantDetailScreenState createState() => _restaurantDetailScreenState();
@@ -31,7 +31,6 @@ class _restaurantDetailScreenState extends State<restaurantDetailScreen> {
   Widget build(BuildContext context) {
     mainCheckout=Provider.of<Checkout>(context, listen: false);
     double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -46,7 +45,7 @@ class _restaurantDetailScreenState extends State<restaurantDetailScreen> {
           ),
         ),
         title: Text(
-          this.widget.restaurant.title,
+          widget.restaurant.title,
           style: TextStyle(
             fontSize: 18.sp,
             color: Colors.black,
@@ -73,8 +72,8 @@ class _restaurantDetailScreenState extends State<restaurantDetailScreen> {
                           width: width,
                           child: Stack(children: [
                             Positioned.fill(
-                              child: Image.network(this.widget.restaurant.images[index],
-                                fit: BoxFit.fill,),
+                              child: Image.network(widget.restaurant.images[index],
+                                fit: BoxFit.fitWidth,),
                             ),
 
                           ]),
@@ -103,7 +102,7 @@ class _restaurantDetailScreenState extends State<restaurantDetailScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              this.widget.restaurant.title,
+                              widget.restaurant.title,
                               style: TextStyle(
                                 fontSize: 20.sp,
                                 color: Colors.black,
@@ -148,7 +147,7 @@ class _restaurantDetailScreenState extends State<restaurantDetailScreen> {
                       Container(
                         width: 170.w,
                         child: Text(
-                          this.widget.restaurant.description,
+                          widget.restaurant.description,
                           style: TextStyle(
                             fontSize: 14.sp,
                             color: Colors.black,
@@ -165,7 +164,7 @@ class _restaurantDetailScreenState extends State<restaurantDetailScreen> {
                             allowHalfRating: true,
                             onRated: (v) {},
                             starCount: 5,
-                            rating: this.widget.restaurant.rating,
+                            rating: widget.restaurant.rating,
                             isReadOnly: true,
                             size: 20.sp,
                             color: Color(0xffFdb601),
@@ -203,7 +202,7 @@ class _restaurantDetailScreenState extends State<restaurantDetailScreen> {
                           Flexible(
                             flex: 1,
                             child: Text(
-                              this.widget.restaurant.address,
+                              widget.restaurant.address,
                               overflow: TextOverflow.fade,
                               style: TextStyle(
                                 fontSize: 14.sp,
@@ -227,7 +226,7 @@ class _restaurantDetailScreenState extends State<restaurantDetailScreen> {
                             width: 8.w,
                           ),
                           Text(
-                            this.widget.restaurant.open
+                            widget.restaurant.open
                                 ? "Open now"
                                 : "Close now",
                             style: TextStyle(
@@ -252,7 +251,7 @@ class _restaurantDetailScreenState extends State<restaurantDetailScreen> {
                         height: 12.h,
                       ),
                       for (var i = 0;
-                          i < this.widget.restaurant.restaurantItems.length;
+                          i < widget.restaurant.restaurantItems.length;
                           i++)
                         Padding(
                           padding: const EdgeInsets.only(bottom: 12),
@@ -265,10 +264,10 @@ class _restaurantDetailScreenState extends State<restaurantDetailScreen> {
                             children: [
                               restaurantItemCard(
                                 restaurantItem:
-                                    this.widget.restaurant.restaurantItems[i],
+                                    widget.restaurant.restaurantItems[i],
                               ),
                             ],
-                            isSelected: [this.widget.isSelectedItems[i]],
+                            isSelected: [widget.isSelectedItems[i]],
                             onPressed: (itemNo) {
                               setState(() {
                                 widget.isSelectedItems[i] =
@@ -278,7 +277,7 @@ class _restaurantDetailScreenState extends State<restaurantDetailScreen> {
                                     .contains(true)) {
                                   isDisabledButton = false;
                                 } else {
-                                  this.isDisabledButton = true;
+                                  isDisabledButton = true;
                                 }
                               });
                             },

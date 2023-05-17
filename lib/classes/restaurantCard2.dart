@@ -38,7 +38,7 @@ class _restaurantCard2State extends State<restaurantCard2> {
               children: [
                 Positioned.fill(
                   child: Image.network(this.widget.restaurant.images[0],
-                    fit: BoxFit.fill,),
+                    fit: BoxFit.fitWidth,),
                 ),
                 Positioned(
                   left: 12.w,

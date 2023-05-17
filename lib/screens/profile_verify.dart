@@ -38,7 +38,7 @@ class _profile_verifyState extends State<profile_verify> {
           children: [
             InkWell(
               onTap: () {
-                Navigator.popAndPushNamed(context, profile_phone.routeName);
+                Navigator.pop(context);
               },
               child: SizedBox(
                 height: 24.h,

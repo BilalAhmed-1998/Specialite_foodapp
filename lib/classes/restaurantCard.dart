@@ -20,41 +20,8 @@ class restaurantCard extends StatelessWidget {
         children: [
           Positioned.fill(
             child: Image.network(this.restaurant.images[0],
-            fit: BoxFit.fill,),
+            fit: BoxFit.fitWidth,),
           ),
-          // Positioned.fill(
-          //   child: ClipRRect(
-          //     borderRadius: BorderRadius.circular(8.0),
-          //     child: this.restaurant.images[0].runtimeType!=String?FutureBuilder(
-          //         future: this.restaurant.images[0],
-          //         builder: (context, snapshot) {
-          //           if (snapshot.connectionState == ConnectionState.done) {
-          //             if(snapshot.hasError)
-          //               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(snapshot.error.toString())));
-          //             else {
-          //               return Image.network(
-          //                 snapshot.data,
-          //                 fit: BoxFit.cover,
-          //               );
-          //             }
-          //           }
-          //           if (snapshot.connectionState == ConnectionState.waiting) {
-          //             return SizedBox(
-          //               height: 400,
-          //               child: CircularProgressIndicator.adaptive(),
-          //             );
-          //           }
-          //         }):Image.network(
-          //       this.restaurant.images[0],
-          //       fit: BoxFit.cover,
-          //     ),
-          //   ),
-          // ),
-          // Positioned.fill(
-          //   child: Image(image: AssetImage(this.restaurant.images[0],),
-          //     fit: BoxFit.cover,
-          //   ),
-          // ),
           Container(
             width: 342.w,
             height: 222.h,
@@ -66,8 +33,6 @@ class restaurantCard extends StatelessWidget {
                     colors: [
                       Color(0xff8B8B8B).withOpacity(0),
                       Color(0xff000000).withOpacity(0.6),
-
-
                     ]
                 )
             ),
